@@ -73,9 +73,17 @@ inline const Vector3<T> Vector3<T>::Scalar(const Vector3<T>& otherCpy, const flo
 }
 
 template <typename T>
+inline const Vector3<T> Vector3<T>::Cross(const Vector3<T>& otherCpy) const noexcept
+{
+    return Vector3<T>( this->y * otherCpy.z - this->z * otherCpy.y,
+                       this->z * otherCpy.x - this->x * otherCpy.z,
+                       this->x * otherCpy.y - this->y * otherCpy.x);
+}
+
+template <typename T>
 inline const T Vector3<T>::Dot(const Vector3<T>& otherCpy) const noexcept    /// A modifier
 {
-    return (this->x * otherCpy.x   +   this->y * otherCpy.y);
+    return (this->x * otherCpy.x   +   this->y * otherCpy.y     +   this->z * otherCpy.z);
 }
 
 template <typename T>
@@ -104,6 +112,14 @@ template <typename T>
 inline const Vector3<T> Vector3<T>::Scalar(const Vector3<T>& aCpy, const Vector3<T>& bCpy, const float angle) noexcept
 {
     return ( aCpy.Magnitude() * bCpy.Magnitude() * static_cast<T>(sinf(angle)) );
+}
+
+template <typename T>
+inline const Vector3<T> Vector3<T>::Cross(const Vector3<T>& aCpy, const Vector3<T>& bCpy) noexcept
+{
+    return Vector3<T>( aCpy.y * bCpy.z - aCpy.z * bCpy.y,
+                       aCpy.z * bCpy.x - aCpy.x * bCpy.z,
+                       aCpy.x * bCpy.y - aCpy.y * bCpy.x);
 }
 
 template <typename T>

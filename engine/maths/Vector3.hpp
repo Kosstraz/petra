@@ -24,6 +24,7 @@ public:
         //  METHODES
 
     inline const Vector3<T> Scalar(const Vector3<T>& otherCpy, const float angle = 90.f) const noexcept;
+    inline const Vector3<T> Cross (const Vector3<T>& otherCpy)                           const noexcept;
     inline const T Dot(const Vector3<T>& otherCpy)                                       const noexcept;
     inline Vector3<T> Magnitude()                                                        const noexcept;
     inline const T Norm()                                                                const noexcept;
@@ -32,6 +33,7 @@ public:
         //  STATIQUES
 
     inline static const Vector3<T> Scalar(const Vector3<T>& aCpy, const Vector3<T>& bCpy, const float angle = 90.f)  noexcept;
+    inline static const Vector3<T> Cross (const Vector3<T>& aCpy, const Vector3<T>& bCpy)                            noexcept;
     inline static const T Dot(const Vector3<T>& aCpy, const Vector3<T>& bCpy)                                        noexcept;
     inline static const Vector3<T> Magnitude(const Vector3<T>& acpy)                                                 noexcept;
     inline static const T Norm(const Vector3<T>& aCpy)                                                               noexcept;

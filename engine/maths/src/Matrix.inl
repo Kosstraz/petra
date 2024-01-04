@@ -3,22 +3,18 @@
     // CONSTRUCTEURS
 
 MATRIX_TEMPLATE
-Matrix<X, Y, T>::Matrix()
+Matrix<X, Y, T>::Matrix() : datas(new T[X * Y])
 {
-    this->datas = new T[X * Y];
-
-    for (uint32 i = 0; i < (X * Y); i++)
+    for (int32 i = 0; i < (X * Y); i++)
         this->datas[i] = static_cast<T>(0);
 }
 
 MATRIX_TEMPLATE
-Matrix<X, Y, T>::Matrix(const T identityValue)
+Matrix<X, Y, T>::Matrix(const T identityValue) : datas(new T[X * Y])
 {
-    this->datas = new T[X * Y];
-
-    for (uint16 i = 0; i < Y; i++)
+    for (int16 i = 0; i < Y; i++)
     {
-        for (uint16 j = 0; j < X; j++)
+        for (int16 j = 0; j < X; j++)
         {
             if (i - j == 0)
                 this->datas[(Y * i) + j] = identityValue;
@@ -45,35 +41,16 @@ void Matrix<X, Y, T>::Free() noexcept
 MATRIX_TEMPLATE
 inline void Matrix<X, Y, T>::Scale(const Vector3<T>& vec3) noexcept
 {
-    this->datas[0] = vec3.x;    
-    this->datas[5] = vec3.y;
+    this->datas[0]  = vec3.x;
+    this->datas[5]  = vec3.y;
     this->datas[10] = vec3.z;
-    this->datas[15] = static_cast<T>(1);
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Scale(const Vector2<T>& vec2) noexcept
+inline void Matrix<X, Y, T>::Scale2D(const Vector2<T>& vec2) noexcept
 {
     this->datas[0] = vec2.x;
     this->datas[4] = vec2.y;
-    this->datas[8] = static_cast<T>(1);
-}
-
-MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Scale(const T value) noexcept
-{   
-    this->datas[0] = value;
-    if (Y == 4 && X == 4)
-    {
-        this->datas[5] = value;
-        this->datas[10] = value;
-        this->datas[15] = static_cast<T>(1);
-    }
-    else if (Y == 3 && X == 3)
-    {
-        this->datas[4] = value;
-        this->datas[8] = static_cast<T>(1);
-    }
 }
 
 
@@ -81,18 +58,16 @@ inline void Matrix<X, Y, T>::Scale(const T value) noexcept
 MATRIX_TEMPLATE
 inline void Matrix<X, Y, T>::Translation(const Vector3<T>& vec3) noexcept
 {
-    this->datas[0]  = vec3.x;
-    this->datas[5]  = vec3.y;
-    this->datas[10] = vec3.z;
-    this->datas[15] = static_cast<T>(1);
+    this->datas[3]  = vec3.x;
+    this->datas[7]  = vec3.y;
+    this->datas[11] = vec3.z;
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Translation(const Vector2<T>& vec2) noexcept
+inline void Matrix<X, Y, T>::Translation2D(const Vector2<T>& vec2) noexcept
 {
-    this->datas[0] = vec2.x;
-    this->datas[4] = vec2.y;
-    this->datas[8] = static_cast<T>(1);
+    this->datas[2] = vec2.x;
+    this->datas[5] = vec2.y;
 }
 
 
@@ -120,12 +95,12 @@ inline void Matrix<X, Y, T>::Rotation(const Vector3<T>& vec3) noexcept
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Rotation(const T angle) noexcept
+inline void Matrix<X, Y, T>::Rotation2D(const Vector2<T>& vec2) noexcept
 {
-    this->datas[0] *= static_cast<T>( cosf(angle));
-    this->datas[1]  = static_cast<T>(-sinf(angle));
-    this->datas[4]  = static_cast<T>( sinf(angle));
-    this->datas[5] *= static_cast<T>( cosf(angle));
+    this->datas[0] *= static_cast<T>( cosf(vec2.x));
+    this->datas[1]  = static_cast<T>(-sinf(vec2.x));
+    this->datas[4]  = static_cast<T>( sinf(vec2.x));
+    this->datas[5] *= static_cast<T>( cosf(vec2.x));
 }
 
 MATRIX_TEMPLATE
@@ -153,11 +128,11 @@ inline void Matrix<X, Y, T>::Transformation2D(const Vector2<T>& pos,
 MATRIX_TEMPLATE
 void Matrix<X, Y, T>::LookAt (const Vector3<T>& eye,
                               const Vector3<T>& center,
-                              const Vector3<T>& up)                  noexcept
+                              const Vector3<T>& up)                         noexcept
 {
-    const Vector3f f(Vector3f::Magnitude(center - eye));
-    const Vector3f s(Vector3f::Magnitude(Vector3f::Scalar(f, up, 90.f)));
-    const Vector3f u(Vector3f::Scalar(s, f, 90.f));
+    const Vector3f f(Vector3f::Magnitude(eye - center));
+    const Vector3f s(Vector3f::Magnitude(Vector3f::Cross(f, up)));
+    const Vector3f u(Vector3f::Cross(s, f));
 
          // X modification
     this->datas[0]  =  f.x;
@@ -174,21 +149,21 @@ void Matrix<X, Y, T>::LookAt (const Vector3<T>& eye,
         // camera_position modification
     this->datas[3]  = -Vector3f::Dot(s, eye);
     this->datas[7]  = -Vector3f::Dot(u, eye);
-    this->datas[11] = Vector3f::Dot(f, eye);
+    this->datas[11] = -Vector3f::Dot(f, eye);
 }
 
 MATRIX_TEMPLATE
-void Matrix<X, Y, T>::Perspective(const float& FOV, const float& width, 
-                                  const float& height, const float& zNear, 
-                                  const float& zFar)                         noexcept
+void Matrix<X, Y, T>::Perspective(const float& FOV, const float& width,
+                                  const float& height, const float& zNear,
+                                  const float& zFar)                            noexcept
 {
-    const T tanFOV   = static_cast<T>(tanf(Maths::deg_to_rad(FOV) / 2.0f));
-    const T aspect   = static_cast<T>((float)width / (float)height);
+    const float tanFOV   = tanf( static_cast<float>( Maths::deg_to_rad(FOV) / 2.0f ) );
+    const float aspect   =       static_cast<float>( width / height   );
 
     this->datas[0]  = static_cast<T>(1.0f / (aspect * tanFOV));
     this->datas[5]  = static_cast<T>(1.0f / tanFOV);
     this->datas[10] = static_cast<T>(zFar / (zFar - zNear));
-    this->datas[11] = static_cast<T>(-(zFar * zNear) / (zFar - zNear));
+    this->datas[11] = static_cast<T>((-zFar * zNear) / (zFar - zNear)); 
     this->datas[14] = static_cast<T>(1);
 }
 

@@ -20,15 +20,14 @@ public:
 
     void Free() noexcept;
 
-    inline void Scale(const Vector2<T>& vec2)  noexcept;
-    inline void Scale(const Vector3<T>& vec3)  noexcept;
-    inline void Scale(const T        value)    noexcept;
+    inline void Scale2D(const Vector2<T>& vec2)  noexcept;
+    inline void Scale(const Vector3<T>& vec3)    noexcept;
 
-    inline void Translation(const Vector2<T>& vec2)  noexcept;
-    inline void Translation(const Vector3<T>& vec3)  noexcept;
+    inline void Translation2D(const Vector2<T>& vec2)  noexcept;
+    inline void Translation(const Vector3<T>& vec3)    noexcept;
 
-    inline void Rotation(const Vector3<T>& vec3)  noexcept;
-    inline void Rotation(const T        value)    noexcept;
+    inline void Rotation(const Vector3<T>&   vec3)  noexcept;
+    inline void Rotation2D(const Vector2<T>& vec2)  noexcept;
 
     inline void Transformation   (const Vector3<T>& pos,
                                   const Vector3<T>& scale,
