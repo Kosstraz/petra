@@ -17,8 +17,10 @@ public:
     void AddObject (PetraO* object, const char* name)  noexcept;
     void AddObjects(PetraO** objects, const char** name, unsigned short sizeo) noexcept;
     void RemoveObject(const char* name);
+    void DeleteObject(const char* name);
 
-    PetraO* FindACTOR(const char* name);
+    template <class PetraObjectType>
+    PetraObjectType* FindACTOR(const char* name) const;
 
     void Clear     ();
 
@@ -33,5 +35,7 @@ protected:
 
     std::unordered_map<const char*, PetraO*> all_objects_in_scene = std::unordered_map<const char*, PetraO*>();
 };
+
+#include "src/Scene.inl"
 
 #endif

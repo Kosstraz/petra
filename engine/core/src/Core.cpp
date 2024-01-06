@@ -3,18 +3,28 @@
 int Core::InitEngine()
 {
     DEBUG(CORE_LOG, "Initialisation du moteur...");
+    Chrono c;
+    c.Start();
 
     if (!glfwInit())
+    {
+        c.Stop();
+        EXEC_TIME(c.GetTime());
+
         return (GLFWINIT_FAILED);
+    }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", 0, 0);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Fenêtre", 0, 0);
     if (!window)
     {
+        c.Stop();
+        EXEC_TIME(c.GetTime());
+
         glfwTerminate();
         return (WINDOWNnullptr_FAILED);
     }
@@ -22,13 +32,24 @@ int Core::InitEngine()
     DEBUG(CORE_LOG, "Fenetre created !");
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        return (GLADLOADER_FAILED);
+    {   
+        c.Stop();
+        EXEC_TIME(c.GetTime());
 
+        return (GLADLOADER_FAILED);
+    }
+
+    c.Stop();
+    EXEC_TIME(c.GetTime());
     return (0);
 }
 
 void Core::CompileAllShaders()
 {
+    DEBUG(SHADER_LOG, "Compilation de tous les shaders...");
+    Chrono c;
+    c.Start();
+
         // Init handle struct
     Handle handle;
     
@@ -42,7 +63,10 @@ void Core::CompileAllShaders()
     delete shader1;
 
         // Use the current shader (for the cam)
-    glad_glUseProgram(handle.shadersProgram[0]);
+    glUseProgram(handle.shadersProgram[0]);
+
+    c.Stop();
+    EXEC_TIME(c.GetTime());
 }
 
 void Core::Terminate()

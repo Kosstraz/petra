@@ -9,7 +9,7 @@ Shader::Shader(const char* VFS_filename)
     this->vertShader = ((char*)0);
     
     ConvertShaderExtension_GLSL(VFS_filename, LARGE_FILE_SIZE);
-    DEBUG(SHADER_LOG, "Fichier .vfs.glsl converti avec succès en .frag.glsl et en .vert.glsl.");
+    DEBUG(SHADER_LOG, "Fichier .vfs.glsl converti avec succes en .frag.glsl et en .vert.glsl.");
 
     delete VFS_filename;
 }
@@ -22,7 +22,7 @@ Shader::Shader(const char* fragShader, const char* vertShader)
     
     ReadFile(fragShader, &this->fragShader, LARGE_FILE_SIZE);
     ReadFile(vertShader, &this->vertShader, LARGE_FILE_SIZE);
-    DEBUG(SHADER_LOG, "Fichier .glsl lu avec succès, avec une taille maximale de 5096 bits.");
+    DEBUG(SHADER_LOG, "Fichier .glsl lu avec succes, avec une taille maximale de 5096 bits.");
     
     delete fragShader;
     delete vertShader;
@@ -37,7 +37,7 @@ Shader::Shader(const char* VFS_filename, const char* fragShader, const char* ver
     ConvertShaderExtension_GLSL(VFS_filename, LARGE_FILE_SIZE);
     ReadFile(fragShader, &this->fragShader,   LARGE_FILE_SIZE);
     ReadFile(vertShader, &this->vertShader,   LARGE_FILE_SIZE);
-    DEBUG(SHADER_LOG, "Fichier .glsl lu avec succès, avec une taille maximale de 5096 bits.");
+    DEBUG(SHADER_LOG, "Fichier .glsl lu avec succes, avec une taille maximale de 5096 bits.");
     
     delete VFS_filename;
     delete fragShader;
@@ -100,24 +100,24 @@ void Shader::Free() noexcept
 
 void Shader::executeShaders() noexcept
 {
-    GLuint vertexShaderID   = glad_glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragmentShaderID = glad_glCreateShader(GL_FRAGMENT_SHADER);
+    GLuint vertexShaderID   = glCreateShader(GL_VERTEX_SHADER);
+    GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-    glad_glShaderSource(vertexShaderID, 1, &(this->vertShader), 0);
-    glad_glCompileShader(vertexShaderID);
-    glad_glShaderSource(fragmentShaderID, 1, &(this->fragShader), 0);
-    glad_glCompileShader(fragmentShaderID);
+    glShaderSource(vertexShaderID, 1, &(this->vertShader), 0);
+    glCompileShader(vertexShaderID);
+    glShaderSource(fragmentShaderID, 1, &(this->fragShader), 0);
+    glCompileShader(fragmentShaderID);
 
-    this->programID = glad_glCreateProgram();
-    glad_glAttachShader(this->programID, vertexShaderID);
-    glad_glAttachShader(this->programID, fragmentShaderID);
-    glad_glLinkProgram(this->programID);
+    this->programID = glCreateProgram();
+    glAttachShader(this->programID, vertexShaderID);
+    glAttachShader(this->programID, fragmentShaderID);
+    glLinkProgram(this->programID);
 
-    glad_glDetachShader(this->programID, vertexShaderID);
-    glad_glDetachShader(this->programID, fragmentShaderID);
+    glDetachShader(this->programID, vertexShaderID);
+    glDetachShader(this->programID, fragmentShaderID);
 
-    glad_glDeleteShader(vertexShaderID);
-    glad_glDeleteShader(fragmentShaderID);
+    glDeleteShader(vertexShaderID);
+    glDeleteShader(fragmentShaderID);
 
     delete this->vertShader;
     delete this->fragShader;

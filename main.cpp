@@ -1,5 +1,3 @@
-#include <cstdio>
-
 #include <core/Core.hpp>
 
 int main()

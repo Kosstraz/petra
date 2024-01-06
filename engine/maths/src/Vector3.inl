@@ -106,6 +106,12 @@ inline const BOOL Vector3<T>::NotNull() const noexcept
     return true;
 }
 
+template <typename T>
+inline const Vector3<T> Vector3<T>::Oppose(const Vector3<T>& otherCpy) const noexcept
+{
+    return (-*this - otherCpy);
+}
+
     //  STATIQUES
 
 template <typename T>
@@ -140,6 +146,11 @@ inline const T Vector3<T>::Norm(const Vector3<T>& otherCpy) noexcept
     return  static_cast<T>( sqrtf((otherCpy.x * otherCpy.x)   +   (otherCpy.y * otherCpy.y)     +   (otherCpy.z * otherCpy.z)) );
 }
 
+template <typename T>
+inline const Vector3<T> Vector3<T>::Oppose(const Vector3<T>& aCpy, const Vector3<T>& bCpy) noexcept
+{
+    return (-aCpy - bCpy);
+}
 
     // OPERATORS
 

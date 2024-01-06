@@ -13,7 +13,7 @@
 
 #define DRAW_TRIANGLE   0
 #define DRAW_SQUARE     1
-#define DRAW_RECTANGLE  2
+#define DRAW_CUBE       2
 
 class GeometryTest final : public PetraO
 {
@@ -21,14 +21,14 @@ public:
         /// CONSTRUCTEURS
 
     GeometryTest(const char* name);
-    ~GeometryTest() noexcept;
+    ~GeometryTest() noexcept override;
 
         /// METHODES
 
     void WhatBuild     (uint8 DRAW_WHAT)                                  ;
     void BuildTriangle (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)   noexcept;
     void BuildSquare   (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)   noexcept;
-    void BuildRectangle(uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)   noexcept;
+    void BuildCube     (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)   noexcept;
 
     virtual void Build(uint32 GL_METHOD_DRAW = GL_STATIC_DRAW) noexcept override;
     virtual void DrawBuild()                                   noexcept override;
@@ -37,7 +37,7 @@ public:
     void SetScale   (const Vector3f scale   ) noexcept;
     void SetRotation(const Vector3f rotation) noexcept;
 
-    virtual void Free() noexcept override;
+    virtual void Destroy() noexcept override;
 
 private:
     uint8 what_build;
@@ -47,7 +47,7 @@ private:
     uchar verticesToDraw;
 
     Transform   transform;
-    Matrix4x4f* model;
+    glm::mat4   MOD;
 };
 
 #endif

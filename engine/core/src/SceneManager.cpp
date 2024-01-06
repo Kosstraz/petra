@@ -14,6 +14,11 @@ void SceneManager::LoadScene(const char* name)
     delete name;
 }
 
+void SceneManager::SetCurrentScene(Scene* scene)
+{
+    Handle::currentScene = scene;
+}
+
 Scene* SceneManager::GetCurrentScene() noexcept
 {
     return Handle::currentScene;

@@ -1,35 +1,27 @@
 #include "../Camera.hpp"
 
+#include <rendering/RendererManager.hpp>
+
     /// CONSTRUCTEURS
 
-Camera::Camera(const char* name) : PetraO(name)
+Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f))
 {
+    this->transform.position = Vector3f(4.0f, 3.0f, 3.0f);
 
-    this->projection = nullptr;
-    this->view = nullptr;
-    
-    this->projection         = new Matrix4x4f(1.f);
-    this->view               = new Matrix4x4f(1.f);
-    this->transform.position = Vector3f(0.f);
+        // glm TEST
+    this->PROJ = glm::perspective(glm::radians(60.f), (float)(800.f/600.f), 0.01f, 1000.0f);
+    this->VIEW = glm::lookAt(     glm::vec3(this->transform.position.x, this->transform.position.y, this->transform.position.z),
+                                  glm::vec3(0.0f, 0.0f, 0.0f),
+                                  glm::vec3(0.0f, 1.0f, 0.0f));
 
-    this->projection->Perspective(80.f, 800.f, 600.f, 0.01f, 1000.f);
-    this->view->LookAt           (  this->transform.position,
-                                    Vector3f(0.f, 0.f, 0.f),
-                                    Vector3f::up);
-
-    int unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "PROJECTION");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->projection->Ref());
-    
-    unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "VIEW");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->view->Ref());
-
-    glad_glUseProgram(Handle::shadersProgram[0]);
+        // Utilisation shader
+    PushMatProgram(this->PROJ, "PROJECTION", (-1));
+    PushMat(this->VIEW, "VIEW");
 }
 
 Camera::~Camera()
 {
-    delete this->projection;
-    delete this->view;
+    this->Destroy();
 }
 
     /// METHODES
@@ -37,38 +29,30 @@ Camera::~Camera()
 void Camera::SetPosition(Vector3f position) noexcept
 {
     this->transform.position = position;
-    this->view->LookAt           (this->transform.position, 
-                                    Vector3f(0.f, 0.f, 0.f), 
-                                    Vector3f(0.f, 1.f, 0.f));
 
-    int loc = glad_glGetUniformLocation(Handle::shadersProgram[0], "VIEW");
-    glad_glUniformMatrix4fv(loc, 1, false, this->view->Ref());
+        // glm TEST
+    this->VIEW = glm::lookAt(   glm::vec3(this->transform.position.x, this->transform.position.y, this->transform.position.z),
+                                glm::vec3(this->at.x,                 this->at.y,                 this->at.z),
+                                glm::vec3(0.0f, 1.0f, 0.0f));
 
-    glad_glUseProgram(Handle::shadersProgram[0]);
+        // Utilisation shader
+    PushMatProgram(this->VIEW, "VIEW", (-1));
 }
 
-void Camera::SetScale(Vector3f scale) noexcept
+void Camera::LookAt(Vector3f at) noexcept
 {
-    this->transform.scale = scale;
-    this->view->LookAt           (this->transform.position, 
-                                    Vector3f(0.f, 0.f, 0.f), 
-                                    Vector3f(0.f, 1.f, 0.f));
+    this->at = at;
 
-    int loc = glad_glGetUniformLocation(Handle::shadersProgram[0], "VIEW");
-    glad_glUniformMatrix4fv(loc, 1, false, this->view->Ref());
+        // glm TEST
+    this->VIEW = glm::lookAt(   glm::vec3(this->transform.position.x, this->transform.position.y, this->transform.position.z),
+                                glm::vec3(this->at.x,                   this->at.y,                     this->at.z),
+                                glm::vec3(0.0f, 1.0f, 0.0f));
 
-    glad_glUseProgram(Handle::shadersProgram[0]);
+        // Utilisation shader
+    PushMatProgram(this->VIEW, "VIEW", (-1));
 }
 
-void Camera::SetRotation(Vector3f rotation) noexcept
+void Camera::Destroy() noexcept
 {
-    this->transform.rotation = rotation;
-    this->view->LookAt           (this->transform.position, 
-                                    Vector3f(0.f, 0.f, 0.f), 
-                                    Vector3f(0.f, 1.f, 0.f));
-                                    
-    int loc = glad_glGetUniformLocation(Handle::shadersProgram[0], "VIEW");
-    glad_glUniformMatrix4fv(loc, 1, false, this->view->Ref());
 
-    glad_glUseProgram(Handle::shadersProgram[0]);
 }

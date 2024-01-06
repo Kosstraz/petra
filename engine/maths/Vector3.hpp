@@ -29,6 +29,10 @@ public:
     inline Vector3<T> Magnitude()                                                        const noexcept;
     inline const T Norm()                                                                const noexcept;
     inline const BOOL NotNull()                                                          const noexcept;
+    inline const Vector3<T> Oppose (const Vector3<T>& otherCpy)                          const noexcept;
+
+    constexpr void Debug() const noexcept 
+    { printf("x : %f, y : %f, z : %f", this->x, this->y, this->z); }
 
         //  STATIQUES
 
@@ -37,6 +41,7 @@ public:
     inline static const T Dot(const Vector3<T>& aCpy, const Vector3<T>& bCpy)                                        noexcept;
     inline static const Vector3<T> Magnitude(const Vector3<T>& acpy)                                                 noexcept;
     inline static const T Norm(const Vector3<T>& aCpy)                                                               noexcept;
+    inline static const Vector3<T> Oppose (const Vector3<T>& aCpy, const Vector3<T>& bCpy)                           noexcept;
 
         //  OPERATORS
 

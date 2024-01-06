@@ -1,21 +1,37 @@
 #include "../GeometryTest.hpp"
 
-    /// CONSTRUCTEURS
+//#include <iostream>
+#include <rendering/RendererManager.hpp>
+
+    /*////////////////*/
+    /// CONSTRUCTEUR ///
+    /*////////////////*/
+
+
 
 GeometryTest::GeometryTest(const char* name) : PetraO(name), GL_GEOMETRY(0), vertexArrayID(0), vertexBufferID(0), verticesToDraw(0)
 {
-    this->model              = new Matrix4x4f(1.0f);
     this->transform.position = Vector3f(0.f, 0.f, 0.f);
+    this->MOD = glm::mat4(1.0f);
+    
+    //for (uint i = 0; i < 16; i++)
+        //std::cout << *(&this->model.datas[0] + i) << std::endl;
 
     this->what_build = 0;
 }
 
 GeometryTest::~GeometryTest() noexcept
 {
-    this->Free();
+    this->Destroy();
 }
 
-    /// METHODES
+
+
+    /*////////////*/
+    /// METHODES ///
+    /*////////////*/
+
+
 
 void GeometryTest::WhatBuild(uint8 DRAW_WHAT) 
 {
@@ -24,22 +40,23 @@ void GeometryTest::WhatBuild(uint8 DRAW_WHAT)
 
 void GeometryTest::BuildTriangle(uint32 GL_METHOD_DRAW) noexcept
 {
+    glUseProgram(Handle::shadersProgram[0]);
+
     constexpr float vertices[9] = {
         -1.0f, -1.0f, 0.0f,
          1.0f, -1.0f, 0.0f,
          0.0f,  1.0f, 0.0f 
     };
 
-        //GESTION DONNEES
-    glad_glGenVertexArrays(1, &this->vertexArrayID);
-    glad_glBindVertexArray(this->vertexArrayID);
+        // GESTION DONNEES
+    glGenVertexArrays(1, &this->vertexArrayID);
+    glBindVertexArray(this->vertexArrayID);
 
-    glad_glGenBuffers(1, &this->vertexBufferID);
-    glad_glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
-    glad_glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_METHOD_DRAW);
+    glGenBuffers(1, &this->vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_METHOD_DRAW);
 
-    int unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "TRANSFORMATION");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->model->Ref());
+    PushMat(this->MOD, "TRANSFORMATION");
 
     this->GL_GEOMETRY    = GL_TRIANGLES;
     this->verticesToDraw = 3;
@@ -47,6 +64,8 @@ void GeometryTest::BuildTriangle(uint32 GL_METHOD_DRAW) noexcept
 
 void GeometryTest::BuildSquare(uint32 GL_METHOD_DRAW) noexcept
 {
+    glUseProgram(Handle::shadersProgram[0]);
+
     constexpr float vertices[12] = {
         -1.0f, -1.0f, 0.0f,
          1.0f, -1.0f, 0.0f,
@@ -54,25 +73,75 @@ void GeometryTest::BuildSquare(uint32 GL_METHOD_DRAW) noexcept
          1.0f,  1.0f, 0.0f
     };
 
-        //GESTION DONNEES
-    glad_glGenVertexArrays(1, &this->vertexArrayID);
-    glad_glBindVertexArray(this->vertexArrayID);
+        // GESTION DONNEES
+    glGenVertexArrays(1, &this->vertexArrayID);
+    glBindVertexArray(this->vertexArrayID);
 
-    glad_glGenBuffers(1, &this->vertexBufferID);
-    glad_glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
-    glad_glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_METHOD_DRAW);
+    glGenBuffers(1, &this->vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_METHOD_DRAW);
 
-    int unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "TRANSFORMATION");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->model->Ref());
+    PushMat(this->MOD, "TRANSFORMATION");
 
     this->GL_GEOMETRY    = GL_TRIANGLE_STRIP;
     this->verticesToDraw = 4;
 }
 
-void GeometryTest::BuildRectangle(uint32 GL_METHOD_DRAW) noexcept
+void GeometryTest::BuildCube(uint32 GL_METHOD_DRAW) noexcept
 {
+    glUseProgram(Handle::shadersProgram[0]);
 
+    constexpr float vertices[12 * 6] = {
+            // Avant
+        //-1.0f, -1.0f,  0.0f,
+         //1.0f, -1.0f,  0.0f,
+        //-1.0f,  1.0f,  0.0f,
+         //1.0f,  1.0f,  0.0f,
+
+            // Droite
+         //1.0f, -1.0f,  0.0f,
+         //1.0f, -1.0f, -1.0f,
+         //1.0f,  1.0f,  0.0f,
+         //1.0f,  1.0f, -1.0f,
+
+            // Bot
+        //-1.0f, -1.0f, -1.0f,
+        // 1.0f, -1.0f, -1.0f,
+        //-1.0f, -1.0f,  0.0f,
+        // 1.0f, -1.0f,  0.0f,
+
+            // Top
+        //-1.0f,  1.0f,  0.0f,
+        // 1.0f,  1.0f,  0.0f,
+        //-1.0f,  1.0f, -1.0f,
+        // 1.0f,  1.0f, -1.0f,
+
+            // Left
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  0.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  0.0f,
+    };
+
+        // GESTION DONNEES
+    glGenVertexArrays(1, &this->vertexArrayID);
+    glBindVertexArray(this->vertexArrayID);
+
+    glGenBuffers(1, &this->vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_METHOD_DRAW);
+
+    PushMat(this->MOD, "TRANSFORMATION");
+
+    this->GL_GEOMETRY    = GL_TRIANGLE_STRIP;
+    this->verticesToDraw = (4 * 1);
 }
+
+
+
+
+
+
 
 void GeometryTest::Build(uint32 GL_METHOD_DRAW) noexcept
 {
@@ -85,59 +154,51 @@ void GeometryTest::Build(uint32 GL_METHOD_DRAW) noexcept
             this->BuildSquare(GL_METHOD_DRAW);
             break;
         case 2:
-            this->BuildRectangle(GL_METHOD_DRAW);
+            this->BuildCube(GL_METHOD_DRAW);
             break;
         default:
-            throw ("Nothing to build");
             break;
     }
 }
 
 void GeometryTest::DrawBuild() noexcept
 {
-    glad_glUseProgram(Handle::shadersProgram[0]);
+    glUseProgram(Handle::shadersProgram[0]);
 
-    glad_glEnableVertexAttribArray(0);
-    glad_glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
-    glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ((const void*)0));
-    glad_glDrawArrays(this->GL_GEOMETRY, 0, this->verticesToDraw);
-    glad_glDisableVertexAttribArray(0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ((const void*)0));
+    glDrawArrays(this->GL_GEOMETRY, 0, this->verticesToDraw);
+    glDisableVertexAttribArray(0);
 }
+
+
 
 void GeometryTest::SetPosition(const Vector3f position) noexcept
 {
     this->transform.position = position;
-    this->model->Translation(position);
+    this->MOD = glm::translate(this->MOD, glm::vec3(position.x, position.y, position.z));
 
-    int unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "TRANSFORMATION");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->model->Ref());
-
-    glad_glUseProgram(Handle::shadersProgram[0]);
+    PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
 void GeometryTest::SetScale(const Vector3f scale) noexcept
 {
     this->transform.scale = scale;
-    this->model->Scale(scale);
+    this->MOD = glm::scale(this->MOD, glm::vec3(scale.x, scale.y, scale.z));
 
-    int unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "TRANSFORMATION");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->model->Ref());
-
-    glad_glUseProgram(Handle::shadersProgram[0]);
+    PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
 void GeometryTest::SetRotation(const Vector3f rotation) noexcept
 {
-    this->transform.rotation = rotation;
-    this->model->Rotation(rotation);
+    //this->transform.rotation = rotation;
+    //glm::mat4 ROT = glm::rotate(glm::quat(rotation.x, rotation.y, rotation.z), 90.0f, glm::vec3());
+    //this->MOD = (ROT * MOD);
 
-    int unifLoc = glad_glGetUniformLocation(Handle::shadersProgram[0], "TRANSFORMATION");
-    glad_glUniformMatrix4fv(unifLoc, 1, false, this->model->Ref());
-
-    glad_glUseProgram(Handle::shadersProgram[0]);
+    PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
-inline void GeometryTest::Free() noexcept
-{
-    delete this->model;
-}
+
+inline void GeometryTest::Destroy() noexcept
+{}

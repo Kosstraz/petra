@@ -15,6 +15,9 @@
 //includes de test
 #include <rendering/Shader.hpp>
 
+// Calcule des temps d'exécutions
+#include <core/Chrono.hpp>
+
 class Core
 {
     /// CONSTRUCTEURS

@@ -14,20 +14,23 @@ public:
         /// CONSTRUCTEURS
 
     Camera(const char* name);
-    ~Camera();
+    ~Camera() override;
 
         /// METHODES
 
     void SetPosition(Vector3f position) noexcept;
-    void SetScale   (Vector3f scale)    noexcept;
-    void SetRotation(Vector3f rotation) noexcept;
+    void LookAt     (Vector3f at)       noexcept;
+
+    virtual void Destroy() noexcept override;
 
     // read only
     READ_ONLY Transform transform;
+    READ_ONLY Vector3f  at       ;
 
 private:
-    Matrix4x4f* projection;
-    Matrix4x4f* view;
+        // glm TEST
+    glm::mat4  VIEW;
+    glm::mat4  PROJ;
 };
 
 #endif

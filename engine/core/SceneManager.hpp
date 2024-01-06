@@ -8,7 +8,9 @@ class SceneManager final : Scene
 {
 public:
     static void LoadScene(const char* sceneName);
-    static Scene* GetCurrentScene()        noexcept;
+    static void SetCurrentScene(Scene* scene);
+
+    static Scene* GetCurrentScene() noexcept;
 
 private:
 };

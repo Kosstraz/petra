@@ -3,11 +3,14 @@
 
 #include <platforms/macros_platform.h>
 
-#define ABSTRACT     ((boolean)0)
-#define NON_ABSTRACT ((boolean)1)
-#define ACTOR        ((boolean)1)
-#define IHM          ((boolean)2)
-#define GUI          ((boolean)2)
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+
+//#define ABSTRACT     ((boolean)0)
+//#define NON_ABSTRACT ((boolean)1)
+//#define ACTOR        ((boolean)1)
+//#define IHM          ((boolean)2)
+//#define GUI          ((boolean)2)
 
 
 //template <boolean abstract_type = ACTOR>
@@ -23,9 +26,7 @@ public:
         /// METHODES
 
     //Réinitialise la mémoire
-    void Destroy()       noexcept;
-    //Libère totalement la mémoire
-    virtual void Free()  noexcept;
+    virtual void Destroy()       noexcept;
 
         /// OVERRIDES METHODES
     inline virtual void Build    (uint32 GL_METHOD_DRAW = 0x88E4) noexcept {}

@@ -14,21 +14,14 @@ PetraO::PetraO(const char* name)
 
 PetraO::~PetraO()
 {
-    Handle::currentScene->RemoveObject(this->name);
-    this->Free();
+    this->Destroy();
 }
 
     /// METHODES
 
 void    PetraO::Destroy() noexcept
 {
-    this->name = nullptr;
-}
-
-void    PetraO::Free() noexcept
-{
-    this->Destroy();
-    delete this->name;
+    Handle::currentScene->RemoveObject(this->name);
 }
 
     /// STATIQUES
