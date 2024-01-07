@@ -1,13 +1,14 @@
-              
 [FRAGMENT_SOURCE]
 {
     #version 330 core
 
-    out vec3 fragColor;
+    out vec4 fragColor;
+
+    uniform vec4 COLOR;
 
     void main()
     {
-        fragColor = vec3(0, 0.5, 0);
+        fragColor = COLOR;
     }
 }
 
