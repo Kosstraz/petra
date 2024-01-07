@@ -8,6 +8,13 @@ namespace Maths
     float deg_to_rad(const float& deg) noexcept;
 
     float rad_to_deg(const float& rad) noexcept;
+
+        // Equivalent à la fonction 'lerp_precise( ... )'
+    float lerp(const float& a, const float& b, const float& t) noexcept;
+
+    float lerp_precise(const float& a, const float& b, const float& t) noexcept;
+    
+    float lerp_imprecise(const float& a, const float& b, const float& t) noexcept;
 };
 
 #endif

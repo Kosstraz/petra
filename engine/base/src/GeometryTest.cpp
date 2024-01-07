@@ -93,34 +93,40 @@ void GeometryTest::BuildCube(uint32 GL_METHOD_DRAW) noexcept
 
     constexpr float vertices[12 * 6] = {
             // Avant
-        //-1.0f, -1.0f,  0.0f,
-         //1.0f, -1.0f,  0.0f,
-        //-1.0f,  1.0f,  0.0f,
-         //1.0f,  1.0f,  0.0f,
+        -1.0f, -1.0f,  0.0f,
+         1.0f, -1.0f,  0.0f,
+        -1.0f,  1.0f,  0.0f,
+         1.0f,  1.0f,  0.0f,
 
             // Droite
-         //1.0f, -1.0f,  0.0f,
-         //1.0f, -1.0f, -1.0f,
-         //1.0f,  1.0f,  0.0f,
-         //1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f,  0.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f,  0.0f,
+         1.0f,  1.0f, -1.0f,
 
             // Bot
-        //-1.0f, -1.0f, -1.0f,
-        // 1.0f, -1.0f, -1.0f,
-        //-1.0f, -1.0f,  0.0f,
-        // 1.0f, -1.0f,  0.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  0.0f,
+         1.0f, -1.0f,  0.0f,
 
             // Top
-        //-1.0f,  1.0f,  0.0f,
-        // 1.0f,  1.0f,  0.0f,
-        //-1.0f,  1.0f, -1.0f,
-        // 1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  0.0f,
+         1.0f,  1.0f,  0.0f,
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
 
             // Left
         -1.0f, -1.0f, -1.0f,
         -1.0f, -1.0f,  0.0f,
         -1.0f,  1.0f, -1.0f,
         -1.0f,  1.0f,  0.0f,
+
+            // Back
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f
     };
 
         // GESTION DONNEES
@@ -134,7 +140,7 @@ void GeometryTest::BuildCube(uint32 GL_METHOD_DRAW) noexcept
     PushMat(this->MOD, "TRANSFORMATION");
 
     this->GL_GEOMETRY    = GL_TRIANGLE_STRIP;
-    this->verticesToDraw = (4 * 1);
+    this->verticesToDraw = (4 * 6);
 }
 
 
@@ -163,7 +169,9 @@ void GeometryTest::Build(uint32 GL_METHOD_DRAW) noexcept
 
 void GeometryTest::DrawBuild() noexcept
 {
-    glUseProgram(Handle::shadersProgram[0]);
+    PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
+    int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "COLOR");
+    glUniform4f(unifLoc, this->color.x, this->color.y, this->color.z, 1.0f);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
@@ -174,29 +182,38 @@ void GeometryTest::DrawBuild() noexcept
 
 
 
-void GeometryTest::SetPosition(const Vector3f position) noexcept
+void GeometryTest::SetPosition(const Vector3f& position) noexcept
 {
     this->transform.position = position;
-    this->MOD = glm::translate(this->MOD, glm::vec3(position.x, position.y, position.z));
+    this->MOD = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, position.z));
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
-void GeometryTest::SetScale(const Vector3f scale) noexcept
+void GeometryTest::SetScale(const Vector3f& scale) noexcept
 {
     this->transform.scale = scale;
-    this->MOD = glm::scale(this->MOD, glm::vec3(scale.x, scale.y, scale.z));
+    this->MOD = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z));
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
-void GeometryTest::SetRotation(const Vector3f rotation) noexcept
+void GeometryTest::SetRotation(const Vector3f& rotation) noexcept
 {
     //this->transform.rotation = rotation;
     //glm::mat4 ROT = glm::rotate(glm::quat(rotation.x, rotation.y, rotation.z), 90.0f, glm::vec3());
     //this->MOD = (ROT * MOD);
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
+}
+
+void GeometryTest::SetColor(const Vector3f color) noexcept
+{
+    this->color = color;
+
+    glUseProgram(Handle::shadersProgram[0]);
+    int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "COLOR");
+    glUniform4f(unifLoc, color.x, color.y, color.z, 1.0f);
 }
 
 

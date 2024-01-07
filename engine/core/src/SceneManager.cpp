@@ -10,8 +10,6 @@ void SceneManager::LoadScene(const char* name)
     }
     else
         Handle::currentScene = ite->second;
-
-    delete name;
 }
 
 void SceneManager::SetCurrentScene(Scene* scene)

@@ -71,7 +71,7 @@ void Scene::Clear()
 void Scene::LoadThisScene() const noexcept
 {
     for (const std::pair<const char*, PetraO*>& objects : this->all_objects_in_scene)
-        objects.second->Build(0x88E8); // GL_DYNAMIC_DRAW
+        objects.second->Build(0x88E0); // GL_STREAM_DRAW
 }
 
 void Scene::DrawThisScene() const noexcept

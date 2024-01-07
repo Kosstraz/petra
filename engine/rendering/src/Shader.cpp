@@ -38,10 +38,6 @@ Shader::Shader(const char* VFS_filename, const char* fragShader, const char* ver
     ReadFile(fragShader, &this->fragShader,   LARGE_FILE_SIZE);
     ReadFile(vertShader, &this->vertShader,   LARGE_FILE_SIZE);
     DEBUG(SHADER_LOG, "Fichier .glsl lu avec succes, avec une taille maximale de 5096 bits.");
-    
-    delete VFS_filename;
-    delete fragShader;
-    delete vertShader;
 }
 
 Shader::~Shader()

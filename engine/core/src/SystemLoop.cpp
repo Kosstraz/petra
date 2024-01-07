@@ -13,6 +13,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         glfwSetWindowShouldClose(window, true);
 }
 
+void window_size_callback(GLFWwindow* window, int width, int height)
+{
+    Handle::window_size = {width, height};
+
+    Camera* get = SceneManager::GetCurrentScene()->FindACTOR<Camera>("mainCamera");
+    get->Perspective(width, height);
+}
+
 void Core::Loop()
 {
         // Debugage
@@ -22,12 +30,13 @@ void Core::Loop()
 
         // Fenêtre et paramètres OpenGL
     GLFWwindow* context = glfwGetCurrentContext();
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glEnable(GL_MULTISAMPLE);
 
         // Callback
-    glfwSetKeyCallback(context, key_callback);
+    //glfwSetKeyCallback(context, key_callback);
+    glfwSetWindowSizeCallback(context, window_size_callback);
 
         // Scène principale
     Scene* mainLevel     = new Scene();
@@ -46,10 +55,14 @@ void Core::Loop()
 
 
         // Modifications de la Personnalisation
+    geo->SetPosition(Vector3f(0.f, 0.f, 0.f));
+    geo->SetColor(Vector3f(1.f, 0.2f, 0.8f));
 
+    cam->LookAt(geo->transform.position);
 
-
-
+    float speed = 0.01f;
+    float f = 0.f;
+    float r = 0.f;
 
     c.Stop();
     EXEC_TIME(c.GetTime())
@@ -57,16 +70,25 @@ void Core::Loop()
     while (!glfwWindowShouldClose(context))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+
+    
 
 
+        
+        if (glfwGetKey(context, 'A') == GLFW_PRESS)
+            r -= speed;
+        if (glfwGetKey(context, 'D') == GLFW_PRESS)
+            r += speed;
+
+        if (glfwGetKey(context, 'W') == GLFW_PRESS)
+            f -= speed;
+        if (glfwGetKey(context, 'S') == GLFW_PRESS)
+            f += speed;
 
 
-
-
-
-
-
+        geo->SetPosition(Vector3f(r, 0.f, f));
+        //geo->transform.position.Debug();
 
 
 

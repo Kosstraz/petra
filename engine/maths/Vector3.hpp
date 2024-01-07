@@ -2,6 +2,7 @@
 #define  VECTOR3_HPP
 
 #include <cmath>
+#include <maths/Maths.hpp>
 
 #define BOOL unsigned short
 
@@ -32,7 +33,7 @@ public:
     inline const Vector3<T> Oppose (const Vector3<T>& otherCpy)                          const noexcept;
 
     constexpr void Debug() const noexcept 
-    { printf("x : %f, y : %f, z : %f", this->x, this->y, this->z); }
+    { printf("x : %f, y : %f, z : %f\n", this->x, this->y, this->z); }
 
         //  STATIQUES
 
@@ -42,6 +43,8 @@ public:
     inline static const Vector3<T> Magnitude(const Vector3<T>& acpy)                                                 noexcept;
     inline static const T Norm(const Vector3<T>& aCpy)                                                               noexcept;
     inline static const Vector3<T> Oppose (const Vector3<T>& aCpy, const Vector3<T>& bCpy)                           noexcept;
+
+    inline static const Vector3<T> Lerp (const Vector3<T>& aCpy, const Vector3<T>& bCpy, const float& t) noexcept;
 
         //  OPERATORS
 

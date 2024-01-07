@@ -152,6 +152,14 @@ inline const Vector3<T> Vector3<T>::Oppose(const Vector3<T>& aCpy, const Vector3
     return (-aCpy - bCpy);
 }
 
+template <typename T>
+inline const Vector3<T> Vector3<T>::Lerp(const Vector3<T>& aCpy, const Vector3<T>& bCpy, const float& t) noexcept
+{
+    return Vector3<T>(Maths::lerp_precise(aCpy.x, bCpy.x, t),
+                      Maths::lerp_precise(aCpy.y, bCpy.y, t),
+                      Maths::lerp_precise(aCpy.z, bCpy.z, t));
+}
+
     // OPERATORS
 
 template <typename T>
@@ -204,11 +212,11 @@ inline const Vector3<T> Vector3<T>::operator+(const Vector3<T>& aCpy) const noex
 
 template <typename T>
 inline const Vector3<T> Vector3<T>::operator+(const T&& x) const noexcept
-{   return (Vector3<T>(this->x + x,  this->y + x, this->z + x.z)); }
+{   return (Vector3<T>(this->x + x,  this->y + x, this->z + x)); }
 
 template <typename T>
 inline const Vector3<T> Vector3<T>::operator+(const T& x) const noexcept
-{   return (Vector3<T>(this->x + x,  this->y + x, this->z + x.z)); }
+{   return (Vector3<T>(this->x + x,  this->y + x, this->z + x)); }
 
 template <typename T>
 inline const void Vector3<T>::operator+=(const Vector3<T>& aCpy) noexcept

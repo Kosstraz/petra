@@ -19,6 +19,7 @@ public:
         /// METHODES
 
     void SetPosition(Vector3f position) noexcept;
+    void Perspective(int window_width, int window_height) noexcept;
     void LookAt     (Vector3f at)       noexcept;
 
     virtual void Destroy() noexcept override;

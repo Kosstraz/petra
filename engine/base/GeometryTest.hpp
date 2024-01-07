@@ -33,20 +33,23 @@ public:
     virtual void Build(uint32 GL_METHOD_DRAW = GL_STATIC_DRAW) noexcept override;
     virtual void DrawBuild()                                   noexcept override;
 
-    void SetPosition(const Vector3f position) noexcept;
-    void SetScale   (const Vector3f scale   ) noexcept;
-    void SetRotation(const Vector3f rotation) noexcept;
+    void SetPosition(const Vector3f& position) noexcept;
+    void SetScale   (const Vector3f& scale   ) noexcept;
+    void SetRotation(const Vector3f& rotation) noexcept;
+
+    void SetColor(const Vector3f color) noexcept;
 
     virtual void Destroy() noexcept override;
 
+    READ_ONLY Transform   transform;
+    READ_ONLY Vector3f    color;
 private:
-    uint8 what_build;
-    uint GL_GEOMETRY;
-    uint vertexArrayID;
-    uint vertexBufferID;
-    uchar verticesToDraw;
+    uint8   what_build;
+    uint    GL_GEOMETRY;
+    uint    vertexArrayID;
+    uint    vertexBufferID;
+    uchar   verticesToDraw;
 
-    Transform   transform;
     glm::mat4   MOD;
 };
 
