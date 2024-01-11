@@ -40,7 +40,7 @@ int8 bmp_header(const char* file_name, BMP_infos* infos)
     return (0);
 }
 
-int8 bmp_datas_24bits(const char* file_name, void** buffer, BMP_infos* infos)
+int8 bmp_datas_24bits(const char* file_name, unsigned char** buffer, BMP_infos* infos)
 {
         // ouverture
     FILE* file = fopen(file_name, "rb");
@@ -56,9 +56,9 @@ int8 bmp_datas_24bits(const char* file_name, void** buffer, BMP_infos* infos)
     }
 
         // lecture
-    BMP_24bits_datas* datas = (BMP_24bits_datas*)malloc(infos->imageSize);
+    unsigned char* datas = (unsigned char*)malloc(infos->imageSize);
     check = fread(datas, infos->imageSize, 1, file);
-    if (check == -1 || datas == ((BMP_24bits_datas*)0))
+    if (check == -1 || datas == ((unsigned char*)0))
     {
         fclose(file);
         free(datas);
@@ -77,7 +77,7 @@ int8 bmp_datas_24bits(const char* file_name, void** buffer, BMP_infos* infos)
     return (0);
 }
 
-int8 bmp_datas_32bits(const char* file_name, void** buffer, BMP_infos* infos)
+int8 bmp_datas_32bits(const char* file_name, unsigned char** buffer, BMP_infos* infos)
 {
         // ouverture
     FILE* file = fopen(file_name, "rb");
@@ -93,28 +93,32 @@ int8 bmp_datas_32bits(const char* file_name, void** buffer, BMP_infos* infos)
     }
 
         // lecture
-    BMP_32bits_datas* datas = (BMP_32bits_datas*)malloc(infos->imageSize);
+    //BMP_32bits_datas* datas = (BMP_32bits_datas*)malloc(infos->imageSize);
+    unsigned char* datas = (unsigned char*)malloc(infos->imageSize * sizeof(unsigned char));
     check = fread(datas, infos->imageSize, 1, file);
-    if (check == -1 || datas == ((BMP_32bits_datas*)0))
+    if (check == -1 || datas == ((unsigned char*)0))
     {
         fclose(file);
         free(datas);
         return BMP_ERROR;
     }
+    printf("r: %d, g: %d, b: %d, a: %d\n", datas[475000], datas[475001], datas[475002], datas[475003]);
 
         // attribution
     *buffer = datas;
 
+    //printf("r: %d, g: %d, b: %d, a: %d\n", buffer[0 + 475000], buffer[1 + 475000], buffer[2 + 475000], buffer[3 + 475000]);
+
         // fermeture
     check = fclose(file);
-    free(datas);
+    //free(datas);
     if (check == -1)
         return NOT_CLOSED;
 
     return (0);
 }
 
-int8 bmp_datas(const char* file_name, void** buffer, BMP_infos* infos)
+int8 bmp_datas(const char* file_name, unsigned char** buffer, BMP_infos* infos)
 {
     if      (infos->bitsPerPixel == 32)
         return (bmp_datas_32bits(file_name, buffer, infos));
@@ -124,24 +128,18 @@ int8 bmp_datas(const char* file_name, void** buffer, BMP_infos* infos)
         return (BMP_ERROR);
 }
 
-BMP_infos bmp_load(const char* file_name, void** buffer)
+BMP_infos bmp_load(const char* file_name, unsigned char** buffer)
 {
     BMP_infos infos;
     init_BMP_infos(&infos);
 
-    int8 check = bmp_header(file_name, &infos);
-    if (check < 0)
-    {
-        infos.errorCode = check;
+    infos.errorCode = bmp_header(file_name, &infos);
+    if (infos.errorCode < 0)
         return infos;
-    }
 
-    check = bmp_datas(file_name, buffer, &infos);
-    if (check < 0)
-    {
-        infos.errorCode = check;
+    infos.errorCode = bmp_datas(file_name, buffer, &infos);
+    if (infos.errorCode < 0)
         return infos;
-    }
 
     return infos;
 }

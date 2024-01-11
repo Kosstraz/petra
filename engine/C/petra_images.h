@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "platforms/errors_macros.hpp"
 #include "platforms/types_macros.hpp"
@@ -57,24 +58,24 @@
     }   BMP_infos;
         // BGR methode
     typedef struct BMP_24bits_datas {
-        int8 b;
-        int8 g;
-        int8 r;
+        uint8 b;
+        uint8 g;
+        uint8 r;
     }   BMP_24bits_datas;
         // BGRA methode
     typedef struct BMP_32bits_datas {
-        int8 b;
-        int8 g;
-        int8 r;
-        int8 a;
+        uint8 b;
+        uint8 g;
+        uint8 r;
+        uint8 a;
     }   BMP_32bits_datas;
     #pragma pack(pop)
 
 int8        bmp_header      (const char* file_name, BMP_infos* infos);
-int8        bmp_datas_24bits(const char* file_name, void** buffer, BMP_infos* infos);
-int8        bmp_datas_32bits(const char* file_name, void** buffer, BMP_infos* infos);
-int8        bmp_datas       (const char* file_name, void** buffer, BMP_infos* infos);
-BMP_infos   bmp_load        (const char* file_name, void** buffer);
+int8        bmp_datas_24bits(const char* file_name, unsigned char** buffer, BMP_infos* infos);
+int8        bmp_datas_32bits(const char* file_name, unsigned char** buffer, BMP_infos* infos);
+int8        bmp_datas       (const char* file_name, unsigned char** buffer, BMP_infos* infos);
+BMP_infos   bmp_load        (const char* file_name, unsigned char** buffer);
 
 void init_BMP_infos(BMP_infos* infos);
 #endif  // !BMP
