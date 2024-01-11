@@ -6,6 +6,8 @@
 #include <C/ConvertFullShadertoGLSL.h>
 #include <platforms/logs_macros.hpp>
 
+#define PRINCIPAL_SHADER_SIZE    FILE_SIZE_1KO
+
 class Shader final
 {
 public:

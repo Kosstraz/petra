@@ -8,7 +8,7 @@ Shader::Shader(const char* VFS_filename)
     this->fragShader = ((char*)0);
     this->vertShader = ((char*)0);
     
-    ConvertShaderExtension_GLSL(VFS_filename, LARGE_FILE_SIZE);
+    ConvertShaderExtension_GLSL(VFS_filename, PRINCIPAL_SHADER_SIZE);
     DEBUG(SHADER_LOG, "Fichier .vfs.glsl converti avec succes en .frag.glsl et en .vert.glsl.");
 
     delete VFS_filename;
@@ -20,8 +20,8 @@ Shader::Shader(const char* fragShader, const char* vertShader)
     this->fragShader = ((char*)0);
     this->vertShader = ((char*)0);
     
-    ReadFile(fragShader, &this->fragShader, LARGE_FILE_SIZE);
-    ReadFile(vertShader, &this->vertShader, LARGE_FILE_SIZE);
+    ReadFile(fragShader, &this->fragShader, PRINCIPAL_SHADER_SIZE);
+    ReadFile(vertShader, &this->vertShader, PRINCIPAL_SHADER_SIZE);
     DEBUG(SHADER_LOG, "Fichier .glsl lu avec succes, avec une taille maximale de 5096 bits.");
     
     delete fragShader;
@@ -34,9 +34,9 @@ Shader::Shader(const char* VFS_filename, const char* fragShader, const char* ver
     this->fragShader = ((char*)0);
     this->vertShader = ((char*)0);
     
-    ConvertShaderExtension_GLSL(VFS_filename, LARGE_FILE_SIZE);
-    ReadFile(fragShader, &this->fragShader,   LARGE_FILE_SIZE);
-    ReadFile(vertShader, &this->vertShader,   LARGE_FILE_SIZE);
+    ConvertShaderExtension_GLSL(VFS_filename, PRINCIPAL_SHADER_SIZE);
+    ReadFile(fragShader, &this->fragShader,   PRINCIPAL_SHADER_SIZE);
+    ReadFile(vertShader, &this->vertShader,   PRINCIPAL_SHADER_SIZE);
     DEBUG(SHADER_LOG, "Fichier .glsl lu avec succes, avec une taille maximale de 5096 bits.");
 }
 
@@ -53,13 +53,13 @@ const char* Shader::GetVertex() const noexcept
 
 void Shader::Set_frag(const char* frag) noexcept
 {
-    ReadFile(frag, &this->fragShader, LARGE_FILE_SIZE);
+    ReadFile(frag, &this->fragShader, PRINCIPAL_SHADER_SIZE);
     delete frag;
 }
 
 void Shader::Set_vert(const char* vert) noexcept
 {
-    ReadFile(vert, &this->vertShader, LARGE_FILE_SIZE);
+    ReadFile(vert, &this->vertShader, PRINCIPAL_SHADER_SIZE);
     delete vert;
 }
 

@@ -7,10 +7,11 @@
 
 #define EXEC_TIME(value)  {printf("--- Temps d'execution --- >> %I64d ms\n", value); printf("\n");}
 
-#define TEST_LOG   ("[TEST      LOG] ")
-#define OGL_LOG    ("[OpenGL    LOG] ")
-#define CORE_LOG   ("[CORE      LOG] ")
-#define SCENE_LOG  ("[SCENE     LOG] ")
-#define SHADER_LOG ("[SHADER    LOG] ")
-#define OBJECT_LOG ("[OBJECT    LOG] ")
-#define MATHS_LOG  ("[MATHS     LOG] ")
+#define TEST_LOG    ("[TEST      LOG] ")
+#define OGL_LOG     ("[OpenGL    LOG] ")
+#define CORE_LOG    ("[CORE      LOG] ")
+#define SCENE_LOG   ("[SCENE     LOG] ")
+#define SHADER_LOG  ("[SHADER    LOG] ")
+#define TEXTURE_LOG ("[TEXTURE   LOG] ")
+#define OBJECT_LOG  ("[OBJECT    LOG] ")
+#define MATHS_LOG   ("[MATHS     LOG] ")

@@ -8,7 +8,9 @@ typedef bool           int16b;
 
 typedef char           int8  ;
 typedef short          int16 ;
-typedef long           int32 ;
+typedef int            int32 ;
+typedef long           int64 ;
+typedef long long      int128;
 
 typedef unsigned char  uint8 ;
 typedef unsigned short uint16;

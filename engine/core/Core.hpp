@@ -30,7 +30,7 @@ public:
 
     static void CompileAllShaders();
 
-    static void Loop();
+    static int  Loop();
 
     static void Terminate();
 

@@ -1,9 +1,5 @@
 #pragma once
 
-#define GLFWINIT_FAILED       (-2)
-#define GLADLOADER_FAILED     (-3)
-#define WINDOWNnullptr_FAILED (-4)
-
 // L'utilisation de __fastcall se fait lorsque nous voulons passer la mémoire dans les registres du CPU plutôt que dans la pile
 // Cela peut s'avérer très utile pour la rapidité de compilation du code si, et seulement si, il n'y pas trop de paramètres et que ceux-ci ne sont pas des objets trop complexes
 // Peut vouloir dire que les deux premiers paramètres seront stockés dans les registres tandis que les autres dans la pile

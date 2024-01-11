@@ -2,13 +2,15 @@
 #define PETRA_CAMERA_HPP
 
 #include <glad/glad.h>
+#define GLFW_DLL
+#include <glfw-3.3.9/glfw3.h>
 
 #include <base/PetraO.hpp>
 #include <core/Handle.hpp>
 #include <maths/Matrix.hpp>
 #include <C/Transform.h>
 
-class Camera final : public PetraO
+class Camera : public PetraO
 {
 public:
         /// CONSTRUCTEURS

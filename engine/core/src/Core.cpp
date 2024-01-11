@@ -14,10 +14,10 @@ int Core::InitEngine()
         return (GLFWINIT_FAILED);
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    //glfwWindowHint(GLFW_SAMPLES, 4);
     
     //glfwWindowHint(GLFW_REFRESH_RATE, 240);
 
@@ -25,7 +25,7 @@ int Core::InitEngine()
     if (!window)
     {
         c.Stop();
-        EXEC_TIME(c.GetTime());
+        EXEC_TIME(c.GetTime())
 
         glfwTerminate();
         return (WINDOWNnullptr_FAILED);

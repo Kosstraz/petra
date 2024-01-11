@@ -1,8 +1,9 @@
 #include "../ConvertFullShadertoGLSL.h"
 
-void ConvertShaderExtension_GLSL(const char* VFS_fileName, unsigned int MAX_FILE_SIZE)
+int ConvertShaderExtension_GLSL(const char* VFS_fileName, unsigned int MAX_FILE_SIZE)
 {
     /// Initialisation des variables
+    int errorCode;
     unsigned int VFS_fileNameSize = 0;
     char* frag_temp = nullptrc;
     char* vert_temp = nullptrc;
@@ -16,7 +17,9 @@ void ConvertShaderExtension_GLSL(const char* VFS_fileName, unsigned int MAX_FILE
     char*  vert_content = nullptrc;
 
         // Lecture du fichier
-    ReadFile(VFS_fileName, &VFS_content, MAX_FILE_SIZE);
+    errorCode = ReadFile(VFS_fileName, &VFS_content, MAX_FILE_SIZE);
+    if (errorCode < 0)
+        return_error("in 'ConvertShaderExtension_GLSL()' error with 'ReadFile' (l.20)", errorCode)
 
     /// Parçage
     _parcingVFS(VFS_content, &frag_content, "FRAGMENT_SOURCE", MAX_FILE_SIZE);
@@ -53,8 +56,11 @@ void ConvertShaderExtension_GLSL(const char* VFS_fileName, unsigned int MAX_FILE
         vert_fileName[i] = glsl_temp[i - (VFS_fileNameSize - 3)];
 
     /// Création des fichiers et écriture
-    WriteInFile(frag_fileName, frag_content, 0);
-    WriteInFile(vert_fileName, vert_content, 0);
+    errorCode = WriteInFile(frag_fileName, frag_content, 0);
+    if (errorCode < 0)  return_error("in 'ConvertShaderExtension_GLSL()' error with 'WriteInFile' (l.59)", errorCode)
+
+    errorCode = WriteInFile(vert_fileName, vert_content, 0);
+    if (errorCode < 0)  return_error("in 'ConvertShaderExtension_GLSL()' error with 'WriteInFile' (l.63)", errorCode)
 
     /// Désallocation de la mémoire
     free(frag_temp);
@@ -67,6 +73,8 @@ void ConvertShaderExtension_GLSL(const char* VFS_fileName, unsigned int MAX_FILE
     free(VFS_content) ;
     free(frag_content);
     free(vert_content);
+
+    return (0);
 }
 
 
