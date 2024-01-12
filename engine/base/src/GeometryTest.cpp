@@ -12,10 +12,7 @@
 GeometryTest::GeometryTest(const char* name) : PetraO(name), GL_GEOMETRY(0), vertexArrayID(0), vertexBufferID(0), verticesToDraw(0)
 {
     this->transform.position = Vector3f(0.f, 0.f, 0.f);
-    this->MOD = glm::mat4(1.0f);
-    
-    //for (uint i = 0; i < 16; i++)
-        //std::cout << *(&this->model.datas[0] + i) << std::endl;
+    this->MOD                = glm::mat4(1.0f);
 
     this->what_build = 0;
 }
@@ -91,7 +88,8 @@ void GeometryTest::BuildCube(uint32 GL_METHOD_DRAW) noexcept
 {
     glUseProgram(Handle::shadersProgram[0]);
 
-    constexpr float vertices[12 * 6] = {
+    constexpr uint8 vertexSize = (12 * 6);
+    constexpr float vertices[vertexSize] = {
             // Avant
         -1.0f, -1.0f,  0.0f,
          1.0f, -1.0f,  0.0f,
@@ -146,9 +144,6 @@ void GeometryTest::BuildCube(uint32 GL_METHOD_DRAW) noexcept
 
 
 
-
-
-
 void GeometryTest::Build(uint32 GL_METHOD_DRAW) noexcept
 {
     switch (this->what_build)
@@ -178,6 +173,53 @@ void GeometryTest::DrawBuild() noexcept
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ((const void*)0));
     glDrawArrays(this->GL_GEOMETRY, 0, this->verticesToDraw);
     glDisableVertexAttribArray(0);
+}
+
+void GeometryTest::PutTexture(uint32 textureID) noexcept
+{
+    /*constexpr float g_uv_buffer_data[vertexSize] = {
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f  
+    };
+
+     // GESTION TEXTURE
+    glEnableVertexAttribArray(1);
+    glGenBuffers(1, &this->uvsBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, this->uvsBufferID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_METHOD_DRAW);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    
+    texture.BindToShader();*/
 }
 
 

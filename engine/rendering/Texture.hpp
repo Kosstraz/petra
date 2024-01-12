@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 
+#include <core/Handle.hpp>
 #include <platforms/logs_macros.hpp>
 
 #define IMAGES_BMP
@@ -15,12 +16,13 @@ public:
    ~Texture() noexcept;
 
     void CreateTexture(const char* image_dir) noexcept;
+    void BindToShader () const noexcept;
 
-    unsigned int width, height;
+    uint TakeTexture() const noexcept;
 
+    uint width, height;
 private:
-    unsigned int bytesSize;
-    unsigned int textureID;
+    uint textureID;
 };
 
 #endif

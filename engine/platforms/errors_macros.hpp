@@ -2,6 +2,8 @@
 
 #define return_error(msg, intLog)  { printf(msg); printf("\nCode erreur : %d\n", intLog); return(intLog); }
 
+#define  JSON_BAD_OPENNING      -(0x001)
+
 #define  GLFWINIT_FAILED        -(0x002)
 #define  GLADLOADER_FAILED      -(0x003)
 #define  WINDOWNnullptr_FAILED  -(0x004)

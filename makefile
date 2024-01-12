@@ -1,7 +1,7 @@
 CXX      = g++
 
 C_SRCS        = engine/C/src/*.c
-CXX_SRCS      = main.cpp 	engine/base/src/*.cpp	engine/core/src/*.cpp	engine/maths/src/*.cpp	engine/rendering/src/*.cpp
+CXX_SRCS      = main.cpp 	engine/base/src/*.cpp	engine/core/src/*.cpp	engine/maths/src/*.cpp	engine/rendering/src/*.cpp	engine/utils/src/*.c	engine/utils/src/*.cpp
 
 STDCXX   = -std=c++17
 

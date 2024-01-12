@@ -5,6 +5,8 @@
 #define GLFW_DLL
 #include <glfw-3.3.9/glfw3.h>
 
+#include <rendering/Texture.hpp>
+
 #include <base/PetraO.hpp>
 #include <C/Transform.h>
 #include <maths/Matrix.hpp>
@@ -32,6 +34,7 @@ public:
 
     virtual void Build(uint32 GL_METHOD_DRAW = GL_STATIC_DRAW) noexcept override;
     virtual void DrawBuild()                                   noexcept override;
+    void PutTexture(uint32 textureID) noexcept;
 
     void SetPosition(const Vector3f& position) noexcept;
     void SetScale   (const Vector3f& scale   ) noexcept;
@@ -46,6 +49,7 @@ public:
 private:
     uint8   what_build;
     uint    GL_GEOMETRY;
+    uint    uvsBufferID;
     uint    vertexArrayID;
     uint    vertexBufferID;
     uchar   verticesToDraw;

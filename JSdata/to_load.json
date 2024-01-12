@@ -1,0 +1,8 @@
+{
+    "textures_to_load": [
+        "resources/images/butezMoiCetteMerde.bmp"
+    ],
+    "vfs_to_load": [
+        "GLSL/LitShader.vfs.glsl"
+    ]
+}

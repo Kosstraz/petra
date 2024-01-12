@@ -17,8 +17,7 @@ int Core::InitEngine()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_SAMPLES, 4);
-    
+    glfwWindowHint(GLFW_SAMPLES, 4);
     //glfwWindowHint(GLFW_REFRESH_RATE, 240);
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "Fenêtre", 0, 0);
@@ -46,34 +45,57 @@ int Core::InitEngine()
     return (0);
 }
 
-void Core::CompileAllShaders()
+int Core::JSONLoader(ArrayForJSON* jsonLoaderInfos)
+{
+    return (json_open("JSdata/to_load.json", jsonLoaderInfos));
+}
+
+void Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
 {
     DEBUG(SHADER_LOG, "Compilation de tous les shaders...");
-    Chrono c;
-    c.Start();
-
-        // Init handle struct
+    Chrono c; c.Start();
     Handle handle;
-    
-        // Init all shaders availlables
-    Shader* shader1 = new Shader("GLSL/LitShader.vfs.glsl");
-    shader1->Set_frag_set_vert("GLSL/LitShader.frag.glsl", "GLSL/LitShader.vert.glsl");
-    shader1->CompileShader();
-    
-        // Finish the shaders' programs attribution
-    handle.shadersProgram[0] = shader1->programID;
-    delete shader1;
 
-        // Use the current shader (for the cam)
-    glUseProgram(handle.shadersProgram[0]);
+    for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); i++)
+    {
+        if (strcmp(i->first, "vfs_to_load") == 0)
+        {
+            Shader shader = Shader(i->second);
+            shader.Guess_frag(i->second);
+            shader.Guess_vert(i->second);
+            shader.CompileShader();
+
+            handle.shadersProgram[0] = shader.programID;
+        }
+    }
 
     c.Stop();
     EXEC_TIME(c.GetTime());
 }
 
-void Core::Terminate()
+void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
 {
-    DEBUG(CORE_LOG, "Terminate memory");
-    glfwDestroyWindow(glfwGetCurrentContext());
-    glfwTerminate();
+    DEBUG(TEXTURE_LOG, "Création de toutes les textures...");
+    Chrono c; c.Start();
+
+    for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); i++)
+        if (strcmp(i->first, "textures_to_load") == 0)
+        {
+            Texture texture = Texture(i->second);
+            
+        }
+
+    c.Stop();
+    EXEC_TIME(c.GetTime());
+}
+
+void Core::FreeJSON(ArrayForJSON* jsonLoaderInfos)
+{
+    for (ArrayForJSON::iterator i = jsonLoaderInfos->begin(); i != jsonLoaderInfos->end(); i++)
+    {
+        free(i->second);
+        free(i->first);
+    }
+    jsonLoaderInfos->clear();
+    delete (jsonLoaderInfos);
 }

@@ -7,7 +7,25 @@
 
 #include "platforms/errors_macros.hpp"
 #include "platforms/types_macros.hpp"
-#define IMAGES_ALL
+
+    /*//////////////*/
+    //  FONDAMENTAL //
+    /*//////////////*/
+
+    typedef struct img_infos {
+        int8   errorCode;
+        uint32 datasOffset;
+        uint32 fileSize;
+        int32  width;
+        int32  height;
+        uint16 bitsPerPixel;
+        uint32 compression;
+        uint32 imageSize;
+
+    }   img_infos;
+
+void init_img_infos(img_infos* infos);
+
 
     /*////////////*/
     //  FONCTIONS //
@@ -18,8 +36,6 @@
     #define IMAGES_BMP
     #define IMAGES_PNG
 #endif  // !ALL
-
-
 
     // Toutes les fonctions et structures liées aux fichiers images .bmp
 #ifdef  IMAGES_BMP
@@ -45,45 +61,20 @@
         uint32 NbImportantColors;
 
     }   BMP_header;
-    typedef struct BMP_infos {
-        int8   errorCode;
-        uint32 datasOffset;
-        uint32 fileSize;
-        int32  width;
-        int32  height;
-        uint16 bitsPerPixel;
-        uint32 compression;
-        uint32 imageSize;
-
-    }   BMP_infos;
-        // BGR methode
-    typedef struct BMP_24bits_datas {
-        uint8 b;
-        uint8 g;
-        uint8 r;
-    }   BMP_24bits_datas;
-        // BGRA methode
-    typedef struct BMP_32bits_datas {
-        uint8 b;
-        uint8 g;
-        uint8 r;
-        uint8 a;
-    }   BMP_32bits_datas;
     #pragma pack(pop)
-
-int8        bmp_header      (const char* file_name, BMP_infos* infos);
-int8        bmp_datas_24bits(const char* file_name, unsigned char** buffer, BMP_infos* infos);
-int8        bmp_datas_32bits(const char* file_name, unsigned char** buffer, BMP_infos* infos);
-int8        bmp_datas       (const char* file_name, unsigned char** buffer, BMP_infos* infos);
-BMP_infos   bmp_load        (const char* file_name, unsigned char** buffer);
-
-void init_BMP_infos(BMP_infos* infos);
+int8        bmp_header  (const char* file_name,                 img_infos* infos);
+int8        bmp_datas   (const char* file_name, uint8** buffer, img_infos* infos);
+img_infos   bmp_load    (const char* file_name, uint8** buffer                  );
 #endif  // !BMP
 
 
 
 
 #ifdef  IMAGES_PNG
+int8        png_header  (const char* file_name,                  img_infos* infos);
+int8        png_datas   (const char* file_name, uint8** buffer,  img_infos* infos);
+img_infos   png_load    (const char* file_name, uint8** buffer                   );
 #endif  // !PNG
+
 
 #endif  // PETRA_IMAGES

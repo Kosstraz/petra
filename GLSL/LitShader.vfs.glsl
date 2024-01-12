@@ -15,7 +15,7 @@
 
     void main()
     {
-        fragColor = COLOR;//texture(TEXTURE, UVs).rgb;
+        fragColor = COLOR;//vec4(texture(TEXTURE, UVs).rgb, 1.0);
     }
 }
 

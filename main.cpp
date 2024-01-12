@@ -2,15 +2,22 @@
 
 int main()
 {
+        // Initialisation du moteur
     int errorCode = Core::InitEngine();
     if (errorCode < 0)      return_error("Initialisation du moteur échouée", errorCode)
 
-    Core::CompileAllShaders();
+        // Charge les informations contenus dans le JSON "to_load.json" et les utilise pas la suite
+    ArrayForJSON jsonLoader = ArrayForJSON();
+    if (Core::JSONLoader(&jsonLoader) < 0)
+        return JSON_BAD_OPENNING;
+        
+    Core::CompileAllShaders         (jsonLoader );
+    //Core::CreateAllImportedTextures (jsonLoader );
+    Core::FreeJSON                  (&jsonLoader);
 
-    errorCode = Core::Loop();
-    if (errorCode < 0)      return_error("Erreur autour de la lecture de la boucle", errorCode)
+        // Boucle principale
+    Core::Loop();
 
-    Core::Terminate();
     return (0);
 }
 

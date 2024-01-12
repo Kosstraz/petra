@@ -23,7 +23,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     get->Perspective(width, height);
 }
 
-int Core::Loop()
+void Core::Loop()
 {
         // Debugage
     DEBUG(CORE_LOG, "Lancement de l'execution principale du programme.")
@@ -48,6 +48,7 @@ int Core::Loop()
     Camera        cam    = Camera("mainCamera");
     GeometryTest* player = new GeometryTest("player");
     player->WhatBuild(DRAW_CUBE);
+    player->PutTexture(0);
 
         // Charge la scène et tous ces éléments
     SceneManager::GetCurrentScene()->LoadThisScene();
@@ -55,8 +56,6 @@ int Core::Loop()
         // Modifications de la Personnalisation
     player->SetPosition(Vector3f(0.f, 1.f, 0.f));
     player->SetColor(Vector3f(1.f, 0.f, 1.f));
-
-    Texture* texture = new Texture("resources/images/ez2.bmp");
 
     c.Stop();
     EXEC_TIME(c.GetTime())
@@ -68,6 +67,22 @@ int Core::Loop()
 
         player->SetColor(Vector3f(1.f, 0.5f, .0f));
 
+        if (glfwGetKey(context, 'W') == GLFW_PRESS)
+            player->SetPosition(Vector3f(player->transform.position.x - .001f, player->transform.position.y, player->transform.position.z));
+        else if (glfwGetKey(context, 'S') == GLFW_PRESS)
+            player->SetPosition(Vector3f(player->transform.position.x + .001f, player->transform.position.y, player->transform.position.z));
+
+        if (glfwGetKey(context, 'D') == GLFW_PRESS)
+            player->SetPosition(Vector3f(player->transform.position.x, player->transform.position.y, player->transform.position.z - .001f));
+        else if (glfwGetKey(context, 'A') == GLFW_PRESS)
+            player->SetPosition(Vector3f(player->transform.position.x, player->transform.position.y, player->transform.position.z + .001f));
+
+        if (glfwGetKey(context, 'E') == GLFW_PRESS)
+            player->SetPosition(Vector3f(player->transform.position.x, player->transform.position.y + .001f, player->transform.position.z));
+        else if (glfwGetKey(context, 'Q') == GLFW_PRESS)
+            player->SetPosition(Vector3f(player->transform.position.x, player->transform.position.y - .001f, player->transform.position.z));
+
+
             // Dessin tous les éléments de la scène
         SceneManager::GetCurrentScene()->DrawThisScene();
 
@@ -75,8 +90,10 @@ int Core::Loop()
         glfwPollEvents();
     }
 
-    DEBUG(CORE_LOG, "Suppression de la memoire, fin de programme.")
+    DEBUG(CORE_LOG, "Terminate memory")
     delete mainLevel;
-
-    return (0);
+    glfwDestroyWindow(context);
+    glfwTerminate();
+    
+    exit(0);
 }

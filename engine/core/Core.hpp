@@ -3,20 +3,25 @@
 
 #include <core/Handle.hpp>
 
-//#include "Graphic/Graphic.hpp"
-
 #include <glad/glad.h>
 #define GLFW_DLL
 #include <glfw-3.3.9/glfw3.h>
 
+// Gestion des erreurs + autres utilités
 #include <platforms/macros_platform.h>
 #include <cstdio>
 
-//includes de test
+// Stockages des informations liées aux images, textures
+#include <rendering/Texture.hpp>
+#include <C/TextureStruct.h>
+
+// Pour la compilation des shaders
 #include <rendering/Shader.hpp>
 
 // Calcule des temps d'exécutions
 #include <core/Chrono.hpp>
+
+#include <utils/json.hpp>
 
 class Core
 {
@@ -28,13 +33,12 @@ public:
 
     static int  InitEngine();
 
-    static void CompileAllShaders();
+    static int  JSONLoader                  (ArrayForJSON* jsonLoaderInfos      );
+    static void CompileAllShaders           (const ArrayForJSON& jsonLoaderInfos);
+    static void CreateAllImportedTextures   (const ArrayForJSON& jsonLoaderInfos);
+    static void FreeJSON                    (ArrayForJSON* jsonLoaderInfos      );
 
-    static int  Loop();
-
-    static void Terminate();
-
-    /// VARIABLES
+    static void Loop();
 };
 
 #endif

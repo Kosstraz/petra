@@ -51,36 +51,30 @@ const char* Shader::GetFragment() const noexcept
 const char* Shader::GetVertex() const noexcept
 {   return this->vertShader;    }
 
-void Shader::Set_frag(const char* frag) noexcept
+void Shader::Set_frag(const char* frag_file_name) noexcept
 {
-    ReadFile(frag, &this->fragShader, PRINCIPAL_SHADER_SIZE);
-    delete frag;
+    ReadFile(frag_file_name, &this->fragShader, PRINCIPAL_SHADER_SIZE);
+    delete frag_file_name;
 }
 
-void Shader::Set_vert(const char* vert) noexcept
+void Shader::Set_vert(const char* vert_file_name) noexcept
 {
-    ReadFile(vert, &this->vertShader, PRINCIPAL_SHADER_SIZE);
-    delete vert;
+    ReadFile(vert_file_name, &this->vertShader, PRINCIPAL_SHADER_SIZE);
+    delete vert_file_name;
 }
 
-void Shader::Set_frag_set_vert(const char* frag, const char* vert) noexcept
+void Shader::Guess_frag(const char* vfs_file_name) noexcept
 {
-    this->Set_frag(frag);
-    delete frag;
+    this->Set_frag(this->guesser(vfs_file_name, FRAG_END_FILE_NAME));
+}
 
-    this->Set_vert(vert);
-    delete vert;
+void Shader::Guess_vert(const char* vfs_file_name) noexcept
+{
+    this->Set_vert(this->guesser(vfs_file_name, VERT_END_FILE_NAME));
 }
 
 void Shader::CompileShader() noexcept
 {   this->executeShaders(); }
-
-Shader Shader::Precompile(const char* VFS_filename, const char* fragShader, const char* vertShader) noexcept
-{
-    Shader ret = Shader(VFS_filename, fragShader, vertShader);
-    ret.CompileShader();
-    return ret;
-}
 
 void Shader::ConvertVFS(const char* VFS_filename) const
 {   ConvertShaderExtension_GLSL(VFS_filename, 0); DEBUG(SHADER_LOG, "Fichier .vfs.glsl converti avec succès en .frag.glsl et en .vert.glsl.");   }
@@ -93,6 +87,22 @@ void Shader::Free() noexcept
 }
 
     /// METHODES (private:)
+
+const char* Shader::guesser(const char* vfs_file_name, const char* fragOrVert) noexcept
+{
+    long i = 0;
+    fsimc(vfs_file_name, '.', &i);
+
+    printf("%ld", i);
+    char* frag_file_name = (char*)malloc(i);
+    int j = -1;
+    while (++j < i)
+        frag_file_name[j] = vfs_file_name[j];
+    frag_file_name[j] = '\0';
+
+    strcat(frag_file_name, fragOrVert);
+    return (frag_file_name);
+}
 
 void Shader::executeShaders() noexcept
 {

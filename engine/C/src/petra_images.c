@@ -1,10 +1,12 @@
+#define IMAGES_ALL
 #include "../petra_images.h"
 
     /*////////*/
     //   BMP  //
     /*////////*/
 
-int8 bmp_header(const char* file_name, BMP_infos* infos)
+    // Lecture du header
+int8 bmp_header(const char* file_name, img_infos* infos)
 {
         // ouverture
     FILE* file = fopen(file_name, "rb");
@@ -23,7 +25,6 @@ int8 bmp_header(const char* file_name, BMP_infos* infos)
     if (header.compression != 0)
         return BMP_BAD_COMPRESSION;
 
-
         // attribution des infos
     infos->fileSize      = header.fileSize;
     infos->width         = header.width;
@@ -40,7 +41,8 @@ int8 bmp_header(const char* file_name, BMP_infos* infos)
     return (0);
 }
 
-int8 bmp_datas_24bits(const char* file_name, unsigned char** buffer, BMP_infos* infos)
+    // Lecture des pixels
+int8 bmp_datas(const char* file_name, uint8** buffer, img_infos* infos)
 {
         // ouverture
     FILE* file = fopen(file_name, "rb");
@@ -56,9 +58,9 @@ int8 bmp_datas_24bits(const char* file_name, unsigned char** buffer, BMP_infos* 
     }
 
         // lecture
-    unsigned char* datas = (unsigned char*)malloc(infos->imageSize);
+    uint8* datas = (uint8*)malloc(infos->imageSize * sizeof(uint8));
     check = fread(datas, infos->imageSize, 1, file);
-    if (check == -1 || datas == ((unsigned char*)0))
+    if (check == -1 || datas == ((uint8*)0))
     {
         fclose(file);
         free(datas);
@@ -70,68 +72,17 @@ int8 bmp_datas_24bits(const char* file_name, unsigned char** buffer, BMP_infos* 
 
         // fermeture
     check = fclose(file);
-    free(datas);
     if (check == -1)
         return NOT_CLOSED;
 
     return (0);
 }
 
-int8 bmp_datas_32bits(const char* file_name, unsigned char** buffer, BMP_infos* infos)
+    // Chargement entier de l'image
+img_infos bmp_load(const char* file_name, uint8** buffer)
 {
-        // ouverture
-    FILE* file = fopen(file_name, "rb");
-    if (file == ((FILE*)0))
-        return FILE_NULL;
-
-        // déplacement du curseur
-    int8 check = fseek(file, infos->datasOffset, SEEK_SET);
-    if (check == -1)
-    {
-        fclose(file);
-        return NOT_SEEK;
-    }
-
-        // lecture
-    //BMP_32bits_datas* datas = (BMP_32bits_datas*)malloc(infos->imageSize);
-    unsigned char* datas = (unsigned char*)malloc(infos->imageSize * sizeof(unsigned char));
-    check = fread(datas, infos->imageSize, 1, file);
-    if (check == -1 || datas == ((unsigned char*)0))
-    {
-        fclose(file);
-        free(datas);
-        return BMP_ERROR;
-    }
-    printf("r: %d, g: %d, b: %d, a: %d\n", datas[475000], datas[475001], datas[475002], datas[475003]);
-
-        // attribution
-    *buffer = datas;
-
-    //printf("r: %d, g: %d, b: %d, a: %d\n", buffer[0 + 475000], buffer[1 + 475000], buffer[2 + 475000], buffer[3 + 475000]);
-
-        // fermeture
-    check = fclose(file);
-    //free(datas);
-    if (check == -1)
-        return NOT_CLOSED;
-
-    return (0);
-}
-
-int8 bmp_datas(const char* file_name, unsigned char** buffer, BMP_infos* infos)
-{
-    if      (infos->bitsPerPixel == 32)
-        return (bmp_datas_32bits(file_name, buffer, infos));
-    else if (infos->bitsPerPixel == 24)
-        return (bmp_datas_24bits(file_name, buffer, infos));
-    else
-        return (BMP_ERROR);
-}
-
-BMP_infos bmp_load(const char* file_name, unsigned char** buffer)
-{
-    BMP_infos infos;
-    init_BMP_infos(&infos);
+    img_infos infos;
+    init_img_infos(&infos);
 
     infos.errorCode = bmp_header(file_name, &infos);
     if (infos.errorCode < 0)
@@ -144,9 +95,8 @@ BMP_infos bmp_load(const char* file_name, unsigned char** buffer)
     return infos;
 }
 
-
-
-void init_BMP_infos(BMP_infos* infos)
+    // Initialisation de la structure des infos de l'image
+void init_img_infos(img_infos* infos)
 {
     infos->errorCode   = 0;
     infos->datasOffset = 0;
@@ -157,3 +107,17 @@ void init_BMP_infos(BMP_infos* infos)
     infos->compression = 0;
     infos->imageSize   = 0;
 }
+
+
+
+
+
+    /*////////*/
+    //   PNG  //
+    /*////////*/
+
+
+
+
+
+
