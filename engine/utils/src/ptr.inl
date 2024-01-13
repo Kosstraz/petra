@@ -9,6 +9,10 @@ ptr<T>::ptr(const T& _t) noexcept
 {   this->alloc(_t);    }
 
 template <typename T>
+ptr<T>::ptr(T* _ptr) noexcept
+{   this->p = _ptr;    }
+
+template <typename T>
 ptr<T>::~ptr() noexcept
 {   //this->free();   }
 }
@@ -26,4 +30,6 @@ inline T* ptr<T>::reference()    const  noexcept
 
 template <typename T>
 inline void ptr<T>::free()    noexcept
-{   delete (this->p);  }
+{   delete (this->p);
+    this->p = nullptr;
+}

@@ -93,7 +93,6 @@ const char* Shader::guesser(const char* vfs_file_name, const char* fragOrVert) n
     long i = 0;
     fsimc(vfs_file_name, '.', &i);
 
-    printf("%ld", i);
     char* frag_file_name = (char*)malloc(i);
     int j = -1;
     while (++j < i)

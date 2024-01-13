@@ -70,16 +70,16 @@ inline void Matrix<X, Y, T, ALLOC>::Scale2D(const Vector2<T>& vec2) noexcept
 MATRIX_TEMPLATE
 inline void Matrix<X, Y, T, ALLOC>::Translation(const Vector3<T>& vec3) noexcept
 {
-    this->at(0, 3)  = vec3.x;
-    this->at(1, 3)  = vec3.y;
-    this->at(2, 3)  = vec3.z;
+    this->at(3, 0)  = vec3.x;
+    this->at(3, 1)  = vec3.y;
+    this->at(3, 2)  = vec3.z;
 }
 
 MATRIX_TEMPLATE
 inline void Matrix<X, Y, T, ALLOC>::Translation2D(const Vector2<T>& vec2) noexcept
 {
-    this->at(0, 2) = vec2.x;
-    this->at(1, 2) = vec2.y;
+    this->at(2, 0) = vec2.x;
+    this->at(2, 1) = vec2.y;
 }
 
 
@@ -147,21 +147,21 @@ void Matrix<X, Y, T, ALLOC>::LookAt (const Vector3<T>& eye,
     const Vector3f u(Vector3f::Cross(s, f));
 
          // X modification
-    this->at(0, 0)  =  f.x;
-    this->at(0, 1)  =  f.y;
-    this->at(0, 2)  =  f.z;
+    this->at(0, 0)  =  s.x;
+    this->at(1, 0)  =  s.y;
+    this->at(2, 0)  =  s.z;
         // Y modification
-    this->at(1, 0)  =  s.x;
-    this->at(1, 1)  =  s.y;
-    this->at(1, 2)  =  s.z;
+    this->at(0, 1)  =  u.x;
+    this->at(1, 1)  =  u.y;
+    this->at(2, 1)  =  u.z;
         // Z modification
-    this->at(2, 0)  =  u.x;
-    this->at(2, 1)  =  u.y;
-    this->at(2, 2)  =  u.z;
+    this->at(0, 2)  =  -f.x;
+    this->at(1, 2)  =  -f.y;
+    this->at(2, 2)  =  -f.z;
         // camera_position modification
-    this->at(0, 3)  = -Vector3f::Dot(s, eye);
-    this->at(1, 3)  = -Vector3f::Dot(u, eye);
-    this->at(2, 3)  = -Vector3f::Dot(f, eye);
+    this->at(3, 0)  = -Vector3f::Dot(s, eye);
+    this->at(3, 1)  = -Vector3f::Dot(u, eye);
+    this->at(3, 2)  =  Vector3f::Dot(f, eye);
 }
 
 MATRIX_TEMPLATE
@@ -175,8 +175,8 @@ void Matrix<X, Y, T, ALLOC>::Perspective(const float& FOV, const float& width,
     this->at(0, 0) = static_cast<T>(1.0f / (aspect * tanFOV));
     this->at(1, 1) = static_cast<T>(1.0f / tanFOV);
     this->at(2, 2) = static_cast<T>(zFar / (zFar - zNear));
-    this->at(2, 3) = static_cast<T>((-zFar * zNear) / (zFar - zNear)); 
-    this->at(3, 2) = static_cast<T>(1);
+    this->at(3, 2) = static_cast<T>((-zFar * zNear) / (zFar - zNear)); 
+    this->at(2, 3) = static_cast<T>(1);
 }
 
 
@@ -193,8 +193,9 @@ inline void Matrix<X, Y, T, ALLOC>::Debug() const
     {
         if (i % 4 == 0)
             printf(" |  ");
-        printf("%f ", this->datas[i]);
+        printf("%f ", *(&this->datas[0] + i));
     }
+    printf("\n");
 }
 
 MATRIX_TEMPLATE

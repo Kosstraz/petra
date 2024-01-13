@@ -9,10 +9,9 @@
 
 
 
-GeometryTest::GeometryTest(const char* name) : PetraO(name), GL_GEOMETRY(0), vertexArrayID(0), vertexBufferID(0), verticesToDraw(0)
+GeometryTest::GeometryTest(const char* name) : PetraO(name), GL_GEOMETRY(0), vertexArrayID(0), vertexBufferID(0), verticesToDraw(0), MOD(new Matrix4(1.0f))
 {
     this->transform.position = Vector3f(0.f, 0.f, 0.f);
-    this->MOD                = glm::mat4(1.0f);
 
     this->what_build = 0;
 }
@@ -162,7 +161,7 @@ void GeometryTest::Build(uint32 GL_METHOD_DRAW) noexcept
     }
 }
 
-void GeometryTest::DrawBuild() noexcept
+void GeometryTest::DrawBuild() const noexcept
 {
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
     int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "COLOR");
@@ -227,7 +226,7 @@ void GeometryTest::PutTexture(uint32 textureID) noexcept
 void GeometryTest::SetPosition(const Vector3f& position) noexcept
 {
     this->transform.position = position;
-    this->MOD = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, position.z));
+    this->MOD->Translation(position);
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
@@ -235,16 +234,14 @@ void GeometryTest::SetPosition(const Vector3f& position) noexcept
 void GeometryTest::SetScale(const Vector3f& scale) noexcept
 {
     this->transform.scale = scale;
-    this->MOD = glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, scale.z));
+    this->MOD->Scale(scale);
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
 void GeometryTest::SetRotation(const Vector3f& rotation) noexcept
 {
-    //this->transform.rotation = rotation;
-    //glm::mat4 ROT = glm::rotate(glm::quat(rotation.x, rotation.y, rotation.z), 90.0f, glm::vec3());
-    //this->MOD = (ROT * MOD);
+
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
@@ -260,4 +257,6 @@ void GeometryTest::SetColor(const Vector3f color) noexcept
 
 
 inline void GeometryTest::Destroy() noexcept
-{}
+{
+    delete (this->MOD);
+}

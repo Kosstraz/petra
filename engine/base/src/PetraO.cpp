@@ -1,10 +1,11 @@
 #include <base/PetraO.hpp>
 
 #include <core/Handle.hpp>
+#include <utils/ptr.hpp>
 
     /// CONSTRUCTEURS
 
-PetraO::PetraO(const char* name)
+PetraO::PetraO(const char* name) : isDestroyed(false)
 {
     this->name = nullptr;
     this->name = name;
@@ -21,7 +22,8 @@ PetraO::~PetraO()
 
 void    PetraO::Destroy() noexcept
 {
-    Handle::currentScene->RemoveObject(this->name);
+    this->isDestroyed = true;
+    Handle::currentScene->DeleteObject(this->name);
 }
 
     /// STATIQUES

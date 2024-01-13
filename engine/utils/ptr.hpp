@@ -1,7 +1,7 @@
 #ifndef PTR_HPP
 #define PTR_HPP
 
-#include "../platforms/opti_macros.hpp"
+#include "platforms/opti_macros.hpp"
 #include <memory>
 
 template <typename T>
@@ -10,9 +10,10 @@ class ptr final
 public:
         // CONSTRUCTEURS
 
-    ptr()       noexcept;
-    ptr(const T& _t)   noexcept;
-   ~ptr()       noexcept;
+    ptr()               noexcept;
+    ptr(const T& _t)    noexcept;
+    ptr(T* _ptr)  noexcept;
+   ~ptr()               noexcept;
 
         // METHODES
 
@@ -45,7 +46,7 @@ public:
 
     inline T* operator->()          const               FREQ
     {   if (this->p == nullptr)
-            throw std::runtime_error("Attempted to access null pointer");
+            throw std::runtime_error("Attempted to access null pointer in 'operator->' with ptr<T>.");
         else
             return (this->p);   }
 

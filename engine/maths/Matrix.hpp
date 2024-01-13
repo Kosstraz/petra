@@ -51,7 +51,7 @@ public:
                              const float& zFar)  noexcept;
 
     inline void Debug() const;
-    inline T& at(const uint16 x, const uint16 y) const noexcept
+    inline T& at(const uint16&& x, const uint16&& y) const noexcept
     { return this->datas[x * Y + y]; }
     inline T*   Ref  () const noexcept;
 

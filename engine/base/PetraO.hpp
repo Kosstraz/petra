@@ -25,17 +25,19 @@ public:
 
         /// METHODES
 
-    //Réinitialise la mémoire
+        // Supprime l'objet de la scène mais ne le supprime aucunement de la mémoire
     virtual void Destroy()       noexcept;
 
         /// OVERRIDES METHODES
-    inline virtual void Build    (uint32 GL_METHOD_DRAW = 0x88E4) noexcept {}
-    inline virtual void DrawBuild()                               noexcept {}
+    inline virtual void Build    (uint32 GL_METHOD_DRAW = 0x88E4)           noexcept            {}
+    inline virtual void DrawBuild()                                 const   noexcept    FREQ    {}
+    inline const  char* GetName()                                   const   noexcept    FREQ    {   return (this->name);    }
 
         /// STATIQUES
-
+    boolean      isDestroyed;
 protected:
     const char*  name;
+    
     boolean      neverDestroy;
 };
 

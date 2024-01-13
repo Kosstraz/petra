@@ -32,8 +32,8 @@ public:
 
 private:
         // glm TEST
-    glm::mat4  VIEW;
-    glm::mat4  PROJ;
+    Matrix4*  PROJ;
+    Matrix4*  VIEW;
 };
 
 #endif

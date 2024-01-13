@@ -2,8 +2,8 @@
 
 #define PRECHARGE(var) __builtin_prefetch(&var)
 #define NO_INLINE      __attribute__((noinline))
-#define RARELY         __attribute__((hot))
-#define FREQ           __attribute__((cold))
+#define RARELY         __attribute__((cold))
+#define FREQ           __attribute__((hot))
 
 // Incrémentation de 1 pour ne pas exécuter une ligne ASM en plus, économie de temps d'exécution
 //#define INCREMENT(var) var = (var+1)&0xFF

@@ -2,6 +2,7 @@
 #define PETRA_SCENE_HPP
 
 #include <base/PetraO.hpp>
+#include <utils/ptr.hpp>
 #include <unordered_map>
 
 class Scene
@@ -15,12 +16,12 @@ public:
         // METHODES
 
     void AddObject (PetraO* object, const char* name)  noexcept;
-    void AddObjects(PetraO** objects, const char** name, unsigned short sizeo) noexcept;
-    void RemoveObject(const char* name);
+    void AddObjects(PetraO** objects, const char** name, uint32 sizeo) noexcept;
+    void RemoveObject_deprecated(const char* name);
     void DeleteObject(const char* name);
 
     template <class PetraObjectType>
-    PetraObjectType* FindACTOR(const char* name) const;
+    ptr<PetraObjectType> FindACTOR(const char* name) const;
 
     void Clear     ();
 
@@ -33,7 +34,7 @@ public:
 protected:
         // ATTRIBUTS
 
-    std::unordered_map<const char*, PetraO*> all_objects_in_scene = std::unordered_map<const char*, PetraO*>();
+    std::unordered_map<const char*, ptr<PetraO>> all_objects_in_scene = std::unordered_map<const char*, ptr<PetraO>>();
 };
 
 #include "src/Scene.inl"

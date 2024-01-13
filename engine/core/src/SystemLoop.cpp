@@ -1,4 +1,4 @@
-#include "../Core.hpp"
+#include <core/Core.hpp>
 
 #include <core/SceneManager.hpp>
 #include <base/Camera.hpp>
@@ -7,6 +7,11 @@
 #include <rendering/Texture.hpp>
 
 #include <core/Chrono.hpp>
+
+#include <sstream>
+
+//  Todo:
+//
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -19,7 +24,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 
     Handle::window_size = {width, height};
-    Camera* get = SceneManager::GetCurrentScene()->FindACTOR<Camera>("mainCamera");
+    Camera* get = &SceneManager::GetCurrentScene()->FindACTOR<Camera>("mainCamera");
     get->Perspective(width, height);
 }
 
@@ -50,16 +55,27 @@ void Core::Loop()
     player->WhatBuild(DRAW_CUBE);
     player->PutTexture(0);
 
-        // Charge la scène et tous ces éléments
-    SceneManager::GetCurrentScene()->LoadThisScene();
+    /*GeometryTest** tests = new GeometryTest*[50000];
+    for (long i = 0; i < 50000; i++)
+    {
+        std::ostringstream os;
+        os << i;
+        std::string s = os.str();
+        tests[i] = new GeometryTest(s.c_str());
+        tests[i]->WhatBuild(DRAW_CUBE);
+    }*/
 
-        // Modifications de la Personnalisation
     player->SetPosition(Vector3f(0.f, 1.f, 0.f));
     player->SetColor(Vector3f(1.f, 0.f, 1.f));
+
+
+        // Charge la scène et tous ces éléments
+    SceneManager::GetCurrentScene()->LoadThisScene();
 
     c.Stop();
     EXEC_TIME(c.GetTime())
     DEBUG_GL()
+    int a = 0;
     while (!glfwWindowShouldClose(context))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -82,6 +98,19 @@ void Core::Loop()
         else if (glfwGetKey(context, 'Q') == GLFW_PRESS)
             player->SetPosition(Vector3f(player->transform.position.x, player->transform.position.y - .001f, player->transform.position.z));
 
+        //if (glfwGetKey(context, 'P') == GLFW_PRESS)
+            //player->Destroy();
+            
+        /*if (glfwGetKey(context, 'P') == GLFW_PRESS && a == 0)
+        {
+            a = 1;
+            printf("p");
+            for (long i = 0; i < 50000; i++)
+            {
+                SceneManager::GetCurrentScene()->DeleteObject(tests[i]->GetName());
+                delete (tests[i]);
+            }
+        }*/
 
             // Dessin tous les éléments de la scène
         SceneManager::GetCurrentScene()->DrawThisScene();
