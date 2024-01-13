@@ -3,48 +3,55 @@
     // CONSTRUCTEURS
 
 MATRIX_TEMPLATE
-Matrix<X, Y, T>::Matrix() : datas(new T[X * Y])
+Matrix<X, Y, T, ALLOC>::Matrix()
 {
+    this->datas = localalloc.allocate(X * Y);
     for (uint8 x = 0; x < X; x++)
     {
-        //this->datas[x] = new T[Y];
         for (uint8 y = 0; y < Y; y++)
-            this->at(y, x) = static_cast<T>(0);//this->datas[x][y] = static_cast<T>(0);
+            localalloc.construct(this->datas + (x * Y + y), static_cast<T>(0));
     }
 }
 
 MATRIX_TEMPLATE
-Matrix<X, Y, T>::Matrix(const T identityValue) : datas(new T[X * Y])
+Matrix<X, Y, T, ALLOC>::Matrix(const T identityValue)
 {
+    this->datas = localalloc.allocate(X * Y);
     for (uint8 x = 0; x < X; x++)
     {
-        //this->datas[x]  =  new T[Y];
         for (uint8 y = 0; y < Y; y++)
         {
             if (x == y)
-                this->at(y, x) = identityValue;//this->datas[x][y] = identityValue;
+                localalloc.construct(this->datas + (x * Y + y), identityValue);//this->at(y, x) = identityValue;
             else
-                this->at(y, x) = static_cast<T>(0);//this->datas[x][y] = static_cast<T>(0);
+                localalloc.construct(this->datas + (x * Y + y), static_cast<T>(0));//this->at(y, x) = static_cast<T>(0);
         }
     }
 }
 
 MATRIX_TEMPLATE
-Matrix<X, Y, T>::~Matrix() noexcept
-{
-   this->Free();
-}
+Matrix<X, Y, T, ALLOC>::~Matrix() noexcept
+{   this->Destroy();    }
 
     // METHODES
 
 MATRIX_TEMPLATE
-void Matrix<X, Y, T>::Free() noexcept
+void Matrix<X, Y, T, ALLOC>::Destroy() noexcept
 {
-    delete[] this->datas;
+    localalloc.destroy(this->datas);
+    localalloc.deallocate(this->datas, X * Y);
+    this->datas = nullptr;
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Scale(const Vector3<T>& vec3) noexcept
+void Matrix<X, Y, T, ALLOC>::Free() noexcept
+{
+    this->~Matrix();
+    delete (this);
+}
+
+MATRIX_TEMPLATE
+inline void Matrix<X, Y, T, ALLOC>::Scale(const Vector3<T>& vec3) noexcept
 {
     this->at(0, 0)  =  vec3.x;
     this->at(1, 1)  =  vec3.y;
@@ -52,7 +59,7 @@ inline void Matrix<X, Y, T>::Scale(const Vector3<T>& vec3) noexcept
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Scale2D(const Vector2<T>& vec2) noexcept
+inline void Matrix<X, Y, T, ALLOC>::Scale2D(const Vector2<T>& vec2) noexcept
 {
     this->at(0, 0)  =  vec2.x;
     this->at(1, 1)  =  vec2.y;
@@ -61,7 +68,7 @@ inline void Matrix<X, Y, T>::Scale2D(const Vector2<T>& vec2) noexcept
 
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Translation(const Vector3<T>& vec3) noexcept
+inline void Matrix<X, Y, T, ALLOC>::Translation(const Vector3<T>& vec3) noexcept
 {
     this->at(0, 3)  = vec3.x;
     this->at(1, 3)  = vec3.y;
@@ -69,7 +76,7 @@ inline void Matrix<X, Y, T>::Translation(const Vector3<T>& vec3) noexcept
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Translation2D(const Vector2<T>& vec2) noexcept
+inline void Matrix<X, Y, T, ALLOC>::Translation2D(const Vector2<T>& vec2) noexcept
 {
     this->at(0, 2) = vec2.x;
     this->at(1, 2) = vec2.y;
@@ -78,7 +85,7 @@ inline void Matrix<X, Y, T>::Translation2D(const Vector2<T>& vec2) noexcept
 
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Rotation(const Vector3<T>& vec3) noexcept
+inline void Matrix<X, Y, T, ALLOC>::Rotation(const Vector3<T>& vec3) noexcept
 {
             // X-Rotation
         /*this->datas[5]  *= static_cast<T>( cosf(vec3.x));
@@ -100,7 +107,7 @@ inline void Matrix<X, Y, T>::Rotation(const Vector3<T>& vec3) noexcept
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Rotation2D(const Vector2<T>& vec2) noexcept
+inline void Matrix<X, Y, T, ALLOC>::Rotation2D(const Vector2<T>& vec2) noexcept
 {
     /*this->datas[0] *= static_cast<T>( cosf(vec2.x));
     this->datas[1]  = static_cast<T>(-sinf(vec2.x));
@@ -109,7 +116,7 @@ inline void Matrix<X, Y, T>::Rotation2D(const Vector2<T>& vec2) noexcept
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Transformation(const Vector3<T>& pos,
+inline void Matrix<X, Y, T, ALLOC>::Transformation(const Vector3<T>& pos,
                                             const Vector3<T>& scale,
                                             const Vector3<T>& rot)      noexcept
 {
@@ -119,7 +126,7 @@ inline void Matrix<X, Y, T>::Transformation(const Vector3<T>& pos,
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Transformation2D(const Vector2<T>& pos,
+inline void Matrix<X, Y, T, ALLOC>::Transformation2D(const Vector2<T>& pos,
                                               const Vector2<T>& scale,
                                               const Vector2<T>& rot)      noexcept
 {
@@ -131,7 +138,7 @@ inline void Matrix<X, Y, T>::Transformation2D(const Vector2<T>& pos,
 
 
 MATRIX_TEMPLATE
-void Matrix<X, Y, T>::LookAt (const Vector3<T>& eye,
+void Matrix<X, Y, T, ALLOC>::LookAt (const Vector3<T>& eye,
                               const Vector3<T>& center,
                               const Vector3<T>& up)                         noexcept
 {
@@ -158,7 +165,7 @@ void Matrix<X, Y, T>::LookAt (const Vector3<T>& eye,
 }
 
 MATRIX_TEMPLATE
-void Matrix<X, Y, T>::Perspective(const float& FOV, const float& width,
+void Matrix<X, Y, T, ALLOC>::Perspective(const float& FOV, const float& width,
                                   const float& height, const float& zNear,
                                   const float& zFar)                            noexcept
 {
@@ -175,7 +182,7 @@ void Matrix<X, Y, T>::Perspective(const float& FOV, const float& width,
 
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T>::Debug() const
+inline void Matrix<X, Y, T, ALLOC>::Debug() const
 {
     if (this->datas == nullptr)
     {
@@ -183,11 +190,15 @@ inline void Matrix<X, Y, T>::Debug() const
         return;
     }
     for (uint16 i = 0; i < (X * Y); i++)
-        printf("%f", this->datas[i]);
+    {
+        if (i % 4 == 0)
+            printf(" |  ");
+        printf("%f ", this->datas[i]);
+    }
 }
 
 MATRIX_TEMPLATE
-inline T* Matrix<X, Y, T>::Ref() const noexcept
+inline T* Matrix<X, Y, T, ALLOC>::Ref() const noexcept
 {
     return (&this->datas[0]);
 }

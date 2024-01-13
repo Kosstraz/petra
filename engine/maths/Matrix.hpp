@@ -1,24 +1,31 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP  
 
+#include "platforms/macros_platform.h"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
 #include "Maths.hpp"
 
-#define MATRIX_TEMPLATE template<const unsigned short X, const unsigned short Y, typename T>
+#include <memory>
 
-template <const unsigned short X, const unsigned short Y, typename T = float>
+#define MATRIX_TEMPLATE template<const unsigned short X, const unsigned short Y, typename T, typename ALLOC>
+
+template <const unsigned short X, const unsigned short Y, typename T = float, typename ALLOC = std::allocator<T>>
 class Matrix final
 {
 public:
-    // CONSTRUCTEURS
+        // CONSTRUCTEURS
+
     Matrix();
     Matrix(const T identityValue);
     ~Matrix() noexcept;
 
-    // METHODES
+        // METHODES
 
-    void Free() noexcept;
+        // Libère la mémoire allouée
+    void Destroy()  noexcept;
+        // Libère la mémoire allouée et supprime l'objet
+    void Free()     noexcept;
 
     inline void Scale2D(const Vector2<T>& vec2)  noexcept;
     inline void Scale(const Vector3<T>& vec3)    noexcept;
@@ -48,40 +55,62 @@ public:
     { return this->datas[x * Y + y]; }
     inline T*   Ref  () const noexcept;
 
-    // STATIQUES
+        // STATIQUES
 
-    // OPERATEURS
+        // OPERATEURS
 
 public:
-    // VARIABLES
+        // VARIABLES
 
-    T* datas;
+    T*      datas;
+
+private:
+
+    ALLOC   localalloc;
 };
 
-typedef Matrix<3U, 3U, int> Matrix3x3i;
-typedef Matrix<4U, 3U, int> Matrix4x3i;
-typedef Matrix<3U, 4U, int> Matrix3x4i;
-typedef Matrix<4U, 4U, int> Matrix4x4i;
+    // INT matrix
 
-typedef Matrix<3U, 3U, float> Matrix3x3f;
-typedef Matrix<4U, 3U, float> Matrix4x3f;
-typedef Matrix<3U, 4U, float> Matrix3x4f;
-typedef Matrix<4U, 4U, float> Matrix4x4f;
+typedef Matrix<3U, 3U, int, std::allocator<int>>                    Matrix3x3i;
+typedef Matrix<4U, 3U, int, std::allocator<int>>                    Matrix4x3i;
+typedef Matrix<3U, 4U, int, std::allocator<int>>                    Matrix3x4i;
+typedef Matrix<4U, 4U, int, std::allocator<int>>                    Matrix4x4i;
+typedef Matrix<3U, 3U, int, std::allocator<int>>                    Matrix3i;
+typedef Matrix<4U, 4U, int, std::allocator<int>>                    Matrix4i;
 
-typedef Matrix<3U, 3U, float> Matrix3x3;
-typedef Matrix<4U, 3U, float> Matrix4x3;
-typedef Matrix<3U, 4U, float> Matrix3x4;
-typedef Matrix<4U, 4U, float> Matrix4x4;
+    // FLOAT matrix
 
-typedef Matrix<3U, 3U, double> Matrix3x3d;
-typedef Matrix<4U, 3U, double> Matrix4x3d;
-typedef Matrix<3U, 4U, double> Matrix3x4d;
-typedef Matrix<4U, 4U, double> Matrix4x4d;
+typedef Matrix<3U, 3U, float, std::allocator<float>>                Matrix3x3f;
+typedef Matrix<4U, 3U, float, std::allocator<float>>                Matrix4x3f;
+typedef Matrix<3U, 4U, float, std::allocator<float>>                Matrix3x4f;
+typedef Matrix<4U, 4U, float, std::allocator<float>>                Matrix4x4f;
+typedef Matrix<3U, 3U, float, std::allocator<float>>                Matrix3f;
+typedef Matrix<4U, 4U, float, std::allocator<float>>                Matrix4f;
 
-typedef Matrix<3U, 3U, long double> Matrix3x3ld;
-typedef Matrix<4U, 3U, long double> Matrix4x3ld;
-typedef Matrix<3U, 4U, long double> Matrix3x4ld;
-typedef Matrix<4U, 4U, long double> Matrix4x4ld;
+typedef Matrix<3U, 3U, float, std::allocator<float>>                Matrix3x3;
+typedef Matrix<4U, 3U, float, std::allocator<float>>                Matrix4x3;
+typedef Matrix<3U, 4U, float, std::allocator<float>>                Matrix3x4;
+typedef Matrix<4U, 4U, float, std::allocator<float>>                Matrix4x4;
+typedef Matrix<3U, 3U, float, std::allocator<float>>                Matrix3;
+typedef Matrix<4U, 4U, float, std::allocator<float>>                Matrix4;
+
+    // DOUBLE matrix
+
+typedef Matrix<3U, 3U, double, std::allocator<double>>              Matrix3x3d;
+typedef Matrix<4U, 3U, double, std::allocator<double>>              Matrix4x3d;
+typedef Matrix<3U, 4U, double, std::allocator<double>>              Matrix3x4d;
+typedef Matrix<4U, 4U, double, std::allocator<double>>              Matrix4x4d;
+typedef Matrix<3U, 3U, double, std::allocator<double>>              Matrix3d;
+typedef Matrix<4U, 4U, double, std::allocator<double>>              Matrix4d;
+
+    // LONG DOUBLE matrix
+
+typedef Matrix<3U, 3U, long double, std::allocator<long double>>    Matrix3x3ld;
+typedef Matrix<4U, 3U, long double, std::allocator<long double>>    Matrix4x3ld;
+typedef Matrix<3U, 4U, long double, std::allocator<long double>>    Matrix3x4ld;
+typedef Matrix<4U, 4U, long double, std::allocator<long double>>    Matrix4x4ld;
+typedef Matrix<3U, 3U, long double, std::allocator<long double>>    Matrix3ld;
+typedef Matrix<4U, 4U, long double, std::allocator<long double>>    Matrix4ld;
 
 #include "src/Matrix.inl"
 

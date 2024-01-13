@@ -2,7 +2,7 @@
 #define  VECTOR3_HPP
 
 #include <cmath>
-#include <maths/Maths.hpp>
+#include "Maths.hpp"
 
 #define BOOL unsigned short
 
