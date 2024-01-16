@@ -1,6 +1,10 @@
 #ifndef F_UTILS_H
 #define F_UTILS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 
     // Cherche le caractère 'c'suivant dans 'v'.
@@ -20,5 +24,9 @@ int fprevc(const char* v, const char c, const long file_size);
     // Cherche le caractère non-vide suivant et enregistre dans 'buffer' tous les caractères entre '*i' et le caractère 'c'
     // Si la valeur que renvoie la fonction est égale au paramètre 'i' inséré, alors le prochain caractère n'est pas celui demandé
 int to_nextc(const char* v, const char c, long* i, char** buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

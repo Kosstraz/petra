@@ -1,12 +1,14 @@
 #ifndef PETRA_JSONREADER_H
 #define PETRA_JSONREADER_H
 
+#include <platforms/errors_macros.hpp>
+
 #include <unordered_map>
 #include <stdio.h>
 
 #include <utils/f_utils.h>
 
-typedef std::unordered_multimap<char*, char*> ArrayForJSON;
+typedef std::unordered_multimap<const char*, const char*> ArrayForJSON;
 
     // Met dans un 'char* buffer' les données du JSON
     // Si aucune erreur renvoie la 'size' du buffer, sinon return('size' < 0)

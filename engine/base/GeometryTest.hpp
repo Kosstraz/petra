@@ -40,7 +40,7 @@ public:
     void SetScale   (const Vector3f& scale   )  noexcept;
     void SetRotation(const Vector3f& rotation)  noexcept;
 
-    void SetColor   (const Vector3f color)      noexcept;
+    void SetColor   (const Color3& color)      noexcept;
 
     virtual void Destroy() noexcept override;
     inline const bool operator==(const GeometryTest& b) const noexcept
@@ -51,7 +51,7 @@ public:
     }
 
     READ_ONLY Transform   transform;
-    READ_ONLY Vector3f    color;
+    READ_ONLY Color3      color;
 private:
     uint8   what_build;
     uint    GL_GEOMETRY;

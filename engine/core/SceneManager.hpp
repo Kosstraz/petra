@@ -4,7 +4,7 @@
 #include <core/Handle.hpp>
 #include <core/Scene.hpp>
 
-class SceneManager final : Scene
+class SceneManager final : public Scene
 {
 public:
     static void LoadScene(const char* sceneName);

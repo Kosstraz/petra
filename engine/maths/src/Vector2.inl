@@ -40,7 +40,10 @@ Vector2<T>::Vector2(const Vector2<T>& copy) noexcept
 
 template <typename T>
 Vector2<T>::Vector2() noexcept
-{}
+{
+    this->x = static_cast<T>(0);
+    this->y = static_cast<T>(0);
+}
 
 template <typename T>
 Vector2<T>::~Vector2() noexcept
@@ -57,8 +60,8 @@ inline const Vector2<T> Vector2<T>::Scalar(const Vector2<T>& otherCpy, float ang
 template <typename T>
 inline const BOOL Vector2<T>::NotNull() const noexcept
 {
-    if(this == 0)   return false;
-    return true;
+    if (*this == static_cast<T>(0))   return (0x00);    // false
+    return (0x01);                                      // true
 }
 
 template <typename T>
@@ -99,43 +102,43 @@ inline const T Vector2<T>::Norm(const Vector2<T>& otherCpy) noexcept
 template <typename T>
 inline const BOOL Vector2<T>::operator==(const Vector2<T>& aCpy) const noexcept
 {
-    if (this->x == aCpy.x && this->y == aCpy.y)   return true;
-    return false;
+    if (this->x == aCpy.x && this->y == aCpy.y)   return (0x01);    // true
+    return (0x00);                                                  // false
 }
 
 template <typename T>
 inline const BOOL Vector2<T>::operator==(const T&& x) const noexcept
 {
-    if (this->x == x && this->y == x)   return true;
-    return false;
+    if (this->x == x && this->y == x)   return(0x01);  // true
+    return (0x00);                                     // false
 }
 
 template <typename T>
 inline const BOOL Vector2<T>::operator==(const T& x) const noexcept
 {
-    if (this->x == x && this->y == x)   return true;
-    return false;
+    if (this->x == x && this->y == x)   return (0x01);  // true
+    return (0x00);                                      // false
 }
 
 template <typename T>
 inline const BOOL Vector2<T>::operator!=(const Vector2<T>& aCpy) const noexcept
 {
-    if (*this == aCpy)   return false;
-    return true;
+    if (*this == aCpy)   return (0x00); // false
+    return (0x01);                      // true
 }
 
 template <typename T>
 inline const BOOL Vector2<T>::operator!=(const T&& x) const noexcept
 {
-    if (*this == x)   return false;
-    return true;
+    if (*this == x)   return (0x00);    // false
+    return (0x01);                      // true
 }
 
 template <typename T>
 inline const BOOL Vector2<T>::operator!=(const T& x) const noexcept
 {
-    if (*this == x)   return false;
-    return true;
+    if (*this == x)   return (0x00);    // false
+    return  (0x01);                     // true
 }
 
 

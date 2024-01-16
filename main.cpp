@@ -6,19 +6,16 @@ int main()
     int errorCode = Core::InitEngine();
     if (errorCode < 0)      return_error("Initialisation du moteur échouée", errorCode)
 
-        // Charge les informations contenus dans le JSON "to_load.json" et les utilise pas la suite
+        // Charge les informations contenus dans le JSON "to_load.json" et les utilise par la suite
     ArrayForJSON jsonLoader = ArrayForJSON();
-    if (Core::JSONLoader(&jsonLoader) < 0)
-        return JSON_BAD_OPENNING;
-        
-    Core::CompileAllShaders         (jsonLoader );
-    //Core::CreateAllImportedTextures (jsonLoader );
-    Core::FreeJSON                  (&jsonLoader);
+    if ((errorCode = Core::JSONLoader(&jsonLoader)) < 0)
+        return_error("Erreur lors de la récupération des informations du fichier 'to_load.json'", errorCode);
+    if ((errorCode = Core::CompileAllShaders(jsonLoader)) < 0)
+        return_error("Erreur lors de la compilation des shaders", errorCode);
+    Core::FreeJSON(&jsonLoader);
 
         // Boucle principale
-    Core::Loop();
-
-    return (0);
+    return (Core::Loop());
 }
 
 // glissement sémentique

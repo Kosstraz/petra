@@ -16,7 +16,7 @@ int8 bmp_header(const char* file_name, img_infos* infos)
         // lecture
     BMP_header header;
     int8 check = fread(&header, sizeof(BMP_header), 1, file);
-    if (check == -1 || header.signature[0] != 'B' || header.signature[1] != 'M')
+    if ((unsigned long long)check < sizeof(BMP_header) || header.signature[0] != 'B' || header.signature[1] != 'M')
     {
         fclose(file);
         return BMP_ERROR;
@@ -59,8 +59,13 @@ int8 bmp_datas(const char* file_name, uint8** buffer, img_infos* infos)
 
         // lecture
     uint8* datas = (uint8*)malloc(infos->imageSize * sizeof(uint8));
+    if (datas == ((uint8*)0))
+    {
+        fclose(file);
+        return BMP_ERROR;
+    }
     check = fread(datas, infos->imageSize, 1, file);
-    if (check == -1 || datas == ((uint8*)0))
+    if ((uint32)check < infos->imageSize)
     {
         fclose(file);
         free(datas);

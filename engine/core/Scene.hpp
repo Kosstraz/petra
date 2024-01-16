@@ -5,6 +5,8 @@
 #include <utils/ptr.hpp>
 #include <unordered_map>
 
+#include <stdexcept>
+
 class Scene
 {
 public:
@@ -15,18 +17,18 @@ public:
 
         // METHODES
 
-    void AddObject (PetraO* object, const char* name)  noexcept;
-    void AddObjects(PetraO** objects, const char** name, uint32 sizeo) noexcept;
+    void AddObject (PetraO* object,     const char* name)                   noexcept;
+    void AddObjects(PetraO** objects,   const char** name, uint32 sizeo)    noexcept;
     void RemoveObject_deprecated(const char* name);
     void DeleteObject(const char* name);
 
     template <class PetraObjectType>
-    ptr<PetraObjectType> FindACTOR(const char* name) const;
+    PetraObjectType* FindACTOR(const char* name);
 
     void Clear     ();
 
-    void LoadThisScene() const noexcept;
-    void DrawThisScene() const noexcept;
+    void LoadThisScene() noexcept;
+    void DrawThisScene() noexcept;
 
     inline boolean IsEmpty() const noexcept
     {return (this->all_objects_in_scene.empty());};
@@ -34,7 +36,7 @@ public:
 protected:
         // ATTRIBUTS
 
-    std::unordered_map<const char*, ptr<PetraO>> all_objects_in_scene = std::unordered_map<const char*, ptr<PetraO>>();
+    std::unordered_map<const char*, PetraO*> all_objects_in_scene = std::unordered_map<const char*, PetraO*>();
 };
 
 #include "src/Scene.inl"

@@ -5,9 +5,6 @@ Chrono::Chrono() noexcept : time(0)
     this->Start();
 }
 
-Chrono::~Chrono() noexcept
-{}
-
 void Chrono::Start() noexcept
 {
     this->begin = std::chrono::high_resolution_clock::now();

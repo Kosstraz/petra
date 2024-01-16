@@ -33,10 +33,12 @@ int Core::InitEngine()
     DEBUG(CORE_LOG, "Fenetre created !");
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {   
+    {
         c.Stop();
         EXEC_TIME(c.GetTime());
 
+        glfwDestroyWindow(window);
+        glfwTerminate();
         return (GLADLOADER_FAILED);
     }
 
@@ -46,31 +48,32 @@ int Core::InitEngine()
 }
 
 int Core::JSONLoader(ArrayForJSON* jsonLoaderInfos)
-{
-    return (json_open("JSdata/to_load.json", jsonLoaderInfos));
-}
+{   return (json_open("JSdata/to_load.json", jsonLoaderInfos)); }
 
-void Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
+int Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
 {
     DEBUG(SHADER_LOG, "Compilation de tous les shaders...");
     Chrono c; c.Start();
     Handle handle;
 
-    for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); i++)
+    int log = 0;
+    for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); ++i)
     {
         if (strcmp(i->first, "vfs_to_load") == 0)
         {
-            Shader shader = Shader(i->second);
-            shader.Guess_frag(i->second);
-            shader.Guess_vert(i->second);
-            shader.CompileShader();
+            Shader shader = Shader();
+            if ((log = shader.Make(i->second)) < 0)
+                return_error ("Probleme lors de la creation des shaders, shader en question :"/*(const char*)i->second*/, log);
 
             handle.shadersProgram[0] = shader.programID;
         }
     }
 
+    glUseProgram(Handle::shadersProgram[0]);
+    
     c.Stop();
     EXEC_TIME(c.GetTime());
+    return (0);
 }
 
 void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
@@ -78,7 +81,7 @@ void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
     DEBUG(TEXTURE_LOG, "Création de toutes les textures...");
     Chrono c; c.Start();
 
-    for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); i++)
+    for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); ++i)
         if (strcmp(i->first, "textures_to_load") == 0)
         {
             Texture texture = Texture(i->second);
@@ -90,12 +93,4 @@ void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
 }
 
 void Core::FreeJSON(ArrayForJSON* jsonLoaderInfos)
-{
-    for (ArrayForJSON::iterator i = jsonLoaderInfos->begin(); i != jsonLoaderInfos->end(); i++)
-    {
-        free(i->second);
-        free(i->first);
-    }
-    jsonLoaderInfos->clear();
-    delete (jsonLoaderInfos);
-}
+{   jsonLoaderInfos->clear();   }

@@ -4,9 +4,14 @@
 
     /// CONSTRUCTEURS
 
-Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f)), PROJ(new Matrix4(1.0f)), VIEW(new Matrix4(1.0f))
+Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f))//, PROJ(new Matrix4(1.0f)), VIEW(new Matrix4(1.0f))
 {
+    this->PROJ = new Matrix4(1.0f);
+    this->VIEW = new Matrix4(1.0f);
+
     this->transform.position = Vector3f(4.0f, 3.0f, 3.0f);
+    this->transform.scale    = Vector3f(0.0f);
+    this->transform.rotation = Vector3f(0.0f);
 
     this->PROJ->Perspective(90.f, (float)(Handle::window_size.x), (float)(Handle::window_size.y), 0.1f, 1000.0f);
     this->VIEW->LookAt( this->transform.position,
@@ -20,12 +25,12 @@ Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f)), PROJ(new Ma
 
 Camera::~Camera()
 {
-    this->Destroy();
+    //this->Destroy();  // !'V1053 Calling the 'Destroy' virtual function in the destructor may lead to unexpected result at runtime. Camera.cpp 23'
 }
 
     /// METHODES
 
-void Camera::SetPosition(Vector3f position) noexcept
+void Camera::SetPosition(const Vector3f& position) noexcept
 {
     this->transform.position = position;
     this->VIEW->LookAt( this->transform.position,
@@ -38,12 +43,12 @@ void Camera::SetPosition(Vector3f position) noexcept
 
 void Camera::Perspective(int window_width, int window_height) noexcept
 {
-    this->PROJ->Perspective(90.f, (float)(Handle::window_size.x), (float)(Handle::window_size.y), 0.1f, 1000.0f);
+    this->PROJ->Perspective(90.f, (float)(Handle::window_size.x), (float)(Handle::window_size.y), 0.01f, 1000.0f);
 
     PushMatProgram(this->PROJ, "PROJECTION", (-1));
 }
 
-void Camera::LookAt(Vector3f at) noexcept
+void Camera::LookAt(const Vector3f& at) noexcept
 {
     this->at = at;
 
@@ -57,6 +62,15 @@ void Camera::LookAt(Vector3f at) noexcept
 
 void Camera::Destroy() noexcept
 {
-    delete (this->VIEW);
-    delete (this->PROJ);
+    if (this->VIEW != nullptr)
+    {
+        delete (this->VIEW) ;
+        this->VIEW = nullptr;
+    }
+
+    if (this->PROJ != nullptr)
+    {
+        delete (this->PROJ) ;
+        this->PROJ = nullptr;
+    }
 }

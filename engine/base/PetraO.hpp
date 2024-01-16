@@ -3,9 +3,6 @@
 
 #include <platforms/macros_platform.h>
 
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-
 //#define ABSTRACT     ((boolean)0)
 //#define NON_ABSTRACT ((boolean)1)
 //#define ACTOR        ((boolean)1)

@@ -1,10 +1,6 @@
 #include <utils/json.hpp>
 
-#define OPEN -1
-#define SEEK -2
-
-#define BUFFERING -5
-#define DETECT_JSON -6
+#include <cstring>
 
 int buffering_json(const char* file_name, char** buffer)
 {
@@ -13,7 +9,7 @@ int buffering_json(const char* file_name, char** buffer)
         // Ouverture
     FILE* file = fopen(file_name, "r");
     if (file == (FILE*)0)
-        return OPEN;
+        return JSON_BAD_OPENNING;
 
         // Récupérer la taille du fichier
     log = fseek(file, 0, SEEK_END);
@@ -21,19 +17,29 @@ int buffering_json(const char* file_name, char** buffer)
     rewind(file);
 
     if (log == (-1))
-        return SEEK;
+        return JSON_BAD_SEEKING;
 
         // Prise des données
     int c(0);
     long size(0);
     
     *buffer = (char*)malloc((fileSize + 1) * sizeof(char));
+    if (*buffer == nullptr)
+    {
+        fclose(file);
+        return FILE_NULL;
+    }
     while ((c = fgetc(file)) != EOF && size < fileSize)
         (*buffer)[size++] = c;
     (*buffer)[size] = '\0';
 
         // Fermeture
-    fclose(file);
+    log = fclose(file);
+    if (log == (-1))
+    {
+        free(*buffer);
+        return JSON_NOT_CLOSED;
+    }
 
     return (size);
 }
@@ -53,16 +59,16 @@ int parse_key(const char* buffer, char** key, long* i)
     long j(*i);
 
     if (fnextc(buffer, '"', &j) < 0)
-        return -10;
+        return (-1);
 
     if (to_nextc(buffer, '"', &j, key) < 0)
-        return -11;
+        return (-2);
 
     if (fnextc(buffer, ':', &j) < 0)
-        return -12;
+        return (-3);
 
     if (fnextc(buffer, '[', &j) < 0)
-        return -13;
+        return (-4);
 
     *i = j;
     return (0);
@@ -70,16 +76,15 @@ int parse_key(const char* buffer, char** key, long* i)
 
 int parse_value(const char* buffer, char** val, long* i)
 {
+    long j(*i);
 
-    if (fnextc(buffer, '"', i) < 0)
-        return -10;
+    if (fnextc(buffer, '"', &j) < 0)
+        return (-1);
 
-    if (to_nextc(buffer, '"', i, val) < 0)
-        return -11;
+    if (to_nextc(buffer, '"', &j, val) < 0)
+        return (-2);
 
-    if (fnextc(buffer, ',', i) < 0)
-        return (0);
-
+    *i = j;
     return (0);
 }
 
@@ -92,21 +97,21 @@ void check_other_key(const char* buffer, long* i)
 int json_open(const char* file_name, ArrayForJSON*  multimap)
 {
     char* data;
-    long size = buffering_json(file_name, &data);
-    if (size < 0)
-        return BUFFERING;
+    long size_log = buffering_json(file_name, &data);   // JSON_BAD_OPENNING || JSON_BAD_SEEKING || FILE_NULL || JSON_NOT_CLOSED
+    if (size_log < 0)
+        return (size_log);
 
     long i(0);
-    if (detect_json(data, size, &i) < 0)
-        return DETECT_JSON;
+    if (detect_json(data, size_log, &i) < 0)
+        return JSON_ERROR_FILE_FORMAT;
 
-    *multimap = ArrayForJSON();
     char* keys;
     while (parse_key(data, &keys, &++i) == 0)
     {
         char* val;
-        while (parse_value(data, &val, &i) == 0)
-            multimap->insert(std::pair<char*, char*>(keys, val));
+        int log = 0;
+        while ((log = parse_value(data, &val, &i)) == 0)
+            multimap->insert(std::pair<const char*, const char*>(keys, val));
 
         check_other_key(data, &i);
     }

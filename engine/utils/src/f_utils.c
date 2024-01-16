@@ -55,6 +55,8 @@ int to_nextc(const char* v, const char c, long* i, char** buffer)
     }
 
     *buffer = (char*)malloc((size + 1));
+    if (*buffer == ((char*)0))
+        return (-1);
 
     long j = 0;
     temp = *i;

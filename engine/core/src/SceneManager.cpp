@@ -19,5 +19,5 @@ void SceneManager::SetCurrentScene(Scene* scene)
 
 Scene* SceneManager::GetCurrentScene() noexcept
 {
-    return Handle::currentScene;
+    return (Handle::currentScene);
 }

@@ -34,35 +34,45 @@ public:
 
         //  OPERATORS
 
-    inline const BOOL operator==(const Vector2& aCpy)    const noexcept;
+    inline Vector2& operator=(const Vector2& cpyRef)            noexcept
+    {
+        if (this != &cpyRef)
+        {
+            this->x = cpyRef.x;
+            this->y = cpyRef.y;
+        }
+        return *this;
+    }
+
+    inline const BOOL operator==(const Vector2& cpy)    const noexcept;
     inline const BOOL operator==(const T&&      x)       const noexcept;
     inline const BOOL operator==(const T&       x)       const noexcept;
-    inline const BOOL operator!=(const Vector2& aCpy)    const noexcept;
+    inline const BOOL operator!=(const Vector2& cpy)    const noexcept;
     inline const BOOL operator!=(const T&& x)            const noexcept;
     inline const BOOL operator!=(const T&  x)            const noexcept;
 
-    inline const Vector2 operator+(const Vector2& aCpy)  const noexcept;
+    inline const Vector2 operator+(const Vector2& cpy)  const noexcept;
     inline const Vector2 operator+(const T&& x)       const noexcept;
     inline const Vector2 operator+(const T&  x)       const noexcept;
-    inline const void    operator+=(const Vector2& aCpy)       noexcept;
+    inline const void    operator+=(const Vector2& cpy)       noexcept;
     inline const void    operator+=(const T&& x)            noexcept;
     inline const void    operator+=(const T&  x)            noexcept;
 
-    inline const Vector2 operator-(const Vector2& aCpy)  const noexcept;
+    inline const Vector2 operator-(const Vector2& cpy)  const noexcept;
     inline const Vector2 operator-(const T&& x)       const noexcept;
     inline const Vector2 operator-(const T&  x)       const noexcept;
-    inline const void    operator-=(const Vector2& aCpy)       noexcept;
+    inline const void    operator-=(const Vector2& cpy)       noexcept;
     inline const void    operator-=(const T&& x)            noexcept;
     inline const void    operator-=(const T&  x)            noexcept;
 
-    inline const Vector2 operator*(const Vector2& aCpy)  const noexcept;
+    inline const Vector2 operator*(const Vector2& cpy)  const noexcept;
     inline const Vector2 operator*(const T&& x)       const noexcept;
     inline const Vector2 operator*(const T&  x)       const noexcept;
-    inline const void    operator*=(const Vector2& aCpy)       noexcept;
+    inline const void    operator*=(const Vector2& cpy)       noexcept;
     inline const void    operator*=(const T&& x)            noexcept;
     inline const void    operator*=(const T&  x)            noexcept;
 
-    inline const Vector2 operator/(const Vector2& aCpy)  const noexcept;
+    inline const Vector2 operator/(const Vector2& cpy)  const noexcept;
     inline const Vector2 operator/(const T&& x)       const noexcept;
     inline const Vector2 operator/(const T&  x)       const noexcept;
     inline const void    operator/=(const Vector2& aCpy)       noexcept;

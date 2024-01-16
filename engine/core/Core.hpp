@@ -34,11 +34,11 @@ public:
     static int  InitEngine();
 
     static int  JSONLoader                  (ArrayForJSON* jsonLoaderInfos      );
-    static void CompileAllShaders           (const ArrayForJSON& jsonLoaderInfos);
+    static int  CompileAllShaders           (const ArrayForJSON& jsonLoaderInfos);
     static void CreateAllImportedTextures   (const ArrayForJSON& jsonLoaderInfos);
     static void FreeJSON                    (ArrayForJSON* jsonLoaderInfos      );
 
-    static void Loop();
+    static int  Loop();
 };
 
 #endif

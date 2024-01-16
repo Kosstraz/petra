@@ -1,12 +1,9 @@
 #include "../Texture.hpp"
 
-Texture::Texture(const char* image_dir) noexcept
+Texture::Texture(const char* image_dir) noexcept    :   width(0), height(0), textureID(0)
 {
     this->CreateTexture(image_dir);
 }
-
-Texture::~Texture() noexcept
-{}
 
 void Texture::CreateTexture(const char* image_dir) noexcept
 {

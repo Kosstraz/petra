@@ -9,16 +9,17 @@
 /**/template <typename T>
 Vector3<T>::Vector3(const T&& x, const T&& y, const T&& z) noexcept
 {  
-    this->x = static_cast<T>(x);
-    this->y = static_cast<T>(y);
-    this->z = static_cast<T>(z);
+    this->x = x;
+    this->y = y;
+    this->z = z;
 }
 
 template <typename T>
 Vector3<T>::Vector3(const T&& x, const T&& y) noexcept
 {  
-    this->x = static_cast<T>(x);
-    this->y = static_cast<T>(y);
+    this->x = x;
+    this->y = y;
+    this->z = static_cast<T>(0);
 }
 
 template <typename T>
@@ -34,6 +35,7 @@ Vector3<T>::Vector3(const T& x, const T& y) noexcept
 {
     this->x = x;
     this->y = y;    
+    this->z = static_cast<T>(0);
 }
 
 template <typename T>
@@ -58,7 +60,11 @@ Vector3<T>::Vector3(const Vector3<T>& copy) noexcept
 
 template <typename T>
 Vector3<T>::Vector3() noexcept
-{}
+{
+    this->x = static_cast<T>(0);
+    this->y = static_cast<T>(0);
+    this->z = static_cast<T>(0);
+}
 
 template <typename T>
 Vector3<T>::~Vector3() noexcept
@@ -102,8 +108,8 @@ inline const T Vector3<T>::Norm() const noexcept
 template <typename T>
 inline const BOOL Vector3<T>::NotNull() const noexcept
 {
-    if(this == 0)   return false;
-    return true;
+    if (*this == static_cast<T>(0))   return (0x00);    // false
+    return (0x01);                                      // true
 }
 
 template <typename T>
@@ -165,43 +171,43 @@ inline const Vector3<T> Vector3<T>::Lerp(const Vector3<T>& aCpy, const Vector3<T
 template <typename T>
 inline const BOOL Vector3<T>::operator==(const Vector3<T>& aCpy) const noexcept
 {
-    if (this->x == aCpy.x && this->y == aCpy.y && this->z == aCpy.z)   return true;
-    return false;
+    if (this->x == aCpy.x && this->y == aCpy.y && this->z == aCpy.z)   return (0x01);   // true
+    return (0x00);                                                                      // false
 }
 
 template <typename T>
 inline const BOOL Vector3<T>::operator==(const T&& x) const noexcept
 {
-    if (this->x == x && this->y == x && this->z == x)   return true;
-    return false;
+    if (this->x == x && this->y == x && this->z == x)   return (0x01);  // true
+    return (0x00);                                                      // false
 }
 
 template <typename T>
 inline const BOOL Vector3<T>::operator==(const T& x) const noexcept
 {
-    if (this->x == x && this->y == x && this->z == x)   return true;
-    return false;
+    if (this->x == x && this->y == x && this->z == x)   return (0x01);  // true
+    return (0x00);                                                      // false
 }
 
 template <typename T>
 inline const BOOL Vector3<T>::operator!=(const Vector3<T>& aCpy) const noexcept
 {
-    if (*this == aCpy)   return false;
-    return true;
+    if (*this == aCpy)   return (0x00); //false
+    return (0x01);                      //true
 }
 
 template <typename T>
 inline const BOOL Vector3<T>::operator!=(const T&& x) const noexcept
 {
-    if (*this == x)   return false;
-    return true;
+    if (*this == x)   return (0x00); //false
+    return (0x01);                   //true
 }
 
 template <typename T>
 inline const BOOL Vector3<T>::operator!=(const T& x) const noexcept
 {
-    if (*this == x)   return false;
-    return true;
+    if (*this == x)   return (0x00); //false
+    return (0x01);                   //true
 }
 
 

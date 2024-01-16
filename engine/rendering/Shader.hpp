@@ -16,37 +16,47 @@
 class Shader final
 {
 public:
-        /// CONSTRUCTEURS
 
-    Shader(const char* VFS_filename);
-    Shader(const char* fragShader, const char* vertShader);
-    Shader(const char* VFS_filename, const char* fragShader, const char* vertShader);
-    ~Shader();
+    /// CONSTRUCTEURS
 
-        /// METHODES
+        // Mettre en place un shader :
+        //  1 - shaderVar.SetVFS("path to a .vfs.glsl file")
+        //  2 - Par la suite 'Guess_frag("path to a .vfs.glsl file")' et 'Guess_vert("path to a .vfs.glsl file")'
+        //  3 - Pour finir shaderVar.CompileShader()
+        // Plus précis :
+        //  1 - Avec Set_frag("path to a .frag.glsl file") et Set_vert("path to a .vert.glsl file")
+        //  2 - Pour finir shaderVar.CompileShader()
+        // Plus rapide :
+        //  1 - shaderVar.Make("path to a .vfs.glsl file")
+    Shader() noexcept;
+   ~Shader() noexcept;
+
+    /// METHODES
 
     const char* GetFragment() const noexcept;
     const char* GetVertex  () const noexcept;
 
-    void Set_frag(const char* frag_file_name) noexcept;
-    void Set_vert(const char* vert_file_name) noexcept;
-    void Guess_frag       (const char* vfs_file_name)          noexcept;
-    void Guess_vert       (const char* vfs_file_name)          noexcept;
+    int  Make               (const char* VFS_filename)     noexcept;
+    int  SetVFS             (const char* VFS_filename)     noexcept;
+    int  Set_frag           (const char* frag_file_name)   noexcept;
+    int  Set_vert           (const char* vert_file_name)   noexcept;
+    int  Guess_frag         (const char* vfs_file_name)    noexcept;
+    int  Guess_vert         (const char* vfs_file_name)    noexcept;
 
-    void            CompileShader()                                                                          noexcept;
+    void CompileShader      ()                             noexcept;
 
-    inline void UseShader() const noexcept 
+    inline void UseShader   ()                      const  noexcept 
     { glad_glUseProgram(this->programID); }
 
-    void ConvertVFS(const char* VFS_filename) const;
-    void Free      ()                         noexcept;
+    void ConvertVFS(const char* VFS_filename)       const          ;
+    void Free      ()                                      noexcept;
 
     GLuint  programID;
 private:
     
         /// METHODES
 
-    const char* guesser(const char* vfs_file_name, const char* fragOrVert) noexcept;
+    int guesser(const char* vfs_file_name, char*& buffer, const char* fragOrVert) noexcept;
     void executeShaders() noexcept;
 
         /// ATTRIBUTS

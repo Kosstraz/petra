@@ -9,16 +9,20 @@
 
 
 
-GeometryTest::GeometryTest(const char* name) : PetraO(name), GL_GEOMETRY(0), vertexArrayID(0), vertexBufferID(0), verticesToDraw(0), MOD(new Matrix4(1.0f))
+GeometryTest::GeometryTest(const char* name)    :   PetraO(name)     , what_build(0)         , GL_GEOMETRY(0), 
+                                                    uvsBufferID(0)   , vertexArrayID(0)      , vertexBufferID(0), 
+                                                    verticesToDraw(0), MOD(new Matrix4(1.0f))
 {
-    this->transform.position = Vector3f(0.f, 0.f, 0.f);
+    this->transform.position = Vector3f(0.0f);
+    this->transform.scale    = Vector3f(0.0f);
+    this->transform.rotation = Vector3f(0.0f);
 
     this->what_build = 0;
 }
 
 GeometryTest::~GeometryTest() noexcept
 {
-    this->Destroy();
+    //this->Destroy();
 }
 
 
@@ -246,7 +250,7 @@ void GeometryTest::SetRotation(const Vector3f& rotation) noexcept
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
-void GeometryTest::SetColor(const Vector3f color) noexcept
+void GeometryTest::SetColor(const Color3& color) noexcept
 {
     this->color = color;
 
@@ -258,5 +262,13 @@ void GeometryTest::SetColor(const Vector3f color) noexcept
 
 inline void GeometryTest::Destroy() noexcept
 {
-    delete (this->MOD);
+    if (this->vertexArrayID != 0)
+        glDeleteVertexArrays(1, &this->vertexArrayID);
+    if (this->vertexBufferID != 0)
+        glDeleteVertexArrays(1, &this->vertexBufferID);
+    if (this->MOD != nullptr)
+    {
+        delete (this->MOD) ;
+        this->MOD = nullptr;
+    }
 }

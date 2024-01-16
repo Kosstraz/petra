@@ -97,12 +97,14 @@ private:
     inline void _Set(const T x = static_cast<T>(0), const T y = static_cast<T>(0), const T z = static_cast<T>(0)) noexcept;
 };
 
-typedef  Vector3<unsigned char>   Vector3uc;
-typedef  Vector3<char>            Vector3c ;
-typedef  Vector3<unsigned int>    Vector3ui;
-typedef  Vector3<int>             Vector3i ;
-typedef  Vector3<float>           Vector3f ;
-typedef  Vector3<double>          Vector3d ;
+typedef  Vector3<double>            Color3;
+
+typedef  Vector3<unsigned char>     Vector3uc;
+typedef  Vector3<char>              Vector3c ;
+typedef  Vector3<unsigned int>      Vector3ui;
+typedef  Vector3<int>               Vector3i ;
+typedef  Vector3<float>             Vector3f ;
+typedef  Vector3<double>            Vector3d ;
 
 #include "src/Vector3.inl"
 

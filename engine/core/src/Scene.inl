@@ -1,11 +1,11 @@
 #include <core/Scene.hpp>
 
 template <class PetraObjectType>
-ptr<PetraObjectType> Scene::FindACTOR(const char* name) const
+PetraObjectType* Scene::FindACTOR(const char* name)
 {
-    std::unordered_map<const char*, ptr<PetraO>>::const_iterator ite = this->all_objects_in_scene.find(name);
+    std::unordered_map<const char*, PetraO*>::iterator ite = this->all_objects_in_scene.find(name);
     if (ite != this->all_objects_in_scene.end())
-        return (ite->second.cast_ptr<PetraObjectType>());
+        return (reinterpret_cast<PetraObjectType*>(ite->second));
         
-    return (ptr<PetraObjectType>::null());
+    return (nullptr);
 }

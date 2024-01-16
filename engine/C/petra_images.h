@@ -1,6 +1,10 @@
 #ifndef PETRA_IMAGES_H
 #define PETRA_IMAGES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif  // __cplusplus
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +16,7 @@
     //  FONDAMENTAL //
     /*//////////////*/
 
+#pragma pack(push, 1)
     typedef struct img_infos {
         int8   errorCode;
         uint32 datasOffset;
@@ -23,6 +28,7 @@
         uint32 imageSize;
 
     }   img_infos;
+#pragma pack(pop)
 
 void init_img_infos(img_infos* infos);
 
@@ -76,5 +82,8 @@ int8        png_datas   (const char* file_name, uint8** buffer,  img_infos* info
 img_infos   png_load    (const char* file_name, uint8** buffer                   );
 #endif  // !PNG
 
+#ifdef __cplusplus
+}
+#endif  // __cplusplus
 
 #endif  // PETRA_IMAGES

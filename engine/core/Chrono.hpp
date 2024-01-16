@@ -8,7 +8,7 @@ class Chrono final
 {
 public:
     Chrono() noexcept;
-   ~Chrono() noexcept;
+   ~Chrono() noexcept = default;
 
     void Start() noexcept;
     void Stop () noexcept;

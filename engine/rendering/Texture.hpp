@@ -13,7 +13,7 @@ class Texture final
 {
 public:
     Texture(const char* image_dir) noexcept;
-   ~Texture() noexcept;
+   ~Texture() noexcept = default;
 
     void CreateTexture(const char* image_dir) noexcept;
     void BindToShader () const noexcept;
