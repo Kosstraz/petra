@@ -12,14 +12,14 @@ Scene::~Scene()
 // Ne supprime rien de la mémoire
 void Scene::AddObject(PetraO* object, const char* name) noexcept
 {
-    //this->all_objects_in_scene.insert(std::pair<const char*, PetraO*>(name, object));  // insert() || emplace() || try_emplace()
+    this->all_objects_in_scene.emplace(name, object);  // insert() || emplace() || try_emplace()
 }
 
 // Ne supprime rien de la mémoire
 void Scene::AddObjects(PetraO** objects, const char** name, uint32 sizeo) noexcept
 {
-    //for (uint32 i = 0; i < sizeo; i++)
-    //    AddObject(&(objects[i]), name[i]);
+    for (uint32 i = 0; i < sizeo; i++)
+        AddObject(objects[i], name[i]);
 }
 
     // Enlève un objet de la scène.
@@ -29,10 +29,7 @@ void Scene::DeleteObject(const char* name)
 {
     std::unordered_map<const char*, PetraO*>::iterator ite = this->all_objects_in_scene.find(name);
     if (ite != this->all_objects_in_scene.end())
-    {
-        //ite->second.free();
         this->all_objects_in_scene.erase(name);
-    }
 }
 
 void Scene::Clear()

@@ -34,13 +34,13 @@ public:
 
     virtual void Build(uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)          noexcept override;
     virtual void DrawBuild()                                   const    noexcept override   FREQ;
-    void PutTexture(uint32 textureID) noexcept;
+    void         PutTexture(const char* textureName)                    noexcept;
 
     void SetPosition(const Vector3f& position)  noexcept    FREQ;
     void SetScale   (const Vector3f& scale   )  noexcept;
-    void SetRotation(const Vector3f& rotation)  noexcept;
+    void SetRotation(const Vector3f& rotation, const float& angle)  noexcept;
 
-    void SetColor   (const Color3& color)      noexcept;
+    void SetColor   (const Color3& color)       noexcept;
 
     virtual void Destroy() noexcept override;
     inline const bool operator==(const GeometryTest& b) const noexcept

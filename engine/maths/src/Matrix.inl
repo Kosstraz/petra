@@ -85,25 +85,78 @@ inline void Matrix<X, Y, T, ALLOC>::Translation2D(const Vector2<T>& vec2) noexce
 
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T, ALLOC>::Rotation(const Vector3<T>& vec3) noexcept
+inline void Matrix<X, Y, T, ALLOC>::Rotation(const Vector3<T>& _axis, const float& angle) noexcept
 {
+    const float c = cos(angle);
+    const float s = sin(angle);
+    const float t = 1.0f - c;
+    Vector3<T> axis = _axis.Magnitude();
+
+    const float tx = t * axis.x;
+    const float ty = t * axis.y;
+    const float tz = t * axis.z;
+
+    const float sx = s * axis.x;
+    const float sy = s * axis.y;
+    const float sz = s * axis.z;
+
+    const float txy = tx * axis.y;
+    const float tyz = tx * axis.z;
+    const float txz = ty * axis.z;
+
+    //float axisRot[16] = {
+    //    tx * x + c,         txy - sz,       txz + sy,       0.0f,
+    //    txy + sz,           ty * y + c,     tyz - sx,       0.0f,
+    //    txz - sy,           tyz + sx,       tz * z + c,     0.0f,
+    //    0.0f,               0.0f,           0.0f,           1.0f
+    //};
+    Matrix4 originalMatrix(*this);
+
+    this->at(0, 0) = originalMatrix.at(0, 0) * (tx * axis.x + c) + originalMatrix.at(1, 0) * (txy - sz) + originalMatrix.at(2, 0) * (txz + sy);
+    this->at(1, 0) = originalMatrix.at(0, 0) * (txy + sz) + originalMatrix.at(1, 0) * (ty * axis.y + c) + originalMatrix.at(2, 0) * (tyz - sx);
+    this->at(2, 0) = originalMatrix.at(0, 0) * (txz - sy) + originalMatrix.at(1, 0) * (tyz + sx) + originalMatrix.at(2, 0) * (tz * axis.z + c);
+
+    this->at(0, 1) = originalMatrix.at(0, 1) * (tx * axis.x + c) + originalMatrix.at(1, 1) * (txy - sz) + originalMatrix.at(2, 1) * (txz + sy);
+    this->at(1, 1) = originalMatrix.at(0, 1) * (txy + sz) + originalMatrix.at(1, 1) * (ty * axis.y + c) + originalMatrix.at(2, 1) * (tyz - sx);
+    this->at(2, 1) = originalMatrix.at(0, 1) * (txz - sy) + originalMatrix.at(1, 1) * (tyz + sx) + originalMatrix.at(2, 1) * (tz * axis.z + c);
+
+    this->at(0, 2) = originalMatrix.at(0, 2) * (tx * axis.x + c) + originalMatrix.at(1, 2) * (txy - sz) + originalMatrix.at(2, 2) * (txz + sy);
+    this->at(1, 2) = originalMatrix.at(0, 2) * (txy + sz) + originalMatrix.at(1, 2) * (ty * axis.y + c) + originalMatrix.at(2, 2) * (tyz - sx);
+    this->at(2, 2) = originalMatrix.at(0, 2) * (txz - sy) + originalMatrix.at(1, 2) * (tyz + sx) + originalMatrix.at(2, 2) * (tz * axis.z + c);
+
+    // Appliquer le reste de la rotation
+    float temp[16];
+    temp[0] = originalMatrix.at(3, 0);
+    temp[1] = originalMatrix.at(3, 1);
+    temp[2] = originalMatrix.at(3, 2);
+
+    this->at(3, 0) = -sx * temp[0] + c * temp[1];
+    this->at(3, 1) = -sy * temp[0] + c * temp[1];
+    this->at(3, 2) = -sz * temp[0] + c * temp[1];
+
+    for (uint8 i = 0; i < 3; ++i)
+    {
+        this->at(i, 3) = originalMatrix.at(i, 3);
+        this->at(3, i) = originalMatrix.at(3, i);
+    }
+
             // X-Rotation
-        /*this->datas[5]  *= static_cast<T>( cosf(vec3.x));
-        this->datas[6]   = static_cast<T>(-sinf(vec3.x));
-        this->datas[9]   = static_cast<T>( sinf(vec3.x));
-        this->datas[10] *= static_cast<T>( cosf(vec3.x));   
+        /*this->at(1, 1)   = static_cast<T>( cosf(vec3.x));
+        this->at(2, 1)   = static_cast<T>(-sinf(vec3.x));
+        this->at(1, 2)   = static_cast<T>( sinf(vec3.x));
+        this->at(2, 2)   = static_cast<T>( cosf(vec3.x));
 
             // Y-Rotation
-        this->datas[0]  *= static_cast<T>( cosf(vec3.y));
-        this->datas[2]   = static_cast<T>( sinf(vec3.y));
-        this->datas[8]   = static_cast<T>(-sinf(vec3.y));
-        this->datas[10] *= static_cast<T>( cosf(vec3.y));
+        this->at(0, 0)   = static_cast<T>( cosf(vec3.y));
+        this->at(2, 0)   = static_cast<T>( sinf(vec3.y));
+        this->at(0, 2)   = static_cast<T>(-sinf(vec3.y));
+        this->at(2, 2)   = static_cast<T>( cosf(vec3.y));
         
             // Z-Rotation
-        this->datas[0] *= static_cast<T>( cosf(vec3.z));
-        this->datas[1]  = static_cast<T>(-sinf(vec3.z));
-        this->datas[4]  = static_cast<T>( sinf(vec3.z));
-        this->datas[5] *= static_cast<T>( cosf(vec3.z));*/
+        this->at(0, 0)  = static_cast<T>( cosf(vec3.z));
+        this->at(1, 0)  = static_cast<T>(-sinf(vec3.z));
+        this->at(0, 1)  = static_cast<T>( sinf(vec3.z));
+        this->at(1, 1)  = static_cast<T>( cosf(vec3.z));*/
 }
 
 MATRIX_TEMPLATE

@@ -26,7 +26,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     Handle::window_size = {width, height};
     Camera* get = SceneManager::GetCurrentScene()->FindACTOR<Camera>("mainCamera");
     get->Perspective(width, height);
-    get = nullptr;
 }
 
 int Core::Loop()
@@ -51,26 +50,32 @@ int Core::Loop()
     SceneManager::SetCurrentScene(&mainLevel);
 
         // Personnalisation   <---
-    Camera cam              =   Camera("mainCamera");
-    GeometryTest player     =   GeometryTest("player");
-    player.SetColor(Color3(1.f, 0.f, 1.0f));
+    Camera       cam      = Camera("mainCamera");
+    GeometryTest player   = GeometryTest("player");
     player.WhatBuild(DRAW_CUBE);
 
         // Charge la scène et tous ces éléments
     SceneManager::GetCurrentScene()->LoadThisScene();
 
+        // Opération sur les objets
+    player.SetColor(Color3(1.f, 1.f, 1.f));
+    player.PutTexture("resources/images/butezMoiCetteMerde.bmp");
+
     c.Stop();
     EXEC_TIME(c.GetTime())
     DEBUG_GL()
+    float a = 0.f;
     while (!glfwWindowShouldClose(context))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-
-        player.SetColor(Color3(1.f, 0.f, 1.0f));
-        player.SetPosition(Vector3f(0.0f));
-
-
+        
+        if (glfwGetKey(context, 'E') == GLFW_PRESS)
+            a += 0.001f;
+        if (glfwGetKey(context, 'Q') == GLFW_PRESS)
+            a -= 0.001f;
+        player.SetRotation(Vector3f(0.f, 0.1f, 0.f), a);
+        a = 0.0f;
 
             // Dessin tous les éléments de la scène
         SceneManager::GetCurrentScene()->DrawThisScene();

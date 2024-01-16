@@ -12,6 +12,9 @@ extern "C" {
 #include "platforms/errors_macros.hpp"
 #include "platforms/types_macros.hpp"
 
+#define IMAGES_ALL
+#define IMAGES_BMP
+
     /*//////////////*/
     //  FONDAMENTAL //
     /*//////////////*/

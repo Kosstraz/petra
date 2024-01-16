@@ -12,6 +12,7 @@ int main()
         return_error("Erreur lors de la récupération des informations du fichier 'to_load.json'", errorCode);
     if ((errorCode = Core::CompileAllShaders(jsonLoader)) < 0)
         return_error("Erreur lors de la compilation des shaders", errorCode);
+    Core::CreateAllImportedTextures(jsonLoader);
     Core::FreeJSON(&jsonLoader);
 
         // Boucle principale

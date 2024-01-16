@@ -50,6 +50,8 @@ int Shader::Guess_frag(const char* vfs_file_name) noexcept
     this->Set_frag(fragFile_name);
     delete[] (fragFile_name);
     fragFile_name = nullptr;
+
+    return (0);
 }
 
 int Shader::Guess_vert(const char* vfs_file_name) noexcept
@@ -59,6 +61,8 @@ int Shader::Guess_vert(const char* vfs_file_name) noexcept
     this->Set_vert(vertFile_name);
     delete[] (vertFile_name);
     vertFile_name = nullptr;
+
+    return (0);
 }
 
 void Shader::CompileShader() noexcept

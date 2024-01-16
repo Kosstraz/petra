@@ -22,7 +22,7 @@ GeometryTest::GeometryTest(const char* name)    :   PetraO(name)     , what_buil
 
 GeometryTest::~GeometryTest() noexcept
 {
-    //this->Destroy();
+    this->Destroy();
 }
 
 
@@ -174,55 +174,64 @@ void GeometryTest::DrawBuild() const noexcept
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferID);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ((const void*)0));
+
+    //glEnableVertexAttribArray(1);
+    //glBindBuffer(GL_ARRAY_BUFFER, this->uvsBufferID);
+    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
     glDrawArrays(this->GL_GEOMETRY, 0, this->verticesToDraw);
+
+    //glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
 }
 
-void GeometryTest::PutTexture(uint32 textureID) noexcept
+void GeometryTest::PutTexture(const char* textureName) noexcept
 {
-    /*constexpr float g_uv_buffer_data[vertexSize] = {
+    /**/
+    constexpr unsigned int vertexSize = (48);
+    constexpr float g_uv_buffer_data[vertexSize] = {
         0.0f, 1.0f,
         0.0f, 0.0f,
         1.0f, 0.0f,
         1.0f, 1.0f,
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        1.0f, 1.0f,
+
         0.0f, 1.0f,
         0.0f, 0.0f,
         1.0f, 0.0f,
         1.0f, 1.0f,
+
         0.0f, 1.0f,
         0.0f, 0.0f,
-        1.0f, 0.0f  
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f
     };
 
      // GESTION TEXTURE
+    glUseProgram(Handle::shadersProgram[0]);
+
     glEnableVertexAttribArray(1);
     glGenBuffers(1, &this->uvsBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, this->uvsBufferID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_METHOD_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
-    texture.BindToShader();*/
+    Texture::BindToShader(textureName);
 }
 
 
@@ -243,9 +252,10 @@ void GeometryTest::SetScale(const Vector3f& scale) noexcept
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
 
-void GeometryTest::SetRotation(const Vector3f& rotation) noexcept
+void GeometryTest::SetRotation(const Vector3f& rotation, const float& angle) noexcept
 {
-
+    this->transform.rotation = rotation;
+    this->MOD->Rotation(rotation, angle);
 
     PushMatProgram(this->MOD, "TRANSFORMATION", (-1));
 }
@@ -266,6 +276,8 @@ inline void GeometryTest::Destroy() noexcept
         glDeleteVertexArrays(1, &this->vertexArrayID);
     if (this->vertexBufferID != 0)
         glDeleteVertexArrays(1, &this->vertexBufferID);
+    if (this->uvsBufferID != 0)
+        glDeleteVertexArrays(1, &this->uvsBufferID);
     if (this->MOD != nullptr)
     {
         delete (this->MOD) ;

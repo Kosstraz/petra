@@ -63,7 +63,7 @@ int Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
         {
             Shader shader = Shader();
             if ((log = shader.Make(i->second)) < 0)
-                return_error ("Probleme lors de la creation des shaders, shader en question :"/*(const char*)i->second*/, log);
+                return (log);
 
             handle.shadersProgram[0] = shader.programID;
         }
@@ -78,14 +78,14 @@ int Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
 
 void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
 {
-    DEBUG(TEXTURE_LOG, "Création de toutes les textures...");
+    DEBUG(TEXTURE_LOG, "Creation de toutes les textures...");
     Chrono c; c.Start();
 
     for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); ++i)
         if (strcmp(i->first, "textures_to_load") == 0)
         {
             Texture texture = Texture(i->second);
-            
+            global_rendering::textures.emplace(i->second, texture.TakeTexture());
         }
 
     c.Stop();

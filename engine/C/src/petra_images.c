@@ -16,7 +16,7 @@ int8 bmp_header(const char* file_name, img_infos* infos)
         // lecture
     BMP_header header;
     int8 check = fread(&header, sizeof(BMP_header), 1, file);
-    if ((unsigned long long)check < sizeof(BMP_header) || header.signature[0] != 'B' || header.signature[1] != 'M')
+    if (check < 0 || header.signature[0] != 'B' || header.signature[1] != 'M')
     {
         fclose(file);
         return BMP_ERROR;
@@ -65,7 +65,7 @@ int8 bmp_datas(const char* file_name, uint8** buffer, img_infos* infos)
         return BMP_ERROR;
     }
     check = fread(datas, infos->imageSize, 1, file);
-    if ((uint32)check < infos->imageSize)
+    if (check < 0)
     {
         fclose(file);
         free(datas);

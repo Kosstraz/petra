@@ -4,11 +4,8 @@
 
     /// CONSTRUCTEURS
 
-Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f))//, PROJ(new Matrix4(1.0f)), VIEW(new Matrix4(1.0f))
+Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f)), PROJ(new Matrix4(1.0f)), VIEW(new Matrix4(1.0f))
 {
-    this->PROJ = new Matrix4(1.0f);
-    this->VIEW = new Matrix4(1.0f);
-
     this->transform.position = Vector3f(4.0f, 3.0f, 3.0f);
     this->transform.scale    = Vector3f(0.0f);
     this->transform.rotation = Vector3f(0.0f);
@@ -25,7 +22,7 @@ Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f))//, PROJ(new 
 
 Camera::~Camera()
 {
-    //this->Destroy();  // !'V1053 Calling the 'Destroy' virtual function in the destructor may lead to unexpected result at runtime. Camera.cpp 23'
+    this->Destroy();  // !'V1053 Calling the 'Destroy' virtual function in the destructor may lead to unexpected result at runtime. Camera.cpp 23'
 }
 
     /// METHODES

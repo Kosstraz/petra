@@ -12,7 +12,7 @@ void Texture::CreateTexture(const char* image_dir) noexcept
 
     IF_RARELY(info.errorCode < 0)
     {
-        DEBUG(TEXTURE_LOG, "Erreur dans 'CreateTexture(...)' avec 'bmp_load'")
+        DEBUG(TEXTURE_LOG, "Erreur 'bmp_load(image_dir, &data)' dans 'Texture::CreateTexture(...)'")
         printf("Code erreur : %d\n", info.errorCode);
     }
     else
@@ -28,18 +28,19 @@ void Texture::CreateTexture(const char* image_dir) noexcept
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,   this->width, this->height, 0, GL_BGR,   GL_UNSIGNED_BYTE, data);
 
         glGenerateMipmap(GL_TEXTURE_2D);
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0 + this->textureID);
     }
 
     free(data);
 }
 
-void Texture::BindToShader() const noexcept
+void Texture::BindToShader(const char* textureName) noexcept
 {
-    glUseProgram(Handle::shadersProgram[0]);
-
+    unsigned int textureID = global_rendering::textures[textureName];
+    glActiveTexture(GL_TEXTURE0 + textureID);
+    
     int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "TEXTURE");
-    glUniform1i(unifLoc, 0);
+    glUniform1i(unifLoc, textureID);
 }
 
 uint Texture::TakeTexture() const noexcept

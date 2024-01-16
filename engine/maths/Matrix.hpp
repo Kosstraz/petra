@@ -27,14 +27,14 @@ public:
         // Libère la mémoire allouée et supprime l'objet
     void Free()     noexcept;
 
-    inline void Scale2D(const Vector2<T>& vec2)  noexcept;
-    inline void Scale(const Vector3<T>& vec3)    noexcept;
+    inline void Scale2D(const Vector2<T>& vec2)     noexcept;
+    inline void Scale   (const Vector3<T>& vec3)    noexcept;
 
-    inline void Translation2D(const Vector2<T>& vec2)  noexcept;
-    inline void Translation(const Vector3<T>& vec3)    noexcept;
+    inline void Translation2D(const Vector2<T>& vec2)   noexcept;
+    inline void Translation (const Vector3<T>& vec3)    noexcept;
 
-    inline void Rotation(const Vector3<T>&   vec3)  noexcept;
-    inline void Rotation2D(const Vector2<T>& vec2)  noexcept;
+    inline void Rotation    (const Vector3<T>&   vec3, const float& angle)  noexcept;
+    inline void Rotation2D  (const Vector2<T>& vec2)                        noexcept;
 
     inline void Transformation   (const Vector3<T>& pos,
                                   const Vector3<T>& scale,
@@ -51,7 +51,7 @@ public:
                              const float& zFar)  noexcept;
 
     inline void Debug() const;
-    inline T& at(const uint16&& x, const uint16&& y) const noexcept
+    inline T& at(const uint16&& x, const uint16&& y)    const   noexcept    FREQ
     { return this->datas[x * Y + y]; }
     inline T*   Ref  () const noexcept;
 
