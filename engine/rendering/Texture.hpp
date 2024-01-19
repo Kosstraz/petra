@@ -6,7 +6,7 @@
 #include <core/Handle.hpp>
 #include <platforms/logs_macros.hpp>
 
-#include <C/TextureStruct.h>
+#include <rendering/TextureStruct.hpp>
 
 #define IMAGES_BMP
     #include <C/petra_images.h>
@@ -19,6 +19,7 @@ public:
 
     void        CreateTexture(const char* image_dir)    noexcept;
     static void BindToShader (const char* textureName)  noexcept;
+    static void BindToShader (uint        textureID)    noexcept;
 
     uint        TakeTexture()                   const   noexcept;
 

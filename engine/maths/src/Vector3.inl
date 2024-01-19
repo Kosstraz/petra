@@ -66,10 +66,6 @@ Vector3<T>::Vector3() noexcept
     this->z = static_cast<T>(0);
 }
 
-template <typename T>
-Vector3<T>::~Vector3() noexcept
-{  this->_Set();      }
-
     //  METHODES
 
 template <typename T>
@@ -321,11 +317,3 @@ inline void Vector3<T>::operator=(const Vector3<T>& cpy) noexcept
 ///////////////
 /*  PRIVATE  */
 ///////////////
-
-template <typename T>
-inline void Vector3<T>::_Set(const T x, const T y, const T z) noexcept
-{
-    this->x = x;
-    this->y = y;
-    this->z = z;
-}

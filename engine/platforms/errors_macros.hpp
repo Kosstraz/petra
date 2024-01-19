@@ -21,11 +21,15 @@
 #define  BMP_ERROR              -(0x00A)
 #define  BMP_BAD_COMPRESSION    -(0x00B)
 
+    // PNG errors
+#define  PNG_ERROR              -(0x00C)
+#define  PNG_BAD_COMPRESSION    -(0x00D)
+
     // JSON errors
-#define JSON_BAD_OPENNING       -(0x00C)
-#define JSON_BAD_SEEKING        -(0x00D)
-#define JSON_NOT_CLOSED         -(0x00E)
-#define JSON_ERROR_FILE_FORMAT  -(0x00F)
+#define JSON_BAD_OPENNING       -(0x00E)
+#define JSON_BAD_SEEKING        -(0x00F)
+#define JSON_NOT_CLOSED         -(0x010)
+#define JSON_ERROR_FILE_FORMAT  -(0x011)
 
     // SHADER errors
-#define SHADER_BAD_GUESSING     -(0x010)
+#define SHADER_BAD_GUESSING     -(0x012)

@@ -67,3 +67,21 @@ int to_nextc(const char* v, const char c, long* i, char** buffer)
     *i = ++temp;    // <-- 'i' s'arrête 1 cran juste après le caractère 'c' trouvé.
     return (0);
 }
+
+char* strjoin(const char* str1, const char* str2, long size1, long size2)
+{
+    if (size1 == 0)
+        size1 = strlen(str1);
+    if (size2 == 0)
+        size2 = strlen(str2);
+
+    long total_size = size1 + size2;
+    char* ret = (char*)malloc(total_size + 1);
+
+    long i = -1;
+    while (++i < total_size + 1)
+        ret[i] = (i < size1) ? str1[i] : str2[i - size1];
+    ret[total_size] = '\0';
+    
+    return (ret);
+}

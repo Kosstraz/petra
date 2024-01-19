@@ -1,15 +1,15 @@
 #include "../Core.hpp"
 
+#define TEXTURE_PATH "resources/images/"
+
 int Core::InitEngine()
 {
     DEBUG(CORE_LOG, "Initialisation du moteur...");
-    Chrono c;
-    c.Start();
+    INIT_RECORD RECORD
 
     if (!glfwInit())
     {
-        c.Stop();
-        EXEC_TIME(c.GetTime());
+        STOP_RECORD
 
         return (GLFWINIT_FAILED);
     }
@@ -23,8 +23,7 @@ int Core::InitEngine()
     GLFWwindow* window = glfwCreateWindow(800, 600, "Fenêtre", 0, 0);
     if (!window)
     {
-        c.Stop();
-        EXEC_TIME(c.GetTime())
+        STOP_RECORD
 
         glfwTerminate();
         return (WINDOWNnullptr_FAILED);
@@ -34,16 +33,14 @@ int Core::InitEngine()
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        c.Stop();
-        EXEC_TIME(c.GetTime());
+        STOP_RECORD
 
         glfwDestroyWindow(window);
         glfwTerminate();
         return (GLADLOADER_FAILED);
     }
 
-    c.Stop();
-    EXEC_TIME(c.GetTime());
+    STOP_RECORD
     return (0);
 }
 
@@ -53,7 +50,7 @@ int Core::JSONLoader(ArrayForJSON* jsonLoaderInfos)
 int Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
 {
     DEBUG(SHADER_LOG, "Compilation de tous les shaders...");
-    Chrono c; c.Start();
+    INIT_RECORD RECORD
     Handle handle;
 
     int log = 0;
@@ -71,25 +68,25 @@ int Core::CompileAllShaders(const ArrayForJSON& jsonLoaderInfos)
 
     glUseProgram(Handle::shadersProgram[0]);
     
-    c.Stop();
-    EXEC_TIME(c.GetTime());
+    STOP_RECORD
     return (0);
 }
 
 void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
 {
     DEBUG(TEXTURE_LOG, "Creation de toutes les textures...");
-    Chrono c; c.Start();
+    INIT_RECORD RECORD
 
     for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); ++i)
         if (strcmp(i->first, "textures_to_load") == 0)
         {
-            Texture texture = Texture(i->second);
+            char* path = strjoin(TEXTURE_PATH, i->second, 0, 0);
+            Texture texture = Texture(path);
             global_rendering::textures.emplace(i->second, texture.TakeTexture());
+            free(path);
         }
 
-    c.Stop();
-    EXEC_TIME(c.GetTime());
+    STOP_RECORD
 }
 
 void Core::FreeJSON(ArrayForJSON* jsonLoaderInfos)

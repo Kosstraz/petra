@@ -1,19 +1,20 @@
 #ifndef PETRA_CORE_HPP
 #define PETRA_CORE_HPP
 
-#include <core/Handle.hpp>
-
+// Contexte OpenGL et gérence des fenêtres
 #include <glad/glad.h>
 #define GLFW_DLL
 #include <glfw-3.3.9/glfw3.h>
 
-// Gestion des erreurs + autres utilités
+// Les resources globales du moteur
+#include <core/Handle.hpp>
+
+// Utilités et MACRO portables
 #include <platforms/macros_platform.h>
 #include <cstdio>
 
-// Stockages des informations liées aux images, textures
+// Stockages des informations liées aux images, les textures
 #include <rendering/Texture.hpp>
-#include <C/TextureStruct.h>
 
 // Pour la compilation des shaders
 #include <rendering/Shader.hpp>
@@ -21,13 +22,11 @@
 // Calcule des temps d'exécutions
 #include <core/Chrono.hpp>
 
+// Parser et ouvrir les fichiers .json compatibles avec Petra
 #include <utils/json.hpp>
 
-class Core
+class Core final
 {
-    /// CONSTRUCTEURS
-
-
 public:
     /// METHODES
 

@@ -100,6 +100,63 @@ img_infos bmp_load(const char* file_name, uint8** buffer)
     return infos;
 }
 
+
+
+
+
+    /*////////*/
+    //   PNG  //
+    /*////////*/
+
+
+
+int8        png_header  (const char* file_name,                  img_infos* infos)
+{
+    FILE* file = fopen(file_name, "rb");
+    if (file == ((FILE*)0))
+        return FILE_NULL;
+
+        // lecture
+    PNG_header header;
+    int8 check = fread(&header, sizeof(PNG_header), 1, file);
+    if (check < 0 || header.signature[1] != 'P' || header.signature[2] != 'N' || header.signature[3] != 'G')
+    {
+        fclose(file);
+        return PNG_ERROR;
+    }
+    
+    printf("width : %d\nheight : %d\n", hltolr(header.width), hltolr(header.height));
+
+    return (0);
+}
+
+int8        png_datas   (const char* file_name, uint8** buffer,  img_infos* infos)
+{
+    return (0);
+}
+
+img_infos   png_load    (const char* file_name, uint8** buffer                   )
+{
+    img_infos info;
+    init_img_infos(&info);
+
+    png_header(file_name, &info);
+
+    uint8* datas;
+    png_datas(file_name, &datas, &info);
+
+    return (info);
+}
+
+
+
+
+    /*////////////*/
+    //   OTHERS   //
+    /*////////////*/
+
+
+
     // Initialisation de la structure des infos de l'image
 void init_img_infos(img_infos* infos)
 {
@@ -112,17 +169,3 @@ void init_img_infos(img_infos* infos)
     infos->compression = 0;
     infos->imageSize   = 0;
 }
-
-
-
-
-
-    /*////////*/
-    //   PNG  //
-    /*////////*/
-
-
-
-
-
-

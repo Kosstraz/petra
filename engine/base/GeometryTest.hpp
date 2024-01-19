@@ -13,11 +13,13 @@
 #include <rendering/Shader.hpp>
 #include <core/Handle.hpp>
 
-#define DRAW_TRIANGLE   0x00
-#define DRAW_SQUARE     0x01
-#define DRAW_CUBE       0x02
+#include <rendering/RendererManager.hpp>
 
-class GeometryTest final : public PetraO
+#define DRAW_TRIANGLE   (0x00)
+#define DRAW_SQUARE     (0x01)
+#define DRAW_CUBE       (0x02)
+
+class GeometryTest : public PetraO
 {
 public:
         /// CONSTRUCTEURS
@@ -27,40 +29,43 @@ public:
 
         /// METHODES
 
-    void WhatBuild     (uint8 DRAW_WHAT)                                        ;
-    void BuildTriangle (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)         noexcept;
-    void BuildSquare   (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)         noexcept;
-    void BuildCube     (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)         noexcept;
+    virtual void WhatBuild(uint8 DRAW_WHAT);
+
+    void BuildTriangle     (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)         noexcept;
+    void BuildSquare       (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)         noexcept;
+    void BuildCube         (uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)         noexcept;
 
     virtual void Build(uint32 GL_METHOD_DRAW = GL_STATIC_DRAW)          noexcept override;
     virtual void DrawBuild()                                   const    noexcept override   FREQ;
-    void         PutTexture(const char* textureName)                    noexcept;
+    virtual void PutTexture(const char* textureName)                    noexcept;
 
-    void SetPosition(const Vector3f& position)  noexcept    FREQ;
-    void SetScale   (const Vector3f& scale   )  noexcept;
-    void SetRotation(const Vector3f& rotation, const float& angle)  noexcept;
+    virtual void SetPosition(const Vector3f& position)  noexcept    FREQ;
+    virtual void SetScale   (const Vector3f& scale   )  noexcept;
+    virtual void SetRotation(const Vector3f& rotation, const float& angle)  noexcept;
 
-    void SetColor   (const Color3& color)       noexcept;
+    virtual void SetColor   (const Color3& color)       noexcept;
 
     virtual void Destroy() noexcept override;
-    inline const bool operator==(const GeometryTest& b) const noexcept
+    inline const BOOL operator==(const GeometryTest& b) const noexcept
     {
-        if (strcmp(this->name, b.name) == 0)
-            return (true);
-        return (false);
+        if (strcmp(this->name, b.name) == 0x00)
+            return (0x01);                      // true
+        return (0x00);                          // false
     }
-
+    
     READ_ONLY Transform   transform;
     READ_ONLY Color3      color;
-private:
-    uint8   what_build;
-    uint    GL_GEOMETRY;
-    uint    uvsBufferID;
-    uint    vertexArrayID;
-    uint    vertexBufferID;
-    uchar   verticesToDraw;
 
-    Matrix4*  MOD;
+protected:
+    uint        vertexArrayID;
+    Matrix4*    SP;
+
+private:
+    uchar   verticesToDraw;
+    uint    GL_GEOMETRY;
+    uint8   what_build;
+    uint    uvsBufferID;
+    uint    vertexBufferID;
 };
 
 #endif

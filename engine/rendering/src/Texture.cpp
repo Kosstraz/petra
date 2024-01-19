@@ -43,6 +43,14 @@ void Texture::BindToShader(const char* textureName) noexcept
     glUniform1i(unifLoc, textureID);
 }
 
+void Texture::BindToShader(uint textureID)    noexcept
+{
+    glActiveTexture(GL_TEXTURE0 + textureID);
+    
+    int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "TEXTURE");
+    glUniform1i(unifLoc, textureID);
+}
+
 uint Texture::TakeTexture() const noexcept
 {
     return (this->textureID);

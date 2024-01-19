@@ -104,12 +104,6 @@ inline void Matrix<X, Y, T, ALLOC>::Rotation(const Vector3<T>& _axis, const floa
     const float tyz = tx * axis.z;
     const float txz = ty * axis.z;
 
-    //float axisRot[16] = {
-    //    tx * x + c,         txy - sz,       txz + sy,       0.0f,
-    //    txy + sz,           ty * y + c,     tyz - sx,       0.0f,
-    //    txz - sy,           tyz + sx,       tz * z + c,     0.0f,
-    //    0.0f,               0.0f,           0.0f,           1.0f
-    //};
     Matrix4 originalMatrix(*this);
 
     this->at(0, 0) = originalMatrix.at(0, 0) * (tx * axis.x + c) + originalMatrix.at(1, 0) * (txy - sz) + originalMatrix.at(2, 0) * (txz + sy);
@@ -124,7 +118,7 @@ inline void Matrix<X, Y, T, ALLOC>::Rotation(const Vector3<T>& _axis, const floa
     this->at(1, 2) = originalMatrix.at(0, 2) * (txy + sz) + originalMatrix.at(1, 2) * (ty * axis.y + c) + originalMatrix.at(2, 2) * (tyz - sx);
     this->at(2, 2) = originalMatrix.at(0, 2) * (txz - sy) + originalMatrix.at(1, 2) * (tyz + sx) + originalMatrix.at(2, 2) * (tz * axis.z + c);
 
-    // Appliquer le reste de la rotation
+        // Appliquer le reste de la rotation
     float temp[16];
     temp[0] = originalMatrix.at(3, 0);
     temp[1] = originalMatrix.at(3, 1);
@@ -134,44 +128,22 @@ inline void Matrix<X, Y, T, ALLOC>::Rotation(const Vector3<T>& _axis, const floa
     this->at(3, 1) = -sy * temp[0] + c * temp[1];
     this->at(3, 2) = -sz * temp[0] + c * temp[1];
 
-    for (uint8 i = 0; i < 3; ++i)
-    {
-        this->at(i, 3) = originalMatrix.at(i, 3);
-        this->at(3, i) = originalMatrix.at(3, i);
-    }
-
-            // X-Rotation
-        /*this->at(1, 1)   = static_cast<T>( cosf(vec3.x));
-        this->at(2, 1)   = static_cast<T>(-sinf(vec3.x));
-        this->at(1, 2)   = static_cast<T>( sinf(vec3.x));
-        this->at(2, 2)   = static_cast<T>( cosf(vec3.x));
-
-            // Y-Rotation
-        this->at(0, 0)   = static_cast<T>( cosf(vec3.y));
-        this->at(2, 0)   = static_cast<T>( sinf(vec3.y));
-        this->at(0, 2)   = static_cast<T>(-sinf(vec3.y));
-        this->at(2, 2)   = static_cast<T>( cosf(vec3.y));
-        
-            // Z-Rotation
-        this->at(0, 0)  = static_cast<T>( cosf(vec3.z));
-        this->at(1, 0)  = static_cast<T>(-sinf(vec3.z));
-        this->at(0, 1)  = static_cast<T>( sinf(vec3.z));
-        this->at(1, 1)  = static_cast<T>( cosf(vec3.z));*/
+    //for (uint8 i = 0; i < 3; ++i)
+    //{
+        //this->at(i, 3) = originalMatrix.at(i, 3);
+        //this->at(3, i) = originalMatrix.at(3, i);
+    //}
 }
 
 MATRIX_TEMPLATE
 inline void Matrix<X, Y, T, ALLOC>::Rotation2D(const Vector2<T>& vec2) noexcept
 {
-    /*this->datas[0] *= static_cast<T>( cosf(vec2.x));
-    this->datas[1]  = static_cast<T>(-sinf(vec2.x));
-    this->datas[4]  = static_cast<T>( sinf(vec2.x));
-    this->datas[5] *= static_cast<T>( cosf(vec2.x));*/
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T, ALLOC>::Transformation(const Vector3<T>& pos,
-                                            const Vector3<T>& scale,
-                                            const Vector3<T>& rot)      noexcept
+inline void Matrix<X, Y, T, ALLOC>::Transformation( const Vector3<T>& pos,
+                                                    const Vector3<T>& scale,
+                                                    const Vector3<T>& rot)      noexcept
 {
     this->Translation(pos);
     this->Scale      (scale);
@@ -179,9 +151,9 @@ inline void Matrix<X, Y, T, ALLOC>::Transformation(const Vector3<T>& pos,
 }
 
 MATRIX_TEMPLATE
-inline void Matrix<X, Y, T, ALLOC>::Transformation2D(const Vector2<T>& pos,
-                                              const Vector2<T>& scale,
-                                              const Vector2<T>& rot)      noexcept
+inline void Matrix<X, Y, T, ALLOC>::Transformation2D(   const Vector2<T>& pos,
+                                                        const Vector2<T>& scale,
+                                                        const Vector2<T>& rot)      noexcept
 {
     this->Translation(pos);
     this->Scale      (scale);
@@ -228,7 +200,7 @@ void Matrix<X, Y, T, ALLOC>::Perspective(const float& FOV, const float& width,
     this->at(0, 0) = static_cast<T>(1.0f / (aspect * tanFOV));
     this->at(1, 1) = static_cast<T>(1.0f / tanFOV);
     this->at(2, 2) = static_cast<T>(zFar / (zFar - zNear));
-    this->at(3, 2) = static_cast<T>((-zFar * zNear) / (zFar - zNear)); 
+    this->at(3, 2) = static_cast<T>(-(zFar + zNear) / (zFar - zNear));
     this->at(2, 3) = static_cast<T>(1);
 }
 

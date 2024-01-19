@@ -59,6 +59,15 @@ public:
 
         // OPERATEURS
 
+    inline const Matrix<X, Y, T, ALLOC> operator*(const Matrix<X, Y, T, ALLOC>& mat)    const   noexcept
+    {
+        for (uint32 i = 0; i < X; i++)
+            for (uint32 j = 0; j < Y; j++)
+                for (uint32 k = 0; k < Y; k++)
+                    this->at(i, j) += this->at(i, k) * mat.at(k, j);
+        return (*this);
+    }
+
 public:
         // VARIABLES
 

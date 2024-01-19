@@ -9,8 +9,10 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-#include "platforms/errors_macros.hpp"
-#include "platforms/types_macros.hpp"
+#include "../utils/f_hexa.h"
+
+#include "../platforms/errors_macros.hpp"   // enlever ../
+#include "../platforms/types_macros.hpp"    // enlever ../
 
 #define IMAGES_ALL
 #define IMAGES_BMP
@@ -80,6 +82,23 @@ img_infos   bmp_load    (const char* file_name, uint8** buffer                  
 
 
 #ifdef  IMAGES_PNG
+    #pragma pack(push, 1)
+typedef struct PNG_header {
+        // Signature   -> 8 octets
+    char  signature[8];
+        // IHDR header -> 13 octets
+    uint32 width;
+    uint32 height;
+    uint8  bit_depth;
+    uint8  color_type;
+    uint8  compression;
+    uint8  filter_method;
+    uint8  interlace_method;
+
+        //
+
+}   PNG_header;
+    #pragma pack(pop)
 int8        png_header  (const char* file_name,                  img_infos* infos);
 int8        png_datas   (const char* file_name, uint8** buffer,  img_infos* infos);
 img_infos   png_load    (const char* file_name, uint8** buffer                   );

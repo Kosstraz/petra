@@ -20,7 +20,8 @@ public:
     Vector3 (const T& identity)                           noexcept;
     Vector3 (const Vector3<T>& copy)                      noexcept;
     Vector3 ()                                            noexcept;
-    ~Vector3()                                            noexcept;
+
+    ~Vector3()                                            noexcept = default;
 
         //  METHODES
 
@@ -45,6 +46,13 @@ public:
     inline static const Vector3<T> Oppose (const Vector3<T>& aCpy, const Vector3<T>& bCpy)                           noexcept;
 
     inline static const Vector3<T> Lerp (const Vector3<T>& aCpy, const Vector3<T>& bCpy, const float& t) noexcept;
+
+    inline static constexpr const Vector3<T> RIGHT  ()  noexcept
+    {    return (Vector3<T>(1.F, 0.F, 0.F));    }
+    inline static constexpr const Vector3<T> UP     ()  noexcept
+    {    return (Vector3<T>(0.F, 1.F, 0.F));    }
+    inline static constexpr const Vector3<T> FORWARD()  noexcept
+    {    return (Vector3<T>(0.F, 0.F, 1.F));    }
 
         //  OPERATORS
 
@@ -86,15 +94,8 @@ public:
     inline void operator=(const Vector3<T>& aCpy)  noexcept;
 
         //  VARIABLES
+
     T x, y, z;
-
-    inline static const Vector3<T> right   = Vector3<T>(1.0f, 0.0f, 0.0f);
-    inline static const Vector3<T> up      = Vector3<T>(0.0f, 1.0f, 0.0f);
-    inline static const Vector3<T> forward = Vector3<T>(0.0f, 0.0f, 1.0f);
-
-private:
-        //  METHODES
-    inline void _Set(const T x = static_cast<T>(0), const T y = static_cast<T>(0), const T z = static_cast<T>(0)) noexcept;
 };
 
 typedef  Vector3<double>            Color3;
