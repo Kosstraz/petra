@@ -88,9 +88,14 @@ int parse_value(const char* buffer, char** val, long* i)
     return (0);
 }
 
-void check_other_key(const char* buffer, long* i)
+void check_another_key(const char* buffer, long* i)
 {
     fnextc(buffer, ']', i);
+    fnextc(buffer, ',', i);
+}
+
+void check_another_value(const char* buffer, long* i)
+{
     fnextc(buffer, ',', i);
 }
 
@@ -108,12 +113,17 @@ int json_open(const char* file_name, ArrayForJSON*  multimap)
     char* keys;
     while (parse_key(data, &keys, &++i) == 0)
     {
+        //printf("Key : %s\n", keys);
         char* val;
         int log = 0;
         while ((log = parse_value(data, &val, &i)) == 0)
+        {
+            //printf("\tvalue = %s\n", val);
             multimap->insert(std::pair<const char*, const char*>(keys, val));
+            check_another_value(data, &i);
+        }
 
-        check_other_key(data, &i);
+        check_another_key(data, &i);
     }
 
     free(data);

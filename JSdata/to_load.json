@@ -1,8 +1,13 @@
 {
-    "textures_to_load": [
-        "resources/images/butezMoiCetteMerde.bmp"
-    ],
     "vfs_to_load": [
         "GLSL/LitShader.vfs.glsl"
+    ],
+    "textures_to_load": [
+        "test/butezMoiCetteMerde.bmp",
+        "blocks/dirt.png",
+        "blocks/grass_front_1.png",
+        "blocks/grass_top_1.png",
+        "blocks/grass_top_2.png",
+        "blocks/grass_top_3.png"
     ]
 }

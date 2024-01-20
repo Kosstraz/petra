@@ -2,20 +2,20 @@
 
 #define READ_ONLY
 
-#define INT8_MAX        (0x00000000000000FF / 2)
-#define INT16_MAX       (0x000000000000FFFF / 2)
-#define INT32_MAX       (0x00000000FFFFFFFF / 2)
-#define INT64_MAX       (0xFFFFFFFFFFFFFFFF / 2)
+#define INT8_MAX_        (0x00000000000000FF / 2)
+#define INT16_MAX_       (0x000000000000FFFF / 2)
+#define INT32_MAX_       (0x00000000FFFFFFFF / 2)
+#define INT64_MAX_       (0xFFFFFFFFFFFFFFFF / 2)
 
-#define INT8_MIN       -(0x00000000000000FF / 2 + 1)
-#define INT16_MIN      -(0x000000000000FFFF / 2 + 1)
-#define INT32_MIN      -(0x00000000FFFFFFFF / 2 + 1)
-#define INT64_MIN      -(0xFFFFFFFFFFFFFFFF / 2 + 1)
+#define INT8_MIN_       -(0x00000000000000FF / 2 + 1)
+#define INT16_MIN_      -(0x000000000000FFFF / 2 + 1)
+#define INT32_MIN_      -(0x00000000FFFFFFFF / 2 + 1)
+#define INT64_MIN_      -(0xFFFFFFFFFFFFFFFF / 2 + 1)
 
-#define UINT8_MAX       (0x00000000000000FF)
-#define UINT16_MAX      (0x000000000000FFFF)
-#define UINT32_MAX      (0x00000000FFFFFFFF)
-#define UINT64_MAX      (0xFFFFFFFFFFFFFFFF)
+#define UINT8_MAX_       (0x00000000000000FF)
+#define UINT16_MAX_      (0x000000000000FFFF)
+#define UINT32_MAX_      (0x00000000FFFFFFFF)
+#define UINT64_MAX_      (0xFFFFFFFFFFFFFFFF)
 
 typedef unsigned char   ubool ;
 typedef char            boolean;

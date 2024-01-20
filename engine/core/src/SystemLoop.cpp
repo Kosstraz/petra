@@ -12,13 +12,12 @@
 
 //  Todo:
 //
-//  1 - Trouver de bonnes coordonnées (U, V) pour les textures sur un simple carré
-//  2 - Trouver de bonnes coordonnées (U, V) pour les textures sur un simple cube
-//  3 - Faire une fonction permettant de décompresser certains types dans un .BMP
-//  4 - Faire des fonctions pour parser un fichier .PNG
-//  5 - Faire une fonction pouvant décompresser certains types dans un .PNG
-//  6 - Faire des fonctions pour parser un fichier .JPG & .JPEG
-//  7 - Faire une fonction pouvant décompresser certains types dans un .JPEG & .JPG
+//  1 - Trouver de bonnes coordonnées (U, V) pour les textures sur un simple cube
+//  2 - Faire une fonction permettant de décompresser certains types dans un .BMP
+//  3 - Faire une fonction pouvant décompresser certains types dans un .PNG
+//  4 - Faire des fonctions pour parser un fichier .JPG & .JPEG
+//  5 - Faire une fonction pouvant décompresser certains types dans un .JPEG & .JPG
+//  6 - Régler le pb de parçage du fichier to_load.json
 //  B - Potentiellement mettre en commun dans une liste les uvsBufferID pour les objets identiques utilisant les mêmes (types de) textures
 
 void window_iconify_callback(GLFWwindow* window, int iconified)
@@ -67,7 +66,7 @@ int Core::Loop()
         // Personnalisation   <---
     Camera       cam      = Camera("mainCamera");
     Cube         player   = Cube("player");
-    const char* textures[6] = { "test/butezMoiCetteMerde.bmp", nullptr,
+    const char* textures[6] = { "blocks/dirt.png", nullptr, //test/butezMoiCetteMerde.bmp
                                 nullptr, nullptr,
                                 nullptr, nullptr };
     player.PutMultiplesTextures(textures);

@@ -2,7 +2,6 @@
 #define PETRA_SCENE_HPP
 
 #include <base/PetraO.hpp>
-#include <utils/ptr.hpp>
 #include <unordered_map>
 
 #include <stdexcept>

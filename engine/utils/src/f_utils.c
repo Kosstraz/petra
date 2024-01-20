@@ -85,3 +85,4 @@ char* strjoin(const char* str1, const char* str2, long size1, long size2)
     
     return (ret);
 }
+

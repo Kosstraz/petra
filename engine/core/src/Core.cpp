@@ -81,6 +81,7 @@ void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
         if (strcmp(i->first, "textures_to_load") == 0)
         {
             char* path = strjoin(TEXTURE_PATH, i->second, 0, 0);
+            //printf("CLEF : %s <=> %s\n", i->first, path);
             Texture texture = Texture(path);
             global_rendering::textures.emplace(i->second, texture.TakeTexture());
             free(path);

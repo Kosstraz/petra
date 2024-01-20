@@ -7,12 +7,12 @@ Texture::Texture(const char* image_dir) noexcept    :   width(0), height(0), tex
 
 void Texture::CreateTexture(const char* image_dir) noexcept
 {
-    unsigned char* data = nullptr;
-    img_infos info      = bmp_load(image_dir, &data);
+    uint8* data;
+    img_infos info  =   png_load(image_dir, &data);
 
     IF_RARELY(info.errorCode < 0)
     {
-        DEBUG(TEXTURE_LOG, "Erreur 'bmp_load(image_dir, &data)' dans 'Texture::CreateTexture(...)'")
+        DEBUG(TEXTURE_LOG, "Erreur 'img_load(image_dir, &data)' dans 'Texture::CreateTexture(...)'")
         printf("Code erreur : %d\n", info.errorCode);
     }
     else
@@ -23,9 +23,14 @@ void Texture::CreateTexture(const char* image_dir) noexcept
         glGenTextures(1, &this->textureID);
         glBindTexture(GL_TEXTURE_2D, this->textureID);
         if (info.bitsPerPixel == 32)
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,  this->width, this->height, 0, GL_BGRA,  GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,  this->width, this->height, 0, GL_RGBA,  GL_UNSIGNED_BYTE, data);
         else
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,   this->width, this->height, 0, GL_BGR,   GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,   this->width, this->height, 0, GL_RGB,   GL_UNSIGNED_BYTE, data);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         glGenerateMipmap(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0 + this->textureID);

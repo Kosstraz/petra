@@ -22,7 +22,10 @@ int parse_key(const char* buffer, char** key, long* i);
 int parse_value(const char* buffer, char** val, long* i);
 
     // Vérifie si après cette clef il y a une autre clef
-void check_other_key(const char* buffer, long* i);
+void check_another_key(const char* buffer, long* i);
+
+    // Vérifie si après cette valeur il y a une autre valeur
+void check_another_value(const char* buffer, long* i);
 
     // Ouverture et recherche des éléments clefs
 int json_open(const char* file_name, ArrayForJSON*  multimap);

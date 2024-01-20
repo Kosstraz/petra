@@ -37,10 +37,10 @@ extern "C" {
 
 void init_img_infos(img_infos* infos);
 
+img_infos img_load(const char* file_name, uint8** datas);
 
-    /*////////////*/
-    //  FONCTIONS //
-    /*////////////*/
+
+
 
     // Toutes les fonctions et structures liées aux fichiers images en général
 #ifdef  IMAGES_ALL
@@ -48,7 +48,14 @@ void init_img_infos(img_infos* infos);
     #define IMAGES_PNG
 #endif  // !ALL
 
-    // Toutes les fonctions et structures liées aux fichiers images .bmp
+
+
+    /*////////*/
+    //   BMP  //
+    /*////////*/
+
+
+
 #ifdef  IMAGES_BMP
     #pragma pack(push, 1)
     typedef struct BMP_header {
@@ -80,26 +87,42 @@ img_infos   bmp_load    (const char* file_name, uint8** buffer                  
 
 
 
+    /*////////*/
+    //   PNG  //
+    /*////////*/
+
+
 
 #ifdef  IMAGES_PNG
     #pragma pack(push, 1)
-typedef struct PNG_header {
-        // Signature   -> 8 octets
+typedef struct PNG_sign_header {    // Signature   -> 8 octets
     char  signature[8];
-        // IHDR header -> 13 octets
+}   PNG_sign_header;
+
+typedef struct PNG_IHDR_header {    // IHDR header -> 13 octets
+    uint32 ihdr_length;
+    char   ihdr_text[4];
     uint32 width;
     uint32 height;
-    uint8  bit_depth;
+    uint8  bitDepth;
     uint8  color_type;
     uint8  compression;
     uint8  filter_method;
     uint8  interlace_method;
-
-        //
+    uint32 CRC_32_ihdr;
 
 }   PNG_header;
+
+typedef struct PNG_sRGB_header {    // sRGB header -> 13 octets
+    uint32 sRGB_length;
+    char   sRGB_text[4];
+    uint8  rendering_intent;
+    uint32 CRC_32_sRGB;
+
+}   PNG_sRGB_header;
     #pragma pack(pop)
 int8        png_header  (const char* file_name,                  img_infos* infos);
+
 int8        png_datas   (const char* file_name, uint8** buffer,  img_infos* infos);
 img_infos   png_load    (const char* file_name, uint8** buffer                   );
 #endif  // !PNG

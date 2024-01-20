@@ -1,7 +1,6 @@
 #include <base/PetraO.hpp>
 
 #include <core/Handle.hpp>
-#include <utils/ptr.hpp>
 
     /// CONSTRUCTEURS
 
