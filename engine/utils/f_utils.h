@@ -26,6 +26,12 @@ int fprevc(const char* v, const char c, const long file_size);
     // Si la valeur que renvoie la fonction est égale au paramètre 'i' inséré, alors le prochain caractère n'est pas celui demandé
 int to_nextc(const char* v, const char c, long* i, char** buffer);
 
+    // Sert pour itoa
+int int_len(int nb);
+
+    // ITOA()
+char *itoa(int n);
+
     // Fusionne deux chaînes de caractères en allouant la bonne taille de mémoire
     // si (size1 = 0 || size2 = 0)  =>  (size1 = strlen(str1) && size2 = strlen(str2))
 char* strjoin(const char* str1, const char* str2, long size1, long size2);

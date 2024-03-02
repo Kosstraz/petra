@@ -22,3 +22,10 @@ float Maths::lerp_precise(const float& a, const float& b, const float& t) noexce
 
 float Maths::lerp_imprecise(const float& a, const float& b, const float& t) noexcept
 {   return (a + t * (b - a));   }
+
+int  Maths::abs_ui(int val)   noexcept
+{
+    if (val < 0)
+        return (-val);
+    return (val);
+}

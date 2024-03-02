@@ -6,19 +6,11 @@
 
 #include <rendering/Texture.hpp>
 
-#include <core/Chrono.hpp>
+#include <core/FPSCounter.hpp>
 
 #include <iostream>
 
-//  Todo:
-//
-//  1 - Trouver de bonnes coordonnées (U, V) pour les textures sur un simple cube
-//  2 - Faire une fonction permettant de décompresser certains types dans un .BMP
-//  3 - Faire une fonction pouvant décompresser certains types dans un .PNG
-//  4 - Faire des fonctions pour parser un fichier .JPG & .JPEG
-//  5 - Faire une fonction pouvant décompresser certains types dans un .JPEG & .JPG
-//  6 - Régler le pb de parçage du fichier to_load.json
-//  B - Potentiellement mettre en commun dans une liste les uvsBufferID pour les objets identiques utilisant les mêmes (types de) textures
+#define VIT_SPEED (2.0f * Time::deltaTime)
 
 void window_iconify_callback(GLFWwindow* window, int iconified)
 {
@@ -38,27 +30,27 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
     Handle::window_size = {width, height};
     Camera* get = SceneManager::GetCurrentScene()->FindACTOR<Camera>("mainCamera");
-    get->Perspective(width, height);
+    get->Perspective();
 }
 
 int Core::Loop()
 {
         // Debugage
     DEBUG(CORE_LOG, "Lancement de l'execution principale du programme.")
-    INIT_RECORD
-    RECORD
+    INIT_RECORD RECORD
 
         // Fenêtre et paramètres OpenGL
     GLFWwindow* context = glfwGetCurrentContext();
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
 
         // Callback
-    glfwSetWindowIconifyCallback(context, window_iconify_callback);
-    glfwSetKeyCallback(context, key_callback);
-    glfwSetFramebufferSizeCallback(context, framebuffer_size_callback);
-
+    glfwSetWindowIconifyCallback    (context, window_iconify_callback);
+    glfwSetKeyCallback              (context, key_callback);
+    glfwSetFramebufferSizeCallback  (context, framebuffer_size_callback);
+    
         // Scène principale
     Scene* mainLevel     = new Scene();
     SceneManager::SetCurrentScene(mainLevel);
@@ -66,41 +58,54 @@ int Core::Loop()
         // Personnalisation   <---
     Camera       cam      = Camera("mainCamera");
     Cube         player   = Cube("player");
-    const char* textures[6] = { "blocks/dirt.png", nullptr, //test/butezMoiCetteMerde.bmp
-                                nullptr, nullptr,
-                                nullptr, nullptr };
-    player.PutMultiplesTextures(textures);
+    /*const char* textures[6] = { "test/KARIS_carre.BMP", "test/KARIS_carre.BMP",
+                                "test/KARIS_carre.BMP", "test/KARIS_carre.BMP",
+                                "no_texture", "test/KARIS_carre.BMP"   };*/
+    //player.PutMultiplesTextures(textures);
+
+    /*Cube** map;
+    map = PetraO::Creates<Cube>("map_", 100);
+    for (uint i = 0; i < 50; i++)
+        map[i]->SetPosition(Vector3f(0.f, 0.f, i * 2.0f));
+    for (uint i = 50; i < 100; i++)
+        map[i]->SetPosition(Vector3f(i * 2.0f, 0.f, 0.f));*/
 
         // Charge la scène et tous ces éléments
     SceneManager::GetCurrentScene()->LoadThisScene();
 
     STOP_RECORD
     DEBUG_GL()
+    FPSCounter fps_counter;
     while (!glfwWindowShouldClose(context))
     {
+        fps_counter.StartCount();
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
         if (glfwGetKey(context, 'W') == GLFW_PRESS)
-            player.SetPosition(Vector3f(player.transform.position.x - 0.001f, player.transform.position.y, player.transform.position.z));
+            player.SetPosition(Vector3f(player.transform.position.x - VIT_SPEED, player.transform.position.y, player.transform.position.z));
         if (glfwGetKey(context, 'S') == GLFW_PRESS)
-            player.SetPosition(Vector3f(player.transform.position.x + 0.001f, player.transform.position.y, player.transform.position.z));
+            player.SetPosition(Vector3f(player.transform.position.x + VIT_SPEED, player.transform.position.y, player.transform.position.z));
 
         if (glfwGetKey(context, 'D') == GLFW_PRESS)
-            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y, player.transform.position.z + 0.001f));
+            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y, player.transform.position.z + VIT_SPEED));
         if (glfwGetKey(context, 'A') == GLFW_PRESS)
-            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y, player.transform.position.z - 0.001f));
+            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y, player.transform.position.z - VIT_SPEED));
 
         if (glfwGetKey(context, 'E') == GLFW_PRESS)
-            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y + 0.001f, player.transform.position.z));
+            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y + VIT_SPEED, player.transform.position.z));
         if (glfwGetKey(context, 'Q') == GLFW_PRESS)
-            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y - 0.001f, player.transform.position.z));
+            player.SetPosition(Vector3f(player.transform.position.x, player.transform.position.y - VIT_SPEED, player.transform.position.z));
 
             // Dessin tous les éléments de la scène
-        SceneManager::GetCurrentScene()->DrawThisScene();
+        SceneManager::GetCurrentScene()->DrawThisScene();   //! Changer la façon dont la fonction 'DrawThisScene()' fonctionne, individuellement et spécifiquement si nécessaire
+                                                            //! --> optimisation FPS | performence
 
         glfwSwapBuffers(context);
         glfwPollEvents();
+
+        fps_counter.MarkCount();
     }
 
     RECORD

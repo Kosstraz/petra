@@ -1,7 +1,11 @@
 #ifndef MATHS_HPP
 #define MATHS_HPP
 
-#define PI (long long)3.14159265358979323846264338327950288419716939937510582
+#include <cmath>
+
+#include "platforms/types_macros.hpp"
+
+#define PI (double)3.14159265358979323846264338327950288419716939937510582
 
 namespace Maths
 {
@@ -15,6 +19,8 @@ namespace Maths
     float lerp_precise(const float& a, const float& b, const float& t) noexcept;
     
     float lerp_imprecise(const float& a, const float& b, const float& t) noexcept;
+
+    int  abs_ui(int val)  noexcept;
 };
 
 #endif

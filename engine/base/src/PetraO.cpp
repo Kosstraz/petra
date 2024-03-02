@@ -4,7 +4,7 @@
 
     /// CONSTRUCTEURS
 
-PetraO::PetraO(const char* name) : isDestroyed((boolean)0x00), name(name), neverDestroy((boolean)0x00)
+PetraO::PetraO(const char* name) : isDestroyed((bool8)0x00), name(name), neverDestroy((bool8)0x00)
 {   Handle::currentScene->AddObject(this, this->name);  }
 
 PetraO::~PetraO()

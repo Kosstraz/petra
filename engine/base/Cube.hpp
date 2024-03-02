@@ -2,6 +2,7 @@
 #define PETRA_CUBE_HPP
 
 #include <base/GeometryTest.hpp>
+#include <rendering/ftOpenGL.hpp>
 
 class Cube final : public GeometryTest
 {

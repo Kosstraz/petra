@@ -5,8 +5,8 @@
     /// CONSTRUCTEURS
 
 #define FOV    (90.0F  )
-#define ZNEAR  (0.001F )
-#define ZFAR   (1000.0F)
+#define ZNEAR  (0.01F  )
+#define ZFAR   (100.0F )
 
 Camera::Camera(const char* name) : PetraO(name), at(Vector3f(0.0f)), PROJ(new Matrix4(1.0f)), VIEW(new Matrix4(1.0f))
 {
@@ -42,7 +42,7 @@ void Camera::SetPosition(const Vector3f& position) noexcept
     PushMatProgram(this->VIEW, "VIEW", (-1));
 }
 
-void Camera::Perspective(int window_width, int window_height) noexcept
+void Camera::Perspective() noexcept
 {
     this->PROJ->Perspective(FOV, (float)(Handle::window_size.x), (float)(Handle::window_size.y), ZNEAR, ZFAR);
 

@@ -8,7 +8,12 @@
 
 Cube::Cube(const char* name) : GeometryTest(name)   , faceCount(0)  , vertexBuffersID(nullptr)  , uvsBuffersID(nullptr) , textureBuffersID(nullptr)
 {
-    vertexBuffersID  = (uint*)malloc(6);
+    this->vertexBuffersID   = (uint*)malloc(6 * sizeof(uint));
+    this->uvsBuffersID      = (uint*)malloc(6 * sizeof(uint));
+    this->textureBuffersID  = (uint*)malloc(6 * sizeof(uint));
+
+    const char *textures[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+    this->PutMultiplesTextures(textures);
 }
 
 Cube::~Cube()
@@ -23,49 +28,57 @@ Cube::~Cube()
 void Cube::Build(uint32 GL_METHOD_DRAW)    noexcept
 {
     glUseProgram(SHADER_PROG);
+    ftOpenGL::refID_AttributeArray(this->vertexArrayID);
 
-    glGenVertexArrays(1, &this->vertexArrayID);
-    glBindVertexArray(this->vertexArrayID);
 
     this->FrontFace ();
-    //this->BackFace  ();
-    //this->RightFace ();
-    //this->LeftFace  ();
-    //this->TopFace   ();
-    //this->BotFace   ();
+    this->BackFace  ();
+    this->RightFace ();
+    this->LeftFace  ();
+    this->TopFace   ();
+    this->BotFace   ();
 }
 
 void Cube::DrawBuild()    const    noexcept
 {
     PushMatProgram(this->SP, "TRANSFORMATION", (-1));
-    int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "COLOR");
-    glUniform4f(unifLoc, this->color.x, this->color.y, this->color.z, 1.0f);
 
-    glEnableVertexAttribArray(0);
-    uint8 i = 0;
-    while (i < this->faceCount)
+    uint32 i = 0;
+    while (i < 6)
     {
-        if (this->vertexBuffersID[i] != 0)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i++]);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ((const void*)0));
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        }
-        else    i++;
+        ftOpenGL::startRendering(0);
+        ftOpenGL::renderBuffer(0, 3, GL_ARRAY_BUFFER, this->vertexBuffersID[i], GL_FLOAT, 0);
+
+        activeShaderLayout(1);
+        ftOpenGL::renderBuffer(1U, 2, GL_ARRAY_BUFFER, this->uvsBuffersID[i], GL_FLOAT, 0);
+        Texture::BindToShader(this->textureBuffersID[i]);
+
+        int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "COLOR");
+        glUniform4f(unifLoc, color.x, color.y, color.z, 1.0f);
+
+        ftOpenGL::drawRender(0, GL_TRIANGLE_STRIP, 4);
+        desactiveShaderLayout(1);
     }
-    glDisableVertexAttribArray(0);
 }
 
 void Cube::PutMultiplesTextures(const char* textureNames[6])  noexcept
 {
-    this->textureBuffersID = (uint*)malloc(6);
     int8 count = -1;
     while (++count < 6)
+    {
         if (textureNames[count] != nullptr)
-                this->textureBuffersID[count] = global_rendering::textures[textureNames[count]];
-        else    this->textureBuffersID[count] = 0;
-
-    uvsBuffersID = (uint*)malloc(6);
+        {
+            for (ArrayForTexture::const_iterator i = global_textures.begin(); i != global_textures.end(); ++i)
+                if (strcmp(textureNames[count], i->first) == 0)
+                    this->textureBuffersID[count] = i->second;
+        }
+        else if (strcmp(textureNames[count], "no_texture") == 0)
+            this->textureBuffersID[count] = UINT32_MAX_;
+        else
+            for (ArrayForTexture::const_iterator i = global_textures.begin(); i != global_textures.end(); ++i)
+                if (strcmp("NULL/NULL.bmp", i->first) == 0)                                                           // ?(++global_textures.begin())->first
+                    this->textureBuffersID[count] = i->second;
+    }
 }
 
 void Cube::Destroy()  noexcept
@@ -74,14 +87,14 @@ void Cube::Destroy()  noexcept
     int8 i = -1;
     while (++i < this->faceCount)
         if (this->vertexBuffersID[i] != 0)
-            glDeleteVertexArrays(1, &this->vertexBuffersID[i]);
+            glDeleteBuffers(1, &this->vertexBuffersID[i]);
 
         // delete (U, V)' datas
     i = -1;
     while (++i < this->faceCount)
         if (this->uvsBuffersID[i] != 0)
-            glDeleteVertexArrays(1, &this->uvsBuffersID[i]);
-
+            glDeleteBuffers(1, &this->uvsBuffersID[i]);
+    
         // delete vertex array datas
     if (this->vertexArrayID != 0)
         glDeleteVertexArrays(1, &this->vertexArrayID);
@@ -112,147 +125,140 @@ void Cube::Destroy()  noexcept
 
 void Cube::FrontFace()  noexcept
 {
-    const uint8 i = this->faceCount;
+    constexpr uint8 face_index = 0;
 
-    constexpr uint32 vSize               = 0xC;
-    constexpr float vertices[vSize] = {
+        // vertex
+    constexpr float vertices[0xC] = {
         -1.0f, -1.0f, 0.0f,
          1.0f, -1.0f, 0.0f,
         -1.0f,  1.0f, 0.0f,
          1.0f,  1.0f, 0.0f
     };
 
-    glEnableVertexAttribArray(0);
-    glGenBuffers(1, &this->vertexBuffersID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-    glDisableVertexAttribArray(0);
-
+        // texture
     constexpr float uvsBufferData[8] = {
-        0.0f, 0.0f,
-        -1.0f, 0.0f,
-        0.0f, 1.0f,
-        -1.0f, 1.0f
+         1.0f, 0.0f,
+         0.0f, 0.0f,
+         1.0f, 1.0f,
+         0.0f, 1.0f
     };
 
-    glEnableVertexAttribArray(1);
-    glGenBuffers(1, &this->uvsBuffersID[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(uvsBufferData), uvsBufferData, GL_STREAM_DRAW);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    Texture::BindToShader(this->textureBuffersID[0]);
-    //glDisableVertexAttribArray(1);
-
-    this->faceCount++;
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[face_index],  vertices,       sizeof(vertices),       GL_STREAM_DRAW);
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[face_index],     uvsBufferData,  sizeof(uvsBufferData),  GL_STREAM_DRAW);
 }
 
 void Cube::BackFace()  noexcept
 {
-    const uint8 i = this->faceCount;
+    constexpr uint8 face_index = 1;
 
-    constexpr uint32 vSize               = 0xC;
-    constexpr float vertices[vSize] = {
+        // vertex
+    constexpr float vertices[0xC] = {
         -1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,
         -1.0f,  1.0f, -1.0f,
          1.0f,  1.0f, -1.0f
     };
 
-    glGenVertexArrays(1, &this->vertexArrayID);
-    glBindVertexArray(this->vertexArrayID);
+        // texture
+    constexpr float uvsBufferData[8] = {
+         0.0f, 0.0f,
+         1.0f, 0.0f,
+         0.0f, 1.0f,
+         1.0f, 1.0f
+    };
 
-    glGenBuffers(1, &this->vertexBuffersID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-
-    this->faceCount++;
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[face_index], vertices,      sizeof(vertices),      GL_STREAM_DRAW);
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[face_index],    uvsBufferData, sizeof(uvsBufferData), GL_STREAM_DRAW);
 }
 
 void Cube::RightFace()  noexcept
 {
-    const uint8 i = this->faceCount;
+    constexpr uint8 face_index = 2;
 
-    constexpr uint32 vSize               = 0xC;
-    constexpr float vertices[vSize] = {
+    constexpr float vertices[0xC] = {
         -1.0f, -1.0f, -1.0f,
         -1.0f, -1.0f,  0.0f,
         -1.0f,  1.0f, -1.0f,
         -1.0f,  1.0f,  0.0f
     };
 
-    glGenVertexArrays(1, &this->vertexArrayID);
-    glBindVertexArray(this->vertexArrayID);
+        // texture
+    constexpr float uvsBufferData[8] = {
+         1.0f, 0.0f,
+         0.0f, 0.0f,
+         1.0f, 1.0f,
+         0.0f, 1.0f
+    };
 
-    glGenBuffers(1, &this->vertexBuffersID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-
-    this->faceCount++;
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[face_index], vertices,      sizeof(vertices),      GL_STREAM_DRAW);
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[face_index],    uvsBufferData, sizeof(uvsBufferData), GL_STREAM_DRAW);
 }
 
 void Cube::LeftFace()  noexcept
 {
-    const uint8 i = this->faceCount;
+    constexpr uint8 face_index = 3;
 
-    constexpr uint32 vSize               = 0xC;
-    constexpr float vertices[vSize] = {
+    constexpr float vertices[0xC] = {
          1.0f, -1.0f,  0.0f,
          1.0f, -1.0f, -1.0f,
          1.0f,  1.0f,  0.0f,
          1.0f,  1.0f, -1.0f
     };
 
-    glGenVertexArrays(1, &this->vertexArrayID);
-    glBindVertexArray(this->vertexArrayID);
+        // texture
+    constexpr float uvsBufferData[8] = {
+         1.0f, 0.0f,
+         0.0f, 0.0f,
+         1.0f, 1.0f,
+         0.0f, 1.0f
+    };
 
-    glGenBuffers(1, &this->vertexBuffersID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-
-    this->faceCount++;
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[face_index], vertices,      sizeof(vertices),      GL_STREAM_DRAW);
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[face_index],    uvsBufferData, sizeof(uvsBufferData), GL_STREAM_DRAW);
 }
 
 void Cube::TopFace()  noexcept
 {
-    const uint8 i = this->faceCount;
+    constexpr uint8 face_index = 4;
 
-    constexpr uint32 vSize               = 0xC;
-    constexpr float vertices[vSize] = {
+    constexpr float vertices[0xC] = {
          -1.0f,  1.0f,  0.0f,
          1.0f,  1.0f,  0.0f,
         -1.0f,  1.0f, -1.0f,
          1.0f,  1.0f, -1.0f
     };
 
-    glGenVertexArrays(1, &this->vertexArrayID);
-    glBindVertexArray(this->vertexArrayID);
+        // texture
+    constexpr float uvsBufferData[8] = {
+         1.0f, 0.0f,
+         0.0f, 0.0f,
+         1.0f, 1.0f,
+         0.0f, 1.0f
+    };
 
-    glGenBuffers(1, &this->vertexBuffersID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-
-    this->faceCount++;
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[face_index], vertices,      sizeof(vertices),      GL_STREAM_DRAW);
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[face_index],    uvsBufferData, sizeof(uvsBufferData), GL_STREAM_DRAW);
 }
 
 void Cube::BotFace()  noexcept
 {
-    const uint8 i = this->faceCount;
+    constexpr uint8 face_index = 5;
 
-    constexpr uint32 vSize               = 0xC;
-    constexpr float vertices[vSize] = {
+    constexpr float vertices[0xC] = {
         -1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,
         -1.0f, -1.0f,  0.0f,
          1.0f, -1.0f,  0.0f
     };
 
-    glGenVertexArrays(1, &this->vertexArrayID);
-    glBindVertexArray(this->vertexArrayID);
+        // texture
+    constexpr float uvsBufferData[8] = {
+         1.0f, 0.0f,
+         0.0f, 0.0f,
+         1.0f, 1.0f,
+         0.0f, 1.0f
+    };
 
-    glGenBuffers(1, &this->vertexBuffersID[i]);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
-
-    this->faceCount++;
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->vertexBuffersID[face_index], vertices,      sizeof(vertices),      GL_STREAM_DRAW);
+    ftOpenGL::setBuffer(GL_ARRAY_BUFFER, this->uvsBuffersID[face_index],    uvsBufferData, sizeof(uvsBufferData), GL_STREAM_DRAW);
 }

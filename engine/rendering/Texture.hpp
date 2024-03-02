@@ -17,15 +17,17 @@ public:
     Texture(const char* image_dir)  noexcept;
    ~Texture()                       noexcept = default;
 
-    void        CreateTexture(const char* image_dir)    noexcept;
-    static void BindToShader (const char* textureName)  noexcept;
-    static void BindToShader (uint        textureID)    noexcept;
+    void        CreateTempTexture(const char* image_dir)    noexcept;
+    
+    static uint32   CreateTexture(const char* image_dir  )  noexcept;
+    static void     BindToShader (const char* textureName)  noexcept;
+    static void     BindToShader (uint32        textureID)  noexcept;
 
-    uint        TakeTexture()                   const   noexcept;
+    uint32      TakeTexture()                   const   noexcept;
 
-    uint width, height;
+    uint32 width, height;
 private:
-    uint textureID;
+    uint32 textureID;
 };
 
 #endif

@@ -4,10 +4,8 @@
     ],
     "textures_to_load": [
         "test/butezMoiCetteMerde.bmp",
-        "blocks/dirt.png",
-        "blocks/grass_front_1.png",
-        "blocks/grass_top_1.png",
-        "blocks/grass_top_2.png",
-        "blocks/grass_top_3.png"
+        "test/butezMoiCetteMerde222.bmp",
+        "test/KARIS_carre.BMP",
+        "NULL/NULL.bmp"
     ]
 }

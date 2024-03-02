@@ -10,7 +10,7 @@ extern "C" {
 #include <stdio.h>
 
 #include "FileManager.h"
-#include <platforms/errors_macros.hpp>
+#include "platforms/errors_macros.hpp"
 
     // (si MAX_FILE_SIZE = 0) = DEFAULT_FILE_SIZE (2048)
     // Conversion .VFS.hlsl -> .vert.hlsl & .frag.hlsl | pour une pleine compatibilité avec OpenGL

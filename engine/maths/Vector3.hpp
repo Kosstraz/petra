@@ -1,7 +1,6 @@
 #ifndef  VECTOR3_HPP
 #define  VECTOR3_HPP
 
-#include <cmath>
 #include "Maths.hpp"
 
 #define BOOL unsigned short

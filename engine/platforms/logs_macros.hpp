@@ -7,10 +7,12 @@
 #define DEBUG_GL()    unsigned int error = glad_glGetError();   if (error != GL_NO_ERROR)   { printf(OGL_LOG) ;printf("Error code : %d\n", error); }
 
     // Recorder
-#define INIT_RECORD       Chrono chrono_recorder_macro;
-#define RECORD            chrono_recorder_macro.Start();
-#define STOP_RECORD       chrono_recorder_macro.Stop();    EXEC_TIME(chrono_recorder_macro.GetTime())
-#define EXEC_TIME(value)  {printf("--- Temps d'execution --- >> %I64d ms\n", value); printf("\n");}
+#define INIT_RECORD             Time   chrono_recorder_macro;
+#define RECORD                  chrono_recorder_macro.Start();
+#define STOP_RECORD_NOT_PRINT   chrono_recorder_macro.Stop();
+#define GET_CHRONO_S            chrono_recorder_macro.GetTime();
+#define STOP_RECORD             chrono_recorder_macro.Stop();    EXEC_TIME(chrono_recorder_macro.GetTime())
+#define EXEC_TIME(value)        {printf("--- Temps d'execution --- >> %I64d ms\n", value); printf("\n");}
 
     // Constexpr char* log
 #define TEST_LOG    ("[TEST      LOG] ")

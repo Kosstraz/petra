@@ -15,6 +15,7 @@
 
     void main()
     {
+        
         fragColor = vec4(texture(TEXTURE, UVs).rgb, 1.0) * COLOR;
     }
 }
@@ -38,7 +39,8 @@
 
     void main()
     {
-        gl_Position = PROJECTION * VIEW * TRANSFORMATION * vec4(loc_VertPos, 1.0);
+        gl_Position = PROJECTION * VIEW * TRANSFORMATION * vec4(loc_VertPos.x, loc_VertPos.y, loc_VertPos.z * 1.85, 1.0);    //? ajustement auto pour l'axe Z
+                                                                                                                            //! à regarder avec une règle (1er degrés)
         UVs = loc_VertUVs;
     }
 }

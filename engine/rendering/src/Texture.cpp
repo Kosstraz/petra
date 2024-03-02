@@ -2,13 +2,14 @@
 
 Texture::Texture(const char* image_dir) noexcept    :   width(0), height(0), textureID(0)
 {
-    this->CreateTexture(image_dir);
+    this->CreateTempTexture(image_dir);
 }
 
-void Texture::CreateTexture(const char* image_dir) noexcept
+void Texture::CreateTempTexture(const char* image_dir) noexcept
 {
     uint8* data;
-    img_infos info  =   png_load(image_dir, &data);
+    printf("Create Texture : %s\n", image_dir);
+    img_infos info  =   img_load(image_dir, &data);
 
     IF_RARELY(info.errorCode < 0)
     {
@@ -23,9 +24,9 @@ void Texture::CreateTexture(const char* image_dir) noexcept
         glGenTextures(1, &this->textureID);
         glBindTexture(GL_TEXTURE_2D, this->textureID);
         if (info.bitsPerPixel == 32)
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,  this->width, this->height, 0, GL_RGBA,  GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,  this->width, this->height, 0, info.CHANNEL_COLOR,  GL_UNSIGNED_BYTE, data);
         else
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,   this->width, this->height, 0, GL_RGB,   GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,   this->width, this->height, 0, info.CHANNEL_COLOR,   GL_UNSIGNED_BYTE, data);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -36,16 +37,22 @@ void Texture::CreateTexture(const char* image_dir) noexcept
         glActiveTexture(GL_TEXTURE0 + this->textureID);
     }
 
-    free(data);
+    img_free(data);
+}
+
+uint32 Texture::CreateTexture(const char* image_dir)    noexcept
+{
+    Texture temp_tex = Texture(image_dir);
+    return (temp_tex.TakeTexture());
 }
 
 void Texture::BindToShader(const char* textureName) noexcept
 {
-    unsigned int textureID = global_rendering::textures[textureName];
+    unsigned int textureID = (global_textures)[textureName];
     glActiveTexture(GL_TEXTURE0 + textureID);
     
     int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "TEXTURE");
-    glUniform1i(unifLoc, textureID);
+    glUniform1i(unifLoc, textureID - 1);
 }
 
 void Texture::BindToShader(uint textureID)    noexcept
@@ -53,7 +60,7 @@ void Texture::BindToShader(uint textureID)    noexcept
     glActiveTexture(GL_TEXTURE0 + textureID);
     
     int unifLoc = glGetUniformLocation(Handle::shadersProgram[0], "TEXTURE");
-    glUniform1i(unifLoc, textureID);
+    glUniform1i(unifLoc, textureID - 1);
 }
 
 uint Texture::TakeTexture() const noexcept

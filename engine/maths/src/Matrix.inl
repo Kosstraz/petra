@@ -167,9 +167,9 @@ void Matrix<X, Y, T, ALLOC>::LookAt (const Vector3<T>& eye,
                               const Vector3<T>& center,
                               const Vector3<T>& up)                         noexcept
 {
-    const Vector3f f(Vector3f::Magnitude(eye - center));
-    const Vector3f s(Vector3f::Magnitude(Vector3f::Cross(f, up)));
-    const Vector3f u(Vector3f::Cross(s, f));
+    const Vector3<T> f(Vector3<T>::Magnitude(eye - center));
+    const Vector3<T> s(Vector3<T>::Magnitude(Vector3<T>::Cross(f, up)));
+    const Vector3<T> u(Vector3<T>::Cross(s, f));
 
          // X modification
     this->at(0, 0)  =  s.x;

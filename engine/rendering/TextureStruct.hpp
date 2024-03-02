@@ -6,9 +6,8 @@
 
 typedef std::unordered_map<const char*, uint32> ArrayForTexture;
 
-namespace global_rendering
-{
-    static inline ArrayForTexture textures = ArrayForTexture();
-}
+extern ArrayForTexture global_textures;
+
+const uint32& get_global_texture_val(const char* _keyVal);  // !inutile
 
 #endif

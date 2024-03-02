@@ -18,7 +18,6 @@ int Core::InitEngine()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 4);
-    //glfwWindowHint(GLFW_REFRESH_RATE, 240);
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "Fenêtre", 0, 0);
     if (!window)
@@ -77,18 +76,23 @@ void Core::CreateAllImportedTextures(const ArrayForJSON& jsonLoaderInfos)
     DEBUG(TEXTURE_LOG, "Creation de toutes les textures...");
     INIT_RECORD RECORD
 
+    //global_textures = new ArrayForTexture();
+
     for (ArrayForJSON::const_iterator i = jsonLoaderInfos.begin(); i != jsonLoaderInfos.end(); ++i)
         if (strcmp(i->first, "textures_to_load") == 0)
         {
             char* path = strjoin(TEXTURE_PATH, i->second, 0, 0);
-            //printf("CLEF : %s <=> %s\n", i->first, path);
-            Texture texture = Texture(path);
-            global_rendering::textures.emplace(i->second, texture.TakeTexture());
+            const char* path2 = i->second;
+            uint32 id = Texture::CreateTexture(path);
+            global_textures.emplace(path2, id);
             free(path);
         }
 
+    //printf("taille texture : %d", global_textures.size());
     STOP_RECORD
 }
 
 void Core::FreeJSON(ArrayForJSON* jsonLoaderInfos)
-{   jsonLoaderInfos->clear();   }
+{   
+    jsonLoaderInfos->clear();   
+}

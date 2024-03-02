@@ -8,7 +8,7 @@
 #include <base/PetraO.hpp>
 #include <core/Handle.hpp>
 #include <maths/Matrix.hpp>
-#include <C/Transform.h>
+#include <maths/Transform.hpp>
 
 class Camera : public PetraO
 {
@@ -20,9 +20,9 @@ public:
 
         /// METHODES
 
-    void SetPosition(const Vector3f& position) noexcept;
-    void Perspective(int window_width, int window_height) noexcept;
-    void LookAt     (const Vector3f& at)       noexcept;
+    void SetPosition(const Vector3f& position)  noexcept;
+    void Perspective()                          noexcept;
+    void LookAt     (const Vector3f& at)        noexcept;
 
     virtual void Destroy() noexcept override;
 

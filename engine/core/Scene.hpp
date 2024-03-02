@@ -29,7 +29,7 @@ public:
     void LoadThisScene() noexcept;
     void DrawThisScene() noexcept;
 
-    inline boolean IsEmpty() const noexcept
+    inline bool8 IsEmpty() const noexcept
     {return (this->all_objects_in_scene.empty());};
 
 protected:

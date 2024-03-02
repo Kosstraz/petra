@@ -68,6 +68,54 @@ int to_nextc(const char* v, const char c, long* i, char** buffer)
     return (0);
 }
 
+int int_len(int nb)
+{
+    if (nb == 0)
+        return (1);
+
+    int len;
+    len = 0;
+    if (nb < 0)
+    {
+        nb = nb * -1;
+        len++;
+    }
+    while (nb > 0)
+    {
+        nb = nb / 10;
+        len++;
+    }
+    return (len);
+}
+
+char *itoa(int n)
+{
+    char *res;
+    int is_neg;
+    int i;
+
+    is_neg = 0;
+    if (n < 0)
+    {   
+        is_neg = 1;
+        n = n * -1;
+    }
+    res = (char*)malloc((sizeof(char) * int_len(n)) + 2 + is_neg);
+    if (!res)
+        return (NULL);
+    i = int_len(n) - 1 + is_neg;
+    res[i + 1] = '\0';
+    while (n >= 0 && i >= 0)
+    {
+        res[i--] = n % 10 + '0';
+        n = n / 10;
+    }
+    if (is_neg)
+        res[i] = '-';
+    
+    return (res);
+}
+
 char* strjoin(const char* str1, const char* str2, long size1, long size2)
 {
     if (size1 == 0)
@@ -85,4 +133,3 @@ char* strjoin(const char* str1, const char* str2, long size1, long size2)
     
     return (ret);
 }
-
