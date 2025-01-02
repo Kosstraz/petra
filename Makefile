@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/02 01:45:45 by bama             ###   ########.fr        #
+#    Updated: 2025/01/02 20:58:30 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,11 @@ EXTERN_LIB = -lpetrajardinssuspendus -lpetrahelper -lpetra -lnsl -lglfw
 
 ALL_LIB = $(LIB) $(EXTERN_LIB)
 
+LIB_PETRA_PATH = ./Engine/libpetra.a
+LIB_JARSU_PATH = ./LesJardinsSuspendus/libpetrajardinssuspendus.a
+LIB_HELPE_PATH = ./Helper/libpetrahelper.a
+LIBS_PATH = $(LIB_PETRA_PATH) $(LIB_JARSU_PATH) $(LIB_HELPE_PATH)
+
 # ############## #
 #*    REGLES    *#
 # ############## #
@@ -78,12 +83,18 @@ compile_petra_libs:
 that: check_compilation $(NAME)
 
 check_compilation:
-	@if [ -f $(NAME) ] && [ -n "$(strip $(OBJS))" ] && [ -n "$(strip $(EXTERN_LIB))" ] && [ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
+	@if [ -f $(NAME) ] && \
+		[ -n "$(strip $(OBJS))" ] && \
+		[ -n "$(strip $(EXTERN_LIB))" ] && \
+		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ] && \
+		[ ! $(LIB_PETRA_PATH) -nt $(NAME) ] && \
+		[ ! $(LIB_JARSU_PATH) -nt $(NAME) ] && \
+		[ ! $(LIB_HELPE_PATH) -nt $(NAME) ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \
 	fi
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBS_PATH)
 	$(CXX) $(CFLAGS) $(OBJS) $(LIB) $(EXTERN_LIB) -o $@
 	@echo "$(BOLD)$(CYAN)Exécutable $(NAME) créé avec succès!$(CLASSIC)"
 

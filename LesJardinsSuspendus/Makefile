@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/02 01:37:39 by bama             ###   ########.fr        #
+#    Updated: 2025/01/02 20:52:54 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,8 @@ LIB = -lnsl -lglfw -L ../Engine/ -lpetra
 
 EXTERN_LIB =
 
+LIB_PATH = ../Engine/libpetra.a
+
 # ############## #
 #*    REGLES    *#
 # ############## #
@@ -64,12 +66,15 @@ EXTERN_LIB =
 all: check_compilation $(NAME)
 
 check_compilation:
-	@if [ -f $(NAME) ] && [ -n "$(strip $(OBJS))" ] && [ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
+	@if [ -f $(NAME) ] && \
+		[ -n "$(strip $(OBJS))" ] && \
+		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ] && \
+		[ ! $(LIB_PATH) -nt $(NAME) ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \
 	fi
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIB_PATH)
 	$(AR) $(NAME) $(OBJS)
 	@echo "$(BOLD)$(CYAN)Exécutable $(NAME) créé avec succès!$(CLASSIC)"
 
