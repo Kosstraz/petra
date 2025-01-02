@@ -8,23 +8,11 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███              	*/
+/*                                              ███    ███             		*/
 /*																			*/
 /************************************************************************** */
 
-#include "Engine.hpp"
-#include "Engine/platform.h"
-#include "Helper.hpp"
-#include "JardinsSuspendus.hpp"
+#ifndef PETRA_RENDERING_HPP
+#define PETRA_RENDERING_HPP
 
-/**/int	main(void)
-{
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	JardinsSuspendus::Init();
-	JardinsSuspendus::Loop();
-	JardinsSuspendus::Destroy();
-	//Engine::Init();
-	//Engine::Loop();
-	//Engine::Destroy();
-	return (0);
-}
+#endif

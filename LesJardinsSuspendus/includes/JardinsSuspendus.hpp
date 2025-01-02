@@ -12,19 +12,29 @@
 /*																			*/
 /************************************************************************** */
 
-#include "Engine.hpp"
-#include "Engine/platform.h"
-#include "Helper.hpp"
-#include "JardinsSuspendus.hpp"
+#ifndef PETRA_JARDINSSUSPENDUS_HPP
+#define PETRA_JARDINSSUSPENDUS_HPP
 
-/**/int	main(void)
+# include "Window.hpp"
+# include <vulkan/vulkan.hpp>
+# define GLFW_INCLUDE_VULKAN
+# include <GLFW/glfw3.h>
+
+class JardinsSuspendus
 {
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	JardinsSuspendus::Init();
-	JardinsSuspendus::Loop();
-	JardinsSuspendus::Destroy();
-	//Engine::Init();
-	//Engine::Loop();
-	//Engine::Destroy();
-	return (0);
-}
+public:
+	static void
+	Init(void);
+
+	static void
+	Loop(void);
+
+	static void
+	Destroy(void);
+
+	static float	deltaTime;
+	static Window*	mainWindow;
+	//static Window*	settingsWindow;
+};
+
+#endif

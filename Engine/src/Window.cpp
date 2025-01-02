@@ -8,23 +8,35 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███              	*/
+/*                                              ███    ███             		*/
 /*																			*/
 /************************************************************************** */
 
-#include "Engine.hpp"
-#include "Engine/platform.h"
-#include "Helper.hpp"
-#include "JardinsSuspendus.hpp"
+#include "Window.hpp"
 
-/**/int	main(void)
+Window::Window(const String& name, int w, int h)
 {
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	JardinsSuspendus::Init();
-	JardinsSuspendus::Loop();
-	JardinsSuspendus::Destroy();
-	//Engine::Init();
-	//Engine::Loop();
-	//Engine::Destroy();
-	return (0);
+	this->glfwPtr = glfwCreateWindow(w, h, name.Data(), nullptr, nullptr);
+	if (!this->glfwPtr)
+		throw (Window::WindowCouldNotBeCreated());
+	this->width = w;
+	this->heigth = h;
+	this->title = name;
+	this->destroyed = false;
+}
+
+Window::~Window(void)
+{
+	this->Destroy();
+}
+
+void
+Window::Destroy(void)
+{
+	if (!this->destroyed)
+	{
+		this->Close();
+		glfwDestroyWindow(this->glfwPtr);
+		this->destroyed = true;
+	}
 }

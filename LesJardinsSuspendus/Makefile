@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/02 01:45:45 by bama             ###   ########.fr        #
+#    Updated: 2025/01/02 01:37:39 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,12 +31,13 @@ YELLOW 	= \e[38;2;250;189;0m
 #*   VARIABLES   *#
 # ############### #
 
-NAME = petra
+NAME = libpetrajardinssuspendus.a
 
 CXX = @c++ -std=c++20
 
-SRCS =	./Scripts/*.cpp \
-		./main.cpp
+AR = @ar -rcs
+
+SRCS =	./src/JardinsSuspendus.cpp \
 
 LMAKE = @make --no-print-directory -C
 
@@ -46,51 +47,36 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./Helper/includes/ -I ./Engine/includes/ -I ./LesJardinsSuspendus/includes/ -I ./Scripts/
+INCLUDES = -I . -I ./includes/ -I ../Engine/includes/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
 CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -MMD $(OPTIFLAGS) -fPIE -g3 #-Werror
 
-LIB = -L ./Engine/ -L ./Helper -L ./LesJardinsSuspendus/ 
+LIB = -lnsl -lglfw -L ../Engine/ -lpetra
 
-EXTERN_LIB = -lpetrajardinssuspendus -lpetrahelper -lpetra -lnsl -lglfw
-
-ALL_LIB = $(LIB) $(EXTERN_LIB)
+EXTERN_LIB =
 
 # ############## #
 #*    REGLES    *#
 # ############## #
 
-all: compile_petra_libs check_compilation $(NAME)
-
-fre:
-	$(LMAKE) ./Helper/ re
-	$(LMAKE) ./Engine/ re
-	$(LMAKE) ./LesJardinsSuspendus/ re
-	$(LMAKE) . that
-
-compile_petra_libs:
-	$(LMAKE) ./Helper/
-	$(LMAKE) ./Engine/
-	$(LMAKE) ./LesJardinsSuspendus/
-
-that: check_compilation $(NAME)
+all: check_compilation $(NAME)
 
 check_compilation:
-	@if [ -f $(NAME) ] && [ -n "$(strip $(OBJS))" ] && [ -n "$(strip $(EXTERN_LIB))" ] && [ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
+	@if [ -f $(NAME) ] && [ -n "$(strip $(OBJS))" ] && [ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \
 	fi
 
 $(NAME): $(OBJS)
-	$(CXX) $(CFLAGS) $(OBJS) $(LIB) $(EXTERN_LIB) -o $@
+	$(AR) $(NAME) $(OBJS)
 	@echo "$(BOLD)$(CYAN)Exécutable $(NAME) créé avec succès!$(CLASSIC)"
 
 $(OBJS_DIR)/%.obj: %.cpp
 	@mkdir -p $(@D)
 	@echo "$(GREEN)🗸 Compilation $(BOLD)$(YELLOW)$<$(CLASSIC)"
-	$(CXX) $(INCLUDES) $(CFLAGS) $(ALL_LIB) -c $< -o $@
+	$(CXX) $(INCLUDES) $(CFLAGS) -c $< -o $@
 
 clean:
 	@echo "$(BOLD)$(RED)"
@@ -105,7 +91,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all that check_compilation compile_petra_libs clean fclean re fre
+.PHONY: check_compilation all clean fclean re
 -include $(DEPS)
 
 # ############## #

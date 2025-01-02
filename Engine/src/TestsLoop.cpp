@@ -12,19 +12,8 @@
 /*																			*/
 /************************************************************************** */
 
-#include "Engine.hpp"
-#include "Engine/platform.h"
-#include "Helper.hpp"
-#include "JardinsSuspendus.hpp"
-
-/**/int	main(void)
+void
+TestsLoop(float deltaTime)
 {
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	JardinsSuspendus::Init();
-	JardinsSuspendus::Loop();
-	JardinsSuspendus::Destroy();
-	//Engine::Init();
-	//Engine::Loop();
-	//Engine::Destroy();
-	return (0);
+	(void)deltaTime;
 }

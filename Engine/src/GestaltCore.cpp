@@ -12,19 +12,12 @@
 /*																			*/
 /************************************************************************** */
 
-#include "Engine.hpp"
-#include "Engine/platform.h"
-#include "Helper.hpp"
-#include "JardinsSuspendus.hpp"
+#include "GestaltCore.hpp"
 
-/**/int	main(void)
-{
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	JardinsSuspendus::Init();
-	JardinsSuspendus::Loop();
-	JardinsSuspendus::Destroy();
-	//Engine::Init();
-	//Engine::Loop();
-	//Engine::Destroy();
-	return (0);
-}
+std::vector<Gestalt*>
+Gestalt::gameObjects = std::vector<Gestalt*>();
+std::vector<void (*)(void)>
+Gestalt::gameSpecialFunctions = std::vector<void (*)(void)>();
+
+std::vector<Gestalt* (*)(void)>
+PV_GestaltUtils::forCreateGameObjects = std::vector<Gestalt* (*)(void)>();
