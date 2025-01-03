@@ -38,8 +38,8 @@
 class Gestalt
 {
 public:
-	static void
-	InitObjects(void);
+	//static void
+	//InitObjects(void);
 
 protected:
 	FORCEINLINE

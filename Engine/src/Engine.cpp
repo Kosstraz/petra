@@ -13,8 +13,8 @@
 /************************************************************************** */
 
 #include "Engine.hpp"
-#include "../platform.h"
-#include "GestaltCore.hpp"
+#include "../Engine.h"
+#include "Gestalt.h"
 #include "../CHRONO/Chrono.hpp"
 
 bool
@@ -25,8 +25,8 @@ bool
 Engine::isDestroyed = false;
 bool
 Engine::requestQuiting = false;
-Window*
-Engine::mainWindow = nullptr;
+//Window*
+//Engine::mainWindow = nullptr;
 //std::vector<Window*>
 //Engine::windows = std::vector<Window*>();
 double
@@ -37,13 +37,13 @@ Engine::errorCode = 0;
 void
 Engine::Init(void)
 {
-	glfwInit();
+	/*glfwInit();
 	if (!glfwVulkanSupported())
 		exit(PETRA_VULKAN_NOT_SUPPORTED);
 	Engine::mainWindow = new Window("Petra - 0.0.1 <==> DEBUG", 800, 600);
 	glfwMakeContextCurrent(*Engine::mainWindow);
-	/* do some stuff */
-	Engine::isInitialized = true;
+	 do some stuff 
+	Engine::isInitialized = true;*/
 }
 
 void
@@ -52,7 +52,7 @@ TestsLoop(float deltaTime);
 void
 Engine::Loop(void)
 {
-	SimpleChrono	deltaTimeChrono;
+	/*SimpleChrono	deltaTimeChrono;
 
 	Gestalt::Begin();
 	while (Engine::mainWindow->IsOpened())
@@ -67,16 +67,16 @@ Engine::Loop(void)
 		std::cout << "ahah\n";
 	}
 	Gestalt::End();
-	Gestalt::DestroyObjects();
+	Gestalt::DestroyObjects();*/
 }
 void
 Engine::PauseLoop(void)
 {
-	while (Engine::mainWindow->IsOpened() && Engine::isPaused)
+	/*while (Engine::mainWindow->IsOpened() && Engine::isPaused)
 	{
 		glfwPollEvents();
 		glfwSwapBuffers(*Engine::mainWindow);
-	}
+	}*/
 }
 
 void
@@ -95,15 +95,23 @@ Engine::MakePlay(void)
 void
 Engine::Destroy(void)
 {
-	glfwTerminate();
+	//glfwTerminate();
 	/* do some stuff */
 	Engine::isDestroyed = true;
 }
 
 void
+Engine::__Debug(void)
+{
+	//Engine::Init();
+	//Engine::mainWindow = new Window("Petra - 0.0.1 <==> DEBUG", 800, 600);
+	//glfwMakeContextCurrent(*Engine::mainWindow);
+	Engine::Loop();
+}
+
+void
 Engine::Debug(void)
 {
-	Engine::Init();
-	Engine::Loop();
-	//Engine::Destroy();
+	Thread	t(Engine::__Debug);
+	t.Wait();
 }

@@ -1,5 +1,4 @@
 .objs/./src/JardinsSuspendus.obj: src/JardinsSuspendus.cpp \
- includes/JardinsSuspendus.hpp ../Engine/includes/Window.hpp \
- ../Engine/CHRONO/Chrono.hpp ../Engine/platform.h \
- ../Engine/includes/GestaltCore.hpp ../Engine/includes/Engine.hpp \
- ../Engine/includes/Window.hpp
+ includes/JardinsSuspendus.hpp ../Engine/CHRONO/Chrono.hpp \
+ ../Engine/Engine.h ../Engine/../Gestalt/Gestalt.h \
+ ../Engine/../Gestalt/includes/Gestalt.hpp ../Engine/includes/Engine.hpp

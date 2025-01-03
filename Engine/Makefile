@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/02 01:09:08 by bama             ###   ########.fr        #
+#    Updated: 2025/01/04 00:12:51 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,8 +38,6 @@ CXX = @c++ -std=c++20
 AR = @ar -rcs
 
 SRCS =	./src/Engine.cpp			\
-		./src/GestaltCore.cpp		\
-		./src/Window.cpp			\
 		./src/TestsLoop.cpp			\
 
 LMAKE = @make --no-print-directory -C
@@ -50,13 +48,13 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./includes/
+INCLUDES = -I . -I ./includes/ -I ../Gestalt/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
 CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -MMD $(OPTIFLAGS) -fPIE -g3 #-Werror
 
-LIB = -lnsl -lglfw
+LIB =
 
 EXTERN_LIB =
 

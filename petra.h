@@ -12,15 +12,11 @@
 /*																			*/
 /************************************************************************** */
 
-#include "petra.h"
+#ifndef PETRA_H
+#define PETRA_H
 
-/**/int	main(void)
-{
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	Petra::Init();
+# define XCB_CONNECTION_ERROR	1
 
+# include "Petra.hpp"
 
-
-	Petra::Destroy();
-	return (0);
-}
+#endif

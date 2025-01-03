@@ -12,15 +12,29 @@
 /*																			*/
 /************************************************************************** */
 
-#include "petra.h"
+#ifndef PETRA_HPP
+#define PETRA_HPP
 
-/**/int	main(void)
+# include <nsl.h>
+# include "Venus.h"
+# include "Gestalt/Gestalt.h"
+
+namespace Petra
 {
-	//WIZARD_SCRIPT("AutoGenerationScript");
-	Petra::Init();
+	FORCEINLINE
+	void
+	Init(void)
+	{
+		Venus::Init();
+	}
 
-
-
-	Petra::Destroy();
-	return (0);
+	FORCEINLINE
+	void
+	Destroy(void)
+	{
+		Venus::Destroy();
+		Gestalt::DestroyObjects();
+	}
 }
+
+#endif

@@ -8,64 +8,25 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███             		*/
+/*                                              ███    ███              	*/
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#ifndef PETRA_GESTALT_H
+#define PETRA_GESTALT_H
 
-#include <nsl.h>
-#include <GLFW/glfw3.h>
+# include "includes/Gestalt.hpp"
 
-class Window
-{
-public:
-	Window(void)			= delete;
-	Window(const Window&)	= delete;
-	Window(Window&&)		= delete;
-	Window(const String& title, int width, int height);
-	~Window(void);
-
-	FORCEINLINE
-	void
-	Close(void)
-	{
-		glfwSetWindowShouldClose(this->glfwPtr, true);
-	}
-
-	FORCEINLINE
-	bool
-	IsClosed(void)
-	{
-		return (glfwWindowShouldClose(this->glfwPtr));
-	}
-
-	FORCEINLINE
-	bool
-	IsOpened(void)
-	{
-		return (!glfwWindowShouldClose(this->glfwPtr));
-	}
-
-	FORCEINLINE
-	operator GLFWwindow*(void)
-	{
-		return (this->glfwPtr);
-	}
-
-	void
-	Destroy(void);
-
-private:
-	GLFWwindow*	glfwPtr;
-	String		title;
-	int			width;
-	int			heigth;
-	bool		destroyed;
-
-public:
-	struct WindowCouldNotBeCreated : std::exception { virtual const char* what(void) const noexcept override { return ("The window could'nt be created !\n"); } };
-};
+# define GESTALT_NONE
+# define GESTALT_USE
+# define GESTALT_ACTIVE(classT, ...)								\
+	static const bool	PV_GestaltCreate##classT##Wizard = []		\
+	{	 															\
+		Gestalt::gameObjects.push_back								\
+		(															\
+			reinterpret_cast<Gestalt *>(new classT(__VA_ARGS__))	\
+		);															\
+		return (true);												\
+	}();															\
 
 #endif

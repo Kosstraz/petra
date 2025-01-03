@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/04 00:11:45 by bama             ###   ########.fr        #
+#    Updated: 2025/01/04 00:05:13 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,13 +31,13 @@ YELLOW 	= \e[38;2;250;189;0m
 #*   VARIABLES   *#
 # ############### #
 
-NAME = libjaspendus.a
+NAME = libgestalt.a
 
 CXX = @c++ -std=c++20
 
 AR = @ar -rcs
 
-SRCS =	./src/JardinsSuspendus.cpp \
+SRCS =	./src/Gestalt.cpp	\
 
 LMAKE = @make --no-print-directory -C
 
@@ -47,7 +47,7 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./includes/ -I ../Engine/includes/
+INCLUDES = -I . -I ./includes/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
@@ -57,7 +57,7 @@ LIB =
 
 EXTERN_LIB =
 
-LIB_PATH = ../Engine/libpetra.a
+LIB_PATH =
 
 # ############## #
 #*    REGLES    *#
@@ -68,8 +68,7 @@ all: check_compilation $(NAME)
 check_compilation:
 	@if [ -f $(NAME) ] && \
 		[ -n "$(strip $(OBJS))" ] && \
-		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ] && \
-		[ ! $(LIB_PATH) -nt $(NAME) ]; then \
+		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \
 	fi

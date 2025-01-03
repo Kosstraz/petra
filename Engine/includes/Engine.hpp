@@ -17,10 +17,6 @@
 
 # include <nsl.h>
 # include <vector>
-# include <vulkan/vulkan.hpp>
-# define GLFW_INCLUDE_VULKAN
-# include <GLFW/glfw3.h>
-# include "Window.hpp"
 
 struct Engine
 {
@@ -57,9 +53,13 @@ struct Engine
 	static bool					isPaused;
 	static bool					isDestroyed;
 	static bool					requestQuiting;
-	static Window*				mainWindow;
+	//static Window*				mainWindow;
 	//static std::vector<Window*>	windows;
 	static double				deltaTime;
+
+private:
+	static void
+	__Debug(void);
 };
 
 #endif

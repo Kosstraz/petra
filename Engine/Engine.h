@@ -8,16 +8,17 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███              	*/
+/*                                              ███    ███             		*/
 /*																			*/
 /************************************************************************** */
 
-#include "GestaltCore.hpp"
+#ifndef PETRA_ENGINE_H
+#define PETRA_ENGINE_H
 
-std::vector<Gestalt*>
-Gestalt::gameObjects = std::vector<Gestalt*>();
-std::vector<void (*)(void)>
-Gestalt::gameSpecialFunctions = std::vector<void (*)(void)>();
+# include "../Gestalt/Gestalt.h"
+# include "Engine.hpp"
 
-std::vector<Gestalt* (*)(void)>
-PV_GestaltUtils::forCreateGameObjects = std::vector<Gestalt* (*)(void)>();
+# define PETRA_SUCCESS				0
+# define PETRA_VULKAN_NOT_SUPPORTED	1
+
+#endif

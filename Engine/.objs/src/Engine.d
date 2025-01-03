@@ -1,3 +1,4 @@
 .objs/./src/Engine.obj: src/Engine.cpp includes/Engine.hpp \
- includes/Window.hpp src/../platform.h includes/GestaltCore.hpp \
+ src/../Engine.h src/../../Gestalt/Gestalt.h \
+ src/../../Gestalt/includes/Gestalt.hpp ../Gestalt/Gestalt.h \
  src/../CHRONO/Chrono.hpp

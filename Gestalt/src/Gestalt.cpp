@@ -8,35 +8,16 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███             		*/
+/*                                              ███    ███              	*/
 /*																			*/
 /************************************************************************** */
 
-#include "Window.hpp"
+#include "Gestalt.hpp"
 
-Window::Window(const String& name, int w, int h)
-{
-	this->glfwPtr = glfwCreateWindow(w, h, name.Data(), nullptr, nullptr);
-	if (!this->glfwPtr)
-		throw (Window::WindowCouldNotBeCreated());
-	this->width = w;
-	this->heigth = h;
-	this->title = name;
-	this->destroyed = false;
-}
+std::vector<Gestalt*>
+Gestalt::gameObjects = std::vector<Gestalt*>();
+std::vector<void (*)(void)>
+Gestalt::gameSpecialFunctions = std::vector<void (*)(void)>();
 
-Window::~Window(void)
-{
-	this->Destroy();
-}
-
-void
-Window::Destroy(void)
-{
-	if (!this->destroyed)
-	{
-		this->Close();
-		glfwDestroyWindow(this->glfwPtr);
-		this->destroyed = true;
-	}
-}
+std::vector<Gestalt* (*)(void)>
+PV_GestaltUtils::forCreateGameObjects = std::vector<Gestalt* (*)(void)>();

@@ -15,11 +15,6 @@
 #ifndef PETRA_JARDINSSUSPENDUS_HPP
 #define PETRA_JARDINSSUSPENDUS_HPP
 
-# include "Window.hpp"
-# include <vulkan/vulkan.hpp>
-# define GLFW_INCLUDE_VULKAN
-# include <GLFW/glfw3.h>
-
 class JardinsSuspendus
 {
 public:
@@ -33,8 +28,18 @@ public:
 	Destroy(void);
 
 	static float	deltaTime;
-	static Window*	mainWindow;
+	//static Window*	mainWindow;
 	//static Window*	settingsWindow;
+
+private:
+	static void
+	__InitVulkan(void);
+
+	static void
+	__SetWindowHints(void);
+
+	static void
+	__DestroyVulkan(void);
 };
 
 #endif

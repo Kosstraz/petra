@@ -3,7 +3,7 @@
 #ifndef PETRA_DEV_
 #define PETRA_DEV_
 
-# include "../platform.h"
+# include "petra.h"
 
 GESTALT_USE
 class AutoGenerationScript : Gestalt
