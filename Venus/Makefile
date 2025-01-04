@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/03 23:04:43 by bama             ###   ########.fr        #
+#    Updated: 2025/01/04 00:27:26 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ AR = @ar -rcs
 
 SRCS =	./src/Window.cpp	\
 		./src/Venus.cpp 	\
+		./src/VVenus.cpp	\
 
 LMAKE = @make --no-print-directory -C
 

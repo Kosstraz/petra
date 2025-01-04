@@ -16,6 +16,7 @@
 #define PETRA_VENUS_H
 
 # include "includes/Venus.hpp"
+# include "includes/VVenus.hpp"
 # include "includes/Window.hpp"
 
 #endif

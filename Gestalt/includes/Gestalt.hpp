@@ -50,23 +50,13 @@ protected:
 	~Gestalt(void) = default;
 
 	virtual void
-	BeforePulse(void)
-	{
-		std::cout << "Before GestaltCore pulse\n";
-	};
+	BeforePulse(void) = 0;
 
 	virtual void
-	Pulse(float dt)
-	{
-		(void)dt;
-		std::cout << "GestaltCore pulse\n";
-	};
+	Pulse(float dt) = 0;
 
 	virtual void
-	AfterPulse(void)
-	{
-		std::cout << "After GestaltCore pulse\n";
-	};
+	AfterPulse(void) = 0;
 
 public:
 	FORCEINLINE

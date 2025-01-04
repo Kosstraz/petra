@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/02 01:09:04 by bama             ###   ########.fr        #
+#    Updated: 2025/01/04 00:31:45 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,11 +53,11 @@ OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-poin
 
 CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -MMD $(OPTIFLAGS) -fPIE -g3 #-Werror
 
-LIB = -lnsl -lglfw
+LIB =
 
 EXTERN_LIB =
 
-ALL_LIB = $(LIB) $(EXTERN_LIB)
+ALL_LIB =
 
 # ############## #
 #*    REGLES    *#
@@ -78,7 +78,7 @@ $(NAME): $(OBJS)
 $(OBJS_DIR)/%.obj: %.cpp
 	@mkdir -p $(@D)
 	@echo "$(GREEN)🗸 Compilation $(BOLD)$(YELLOW)$<$(CLASSIC)"
-	$(CXX) $(INCLUDES) $(CFLAGS) $(ALL_LIB) -c $< -o $@
+	$(CXX) $(INCLUDES) $(CFLAGS) -c $< -o $@
 
 clean:
 	@echo "$(BOLD)$(RED)"

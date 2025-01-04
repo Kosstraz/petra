@@ -15,8 +15,12 @@
 #ifndef PETRA_H
 #define PETRA_H
 
-# define XCB_CONNECTION_ERROR	1
+# define PETRA_ENGINE_NAME		"PETRA Engine"
+# define PETRA_VERSION_MAJOR	0
+# define PETRA_VERSION_MINOR	0
+# define PETRA_VERSION_PATCH	0
 
 # include "Petra.hpp"
+# include "Helper/Helper.h"
 
 #endif

@@ -8,58 +8,55 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███             		*/
+/*                                              ███    ███              	*/
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_ENGINE_HPP
-#define PETRA_ENGINE_HPP
+#ifndef PETRA_VVENUS_HPP
+#define PETRA_VVENUS_HPP
 
-# include <nsl.h>
-# include <vector>
+# define VVENUS_BAD_PDEVICE_SCORE	-9999
 
-struct Engine
+# include <vulkan/vulkan.h>
+# include "../colors.h"
+
+struct VVenus
 {
-	static
-	void
-	Init(void);
+	static void
+	Init(const char* engineName, unsigned int major, unsigned int minor, unsigned int patch);
 
-	static
-	void
-	Loop(void);
-
-	static
-	void
-	PauseLoop(void);
-
-	static
-	void
-	MakePause(void);
-
-	static
-	void
-	MakePlay(void);
-
-	static
-	void
+	static void
 	Destroy(void);
 
-	static
-	void
-	Debug(void);
+	static void
+	ShowPhysicalDevicesProperties(unsigned int i);
 
-	static int					errorCode;
-	static bool					isInitialized;
-	static bool					isPaused;
-	static bool					isDestroyed;
-	static bool					requestQuiting;
-	//static Window*				mainWindow;
-	//static std::vector<Window*>	windows;
-	static double				deltaTime;
+	static void
+	ShowPhysicalDevicesFeatures(unsigned int i);
+
+	static VkInstance				vk;
+	static VkDebugUtilsMessengerEXT	vkDebug;
+	static VkPhysicalDevice*		vkPhysicalDevices;
+	static VkDevice					vkDevice;
+	static VkSurfaceKHR				vkSurfaceKHR;
+	static VkApplicationInfo		vkAppInfo;
+	static unsigned int				physicalDevicesCount;
 
 private:
+	static int
+	__EvaluateDeviceScore(VkPhysicalDevice);
+
 	static void
-	__Debug(void);
+	__CreateLogicalDevice(void);
+
+	static void
+	__SetupAppInfo(const char* engineName, unsigned int major, unsigned int minor, unsigned int patch);
+
+	static void
+	__CreateVulkanInstance(void);
+
+	static void
+	__FindGPUs(void);
 };
 
 #endif

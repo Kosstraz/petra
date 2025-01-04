@@ -13,7 +13,7 @@
 /************************************************************************** */
 
 #include "../includes/Venus.hpp"
-#include "../petra.h"
+#include "../errors.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -39,13 +39,6 @@ Venus::Init(void)
 	Venus::setup = xcb_get_setup(Venus::xcb);
 	screenIt = xcb_setup_roots_iterator(Venus::setup);
 	Venus::mainScreen = screenIt.data;
-	//Venus::screens = static_cast<xcb_screen_t**>(malloc(sizeof(xcb_screen_t*) * Venus::mainScreenNumber));
-	//for (int i = 0 ; i < Venus::mainScreenNumber ; ++i)
-	//{
-	//	xcb_screen_next(&screenIt);
-	//	Venus::mainScreen = screenIt.data;
-	//}
-	//Venus::mainScreen
 }
 
 void

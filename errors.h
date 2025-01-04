@@ -8,17 +8,17 @@
 /*		  ███          ███    █▄      ███     ▀███████████   ███    ███		*/
 /*		  ███          ███    ███     ███       ███    ███   ███    ███		*/
 /*		 ▄████▀        ██████████    ▄████▀     ███    ███   ███    █▀ 		*/
-/*                                              ███    ███             		*/
+/*                                              ███    ███              	*/
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_ENGINE_H
-#define PETRA_ENGINE_H
+#ifndef PETRA_ERRORS_H
+#define PETRA_ERRORS_H
 
-# include "../Gestalt/Gestalt.h"
-# include "Engine.hpp"
-
-# define PETRA_SUCCESS				0
-# define PETRA_VULKAN_NOT_SUPPORTED	1
+# define XCB_CONNECTION_ERROR							1
+# define VK_FAILED_TO_CREATE_AN_INSTANCE				2
+# define VK_NOT_FOUND_PHYSICAL_DEVICE					3
+# define VK_FAILED_TO_CREATE_LOGICAL_DEVICE				4
+# define VK_PHYSICAL_DEVICE_DONT_SUPPORT_GEOMETRYSHADER	5
 
 #endif

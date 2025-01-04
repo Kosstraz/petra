@@ -14,13 +14,12 @@
 
 #include "petra.h"
 
-/**/int	main(void)
+//WIZARD_SCRIPT("AutoGenerationScript");
+
+int	main(void)
 {
-	//WIZARD_SCRIPT("AutoGenerationScript");
 	Petra::Init();
-
-
-
+	Petra::Loop();
 	Petra::Destroy();
 	return (0);
 }

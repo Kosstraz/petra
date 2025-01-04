@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/04 00:14:34 by bama             ###   ########.fr        #
+#    Updated: 2025/01/04 01:31:59 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,23 +46,22 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./Helper/ -I ./Engine/ -I ./LesJardinsSuspendus/ -I ./Gestalt/ -I ./Venus/ -I ./Scripts/
+INCLUDES = -I . -I ./Helper/ -I ./LesJardinsSuspendus/ -I ./Gestalt/ -I ./Venus/ -I ./Scripts/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
 CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -MMD $(OPTIFLAGS) -fPIE -g3 #-Werror
 
-LIB = -L ./Engine/ -L ./Helper -L ./LesJardinsSuspendus/  -L ./Venus/ -L ./Gestalt/
+LIB = -L ./Helper -L ./LesJardinsSuspendus/  -L ./Venus/ -L ./Gestalt/
 
-EXTERN_LIB = -ljaspendus -lpetrahelper -lvenus -lgestalt -lpetra -lvulkan -lnsl -lxcb
+EXTERN_LIB = -ljaspendus -lpetrahelper -lvenus -lgestalt -lvulkan -lnsl -lxcb
 
 ALL_LIB = $(LIB) $(EXTERN_LIB)
 
-LIB_PETRA_PATH = ./Engine/libpetra.a
 LIB_JARSU_PATH = ./LesJardinsSuspendus/libjaspendus.a
 LIB_HELPE_PATH = ./Helper/libpetrahelper.a
 LIB_VENUS_PATH = ./Venus/libvenus.a
-LIBS_PATH = $(LIB_PETRA_PATH) $(LIB_JARSU_PATH) $(LIB_HELPE_PATH) $(LIB_VENUS_PATH)
+LIBS_PATH = $(LIB_JARSU_PATH) $(LIB_HELPE_PATH) $(LIB_VENUS_PATH)
 
 # ############## #
 #*    REGLES    *#
@@ -73,14 +72,12 @@ all: compile_petra_libs check_compilation $(NAME)
 fre:
 	$(LMAKE) ./Venus/ re
 	$(LMAKE) ./Helper/ re
-	$(LMAKE) ./Engine/ re
 	$(LMAKE) ./LesJardinsSuspendus/ re
 	$(LMAKE) . that
 
 compile_petra_libs:
 	$(LMAKE) ./Venus/
 	$(LMAKE) ./Helper/
-	$(LMAKE) ./Engine/
 	$(LMAKE) ./LesJardinsSuspendus/
 
 that: check_compilation $(NAME)
@@ -90,7 +87,6 @@ check_compilation:
 		[ -n "$(strip $(OBJS))" ] && \
 		[ -n "$(strip $(EXTERN_LIB))" ] && \
 		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ] && \
-		[ ! $(LIB_PETRA_PATH) -nt $(NAME) ] && \
 		[ ! $(LIB_JARSU_PATH) -nt $(NAME) ] && \
 		[ ! $(LIB_VENUS_PATH) -nt $(NAME) ] && \
 		[ ! $(LIB_HELPE_PATH) -nt $(NAME) ]; then \

@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/04 00:11:45 by bama             ###   ########.fr        #
+#    Updated: 2025/01/04 00:36:03 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./includes/ -I ../Engine/includes/
+INCLUDES = -I . -I ./includes/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
@@ -57,7 +57,7 @@ LIB =
 
 EXTERN_LIB =
 
-LIB_PATH = ../Engine/libpetra.a
+LIB_PATH = ../Venus/libvenus.a
 
 # ############## #
 #*    REGLES    *#

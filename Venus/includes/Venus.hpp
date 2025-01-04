@@ -16,7 +16,6 @@
 #define PETRA_VENUS_HPP
 
 # include <xcb/xcb.h>
-# include <vulkan/vulkan.h>
 
 struct Venus
 {

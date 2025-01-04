@@ -26,7 +26,6 @@ public:
 		struct timeval	tv;
 		gettimeofday(&tv, nullptr);
 		timeB = static_cast<double>(tv.tv_sec) * 1000.0 + static_cast<double>(tv.tv_usec) / 1000.0;
-		//std::cout << timeB;
 	}
 
 	FORCEINLINE

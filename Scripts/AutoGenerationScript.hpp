@@ -1,7 +1,7 @@
 /* PETRA DEVELOPPMENT SCRIPT WIZARD */
 
-#ifndef PETRA_DEV_
-#define PETRA_DEV_
+#ifndef PETRA_DEV_HPP
+#define PETRA_DEV_HPP
 
 # include "petra.h"
 
