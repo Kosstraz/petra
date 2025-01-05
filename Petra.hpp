@@ -37,7 +37,14 @@ namespace Petra
 	{
 		Window*	w = new Window("Fenêtre - PETRA", 800, 600);
 		VVenus::SetMainWindow(w);
-		Sleep::ForSeconds(1);
+		while (w->IsOpened())
+		{
+			std::cout << "ah\n";
+			w->RecvLocalEvent(XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT, w->GetAtom("WM_ATOM"), 1, WindowState::Invisible);
+			//w->Close();
+		}
+		//while (1) ;
+		Sleep::ForSeconds(3);
 		delete (w);
 	}
 
