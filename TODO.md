@@ -8,3 +8,7 @@
 - Dans '__CreateLogicalDevice()' se renseigner sur la queue du device (familyQueue, ...) [vkGetPhysicalDeviceQueueFamilyProperties(...)]
 - Dans 'ShowPhysicalDeviceProperties()' afficher les .limits du device physique
 - Dans '__CreateLogicalDevice()' choisir le device physique en fonction d'un score jugé selon ces limites, ces "features" et et si c'est un GPU ou non.
+
+VK_QUEUE_GRAPHICS_BIT <=> support des opérations graphiques
+VK_QUEUE_COMPUTE_BIT <=> support des opérations graphiques
+VK_QUEUE_TRANSFER_BIT <=> support des opérations graphiques

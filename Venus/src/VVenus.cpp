@@ -19,18 +19,24 @@
 
 VkInstance
 VVenus::vk = VK_NULL_HANDLE;
-VkDebugUtilsMessengerEXT
-VVenus::vkDebug = VK_NULL_HANDLE;
 VkPhysicalDevice*
 VVenus::vkPhysicalDevices = VK_NULL_HANDLE;
 VkDevice
 VVenus::vkDevice = VK_NULL_HANDLE;
+VkXcbSurfaceCreateInfoKHR
+VVenus::vkXcbSurfaceInfoKHR = VkXcbSurfaceCreateInfoKHR{};
 VkSurfaceKHR
 VVenus::vkSurfaceKHR = VK_NULL_HANDLE;
 VkApplicationInfo
 VVenus::vkAppInfo = VkApplicationInfo{};
+VVQueue*
+VVenus::vvGraphicsQueue = nullptr;
+VVCommandManager*
+VVenus::vvCommandManager = nullptr;
 unsigned int
-VVenus::physicalDevicesCount = 0;
+VVenus::physicalDevicesCount = 0U;
+unsigned int
+VVenus::physicalGDeviceIndex = 0U;
 
 void
 VVenus::Init(const char* engineName, unsigned int major, unsigned int minor, unsigned int patch)
@@ -39,20 +45,73 @@ VVenus::Init(const char* engineName, unsigned int major, unsigned int minor, uns
 	VVenus::__CreateVulkanInstance();
 	VVenus::__FindGPUs();
 	VVenus::__CreateLogicalDevice();
+	VVenus::__XCBSetSurfaceKHR();
+	VVenus::__CreateQueueAndLogic();
+}
+
+void
+VVenus::SetMainWindow(Window* window)
+{
+	VVenus::vkXcbSurfaceInfoKHR.window = window->GetXcbID();
+	if (vkCreateXcbSurfaceKHR(VVenus::vk, &VVenus::vkXcbSurfaceInfoKHR, nullptr, &VVenus::vkSurfaceKHR) != VK_SUCCESS)
+		exit(VK_FAILED_TO_CREATE_XCB_SURFACE_KHR);
 }
 
 void
 VVenus::Destroy(void)
 {
+	delete(VVenus::vvCommandManager);
+	delete(VVenus::vvGraphicsQueue);
 	if (VVenus::vkDevice != VK_NULL_HANDLE)
 		vkDestroyDevice(VVenus::vkDevice, nullptr);
 	if (VVenus::vkSurfaceKHR != VK_NULL_HANDLE)
 		vkDestroySurfaceKHR(VVenus::vk, VVenus::vkSurfaceKHR, nullptr);
-	//if (VVenus::vkDebug != VK_NULL_HANDLE)
-	//	vkDestroyDebugUtilsMessengerEXT(VVenus::vk, VVenus::vkDebug, nullptr);
 	if (VVenus::vk != VK_NULL_HANDLE)
 		vkDestroyInstance(VVenus::vk, nullptr);
 	free(VVenus::vkPhysicalDevices);
+}
+
+int
+VVenus::__GetFamilyQueueIndex(int flag)
+{
+	unsigned int				queueFamilyCount = 0;
+	VkQueueFamilyProperties*	queueFamilies;
+
+	vkGetPhysicalDeviceQueueFamilyProperties(VVenus::vkPhysicalDevices[VVenus::physicalGDeviceIndex], &queueFamilyCount, nullptr);
+	queueFamilies = cast<VkQueueFamilyProperties*>(malloc(queueFamilyCount * sizeof(VkQueueFamilyProperties)));
+	vkGetPhysicalDeviceQueueFamilyProperties(VVenus::vkPhysicalDevices[VVenus::physicalGDeviceIndex], &queueFamilyCount, queueFamilies);
+	for (unsigned int i = 0 ; i < queueFamilyCount ; ++i)
+	{
+		if (queueFamilies[i].queueFlags & flag)
+		{
+			free(queueFamilies);
+			return (i);
+		}
+	}
+	free(queueFamilies);
+	return (-1);
+}
+
+void
+VVenus::__CreateQueueAndLogic(void)
+{
+	int	graphicsFamilyIndex;
+
+	graphicsFamilyIndex = VVenus::__GetFamilyQueueIndex(VK_QUEUE_GRAPHICS_BIT);
+	if (graphicsFamilyIndex == -1)
+		exit(VK_NO_GRAPHICS_FAMILY_QUEUE_INDEX);
+	VVenus::vvGraphicsQueue = new VVQueue(	VVenus::vkDevice,
+											graphicsFamilyIndex,
+											0);
+	VVenus::vvCommandManager = new VVCommandManager(&VVenus::vkDevice, *VVenus::vvGraphicsQueue);
+}
+ 
+void
+VVenus::__XCBSetSurfaceKHR(void)
+{
+	VVenus::vkXcbSurfaceInfoKHR.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
+	VVenus::vkXcbSurfaceInfoKHR.flags = 0;
+	VVenus::vkXcbSurfaceInfoKHR.connection = Venus::xcb;
 }
 
 int
@@ -61,29 +120,61 @@ VVenus::__EvaluateDeviceScore(VkPhysicalDevice physicalDevice)
 	VkPhysicalDeviceProperties	pDeviceProperties;
 	VkPhysicalDeviceFeatures	pDeviceFeatures;
 	int							score = 0;
+	size_t						structSize;
 
 	vkGetPhysicalDeviceProperties(physicalDevice, &pDeviceProperties);
 	vkGetPhysicalDeviceFeatures(physicalDevice, &pDeviceFeatures);
-	if (pDeviceFeatures.geometryShader == false)
+	if (pDeviceFeatures.geometryShader == VK_FALSE)
 		return (VVENUS_BAD_PDEVICE_SCORE);
-// Taille de la structure VkPhysicalDeviceFeatures
-    size_t size = sizeof(pDeviceFeatures);
+	structSize = sizeof(pDeviceFeatures);
+	const char* data = ptrCast<const char*>(&pDeviceFeatures);
+	for (size_t i = 0; i < structSize; i += sizeof(VkBool32))
+	{
+		VkBool32	field;
+		memcpy(&field, &data[i], sizeof(VkBool32));
+		if (field == VK_TRUE)
+			++score;
+	}
+	if (pDeviceFeatures.tessellationShader == VK_FALSE)
+		score -= 10;
+	switch (pDeviceProperties.deviceType)
+	{
+		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:
+			score += 50;
+			break ;
+		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
+			score += 30;
+			break ;
+		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
+			score += 20;
+			break ;
+		case VK_PHYSICAL_DEVICE_TYPE_CPU:
+			score += 10;
+			break ;
+		default :
+			score = VVENUS_BAD_PDEVICE_SCORE;
+			break ;
+	}
+	return (score);
+}
 
-    // Pointeur vers la mémoire brute de la structure
-    const uint8_t* data = reinterpret_cast<const uint8_t*>(&pDeviceFeatures);
+unsigned int
+VVenus::__EvaluateAllDevicesScore(void)
+{
+	Pair	scoreIndex = Pair(VVENUS_BAD_PDEVICE_SCORE, 0U);
 
-    // Parcourir chaque champ, ici supposé que chaque champ booléen occupe 4 octets (comme VkBool32)
-    for (size_t i = 0; i < size; i += sizeof(VkBool32)) {
-        VkBool32 field;
-        std::memcpy(&field, &data[i], sizeof(VkBool32));  // Copie de 4 octets dans un VkBool32
-        
-        // Si le champ booléen est true, incrémente le score
-        if (field == VK_TRUE) {
-            ++score;
-        }
-    }
-
-    std::cout << "Score: " << score << std::endl;
+	for (unsigned int i = 0 ; VVenus::vkPhysicalDevices[i] ; ++i)
+	{
+		int	scoreTmp = __EvaluateDeviceScore(VVenus::vkPhysicalDevices[i]);
+		if (scoreIndex.a < scoreTmp)
+		{
+			scoreIndex.a = scoreTmp;
+			scoreIndex.b = i;
+		}
+	}
+	if (scoreIndex.a == VVENUS_BAD_PDEVICE_SCORE)
+		exit (VK_PHYSICAL_DEVICE_DONT_SUPPORT_GEOMETRYSHADER);
+	return (scoreIndex.b);
 }
 
 void
@@ -91,7 +182,6 @@ VVenus::__CreateLogicalDevice(void)
 {
 	VkDeviceQueueCreateInfo	vkDeviceQueueCInfo{};
 	VkDeviceCreateInfo		vkDeviceCInfo{};
-	Pair					scoreIndex = Pair(VVENUS_BAD_PDEVICE_SCORE, 0U);
 	float					queuePriority = 1.0f;
 
 	vkDeviceQueueCInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -102,17 +192,12 @@ VVenus::__CreateLogicalDevice(void)
 	vkDeviceCInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	vkDeviceCInfo.queueCreateInfoCount = 1;
 	vkDeviceCInfo.pQueueCreateInfos = &vkDeviceQueueCInfo;
-
-	for (unsigned int i = 0 ; VVenus::vkPhysicalDevices[i] ; ++i)
-		if (scoreIndex.a < __EvaluateDeviceScore(VVenus::vkPhysicalDevices[i]))
-			scoreIndex.b = i;
-	if (scoreIndex.a == VVENUS_BAD_PDEVICE_SCORE)
-		exit (VK_PHYSICAL_DEVICE_DONT_SUPPORT_GEOMETRYSHADER);
-	else if (vkCreateDevice(VVenus::vkPhysicalDevices[scoreIndex.b], &vkDeviceCInfo, nullptr, &VVenus::vkDevice) != VK_SUCCESS)
+	VVenus::physicalGDeviceIndex = VVenus::__EvaluateAllDevicesScore();
+	if (vkCreateDevice(VVenus::vkPhysicalDevices[VVenus::physicalGDeviceIndex], &vkDeviceCInfo, nullptr, &VVenus::vkDevice) != VK_SUCCESS)
 		exit(VK_FAILED_TO_CREATE_LOGICAL_DEVICE);
 	
-	//ShowPhysicalDevicesProperties(scoreIndex.b);
-	//ShowPhysicalDevicesFeatures(scoreIndex.b);
+	//ShowPhysicalDevicesProperties(VVenus::physicalDeviceUsedIndex);
+	//ShowPhysicalDevicesFeatures(VVenus::physicalDeviceUsedIndex);
 }
 
 void
@@ -121,21 +206,32 @@ VVenus::__FindGPUs(void)
 	vkEnumeratePhysicalDevices(VVenus::vk, &VVenus::physicalDevicesCount, nullptr);
 	if (VVenus::physicalDevicesCount == 0)
 		exit(VK_NOT_FOUND_PHYSICAL_DEVICE);
-	VVenus::vkPhysicalDevices = static_cast<VkPhysicalDevice*>(calloc(127, sizeof(VkPhysicalDevice)));
+	VVenus::vkPhysicalDevices = cast<VkPhysicalDevice*>(calloc(127, sizeof(VkPhysicalDevice)));
 	vkEnumeratePhysicalDevices(VVenus::vk, &VVenus::physicalDevicesCount, VVenus::vkPhysicalDevices);
+}
+
+void
+VVenus::__SetInstanceExtension(VkInstanceCreateInfo* vkInstCInfo)
+{
+	constexpr unsigned int	extensionCount = 2;
+	const char** const		extensions = cast<const char**>(malloc(sizeof(const char*) * extensionCount)); // to free after uses
+
+	extensions[0] = VK_KHR_SURFACE_EXTENSION_NAME;
+	extensions[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
+	vkInstCInfo->enabledExtensionCount = extensionCount;
+	vkInstCInfo->ppEnabledExtensionNames = extensions;
 }
 
 void
 VVenus::__CreateVulkanInstance(void)
 {
 	VkInstanceCreateInfo	vkCreateIInfo{};
-	//Queue<const char*>		validationLayers;
 
-	//validationLayers.Push("VK_LAYER_KHRONOS_validation");
+	//const char* const		khronos = strdup("VK_LAYER_KHRONOS_validation");
+
 	vkCreateIInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	vkCreateIInfo.pApplicationInfo = &VVenus::vkAppInfo;
-	//vkCreateIInfo.enabledLayerCount = static_cast<unsigned int>(validationLayers.Size());
-	//vkCreateIInfo.ppEnabledLayerNames = validationLayers.begin().get();
+	VVenus::__SetInstanceExtension(&vkCreateIInfo);
 	if (vkCreateInstance(&vkCreateIInfo, nullptr, &VVenus::vk) != VK_SUCCESS)
 		exit(VK_FAILED_TO_CREATE_AN_INSTANCE);
 }

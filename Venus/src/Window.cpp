@@ -61,6 +61,12 @@ Window::ChangeTitle(const char* title, unsigned int size)
 	this->__ChangeTitle(title, size);
 }
 
+unsigned int
+Window::GetXcbID(void)
+{
+	return (this->id);
+}
+
 Window::~Window(void)
 {
 	this->Destroy();

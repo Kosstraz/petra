@@ -16,6 +16,7 @@
 #define PETRA_VENUS_HPP
 
 # include <xcb/xcb.h>
+# include "../platform.h"
 
 struct Venus
 {

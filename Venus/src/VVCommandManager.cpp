@@ -12,44 +12,31 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#include "VVCommandManager.hpp"
 
-# include <xcb/xcb.h>
-# include "Venus.hpp"
+class VVQueue;
 
-class Window final : private Venus
+VVCommandManager::VVCommandManager(VkDevice* vkDevice, VVQueue queue, enum VkCommandPoolCreateFlagBits flag)
+	: isDestroyed(false)
 {
-public:
-	Window(void) = delete;
-	Window(const char* title, int width, int height);
-	~Window(void);
+	VkCommandPoolCreateInfo	vkCommandPoolCInfo;
 
-	void
-	ChangeTitle(const char* title);
+	this->vdevice = vkDevice;
+	vkCommandPoolCInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	vkCommandPoolCInfo.flags = flag;
+	vkCommandPoolCInfo.queueFamilyIndex = queue.GetQueueFamilyIndex();
+	vkCreateCommandPool(*this->vdevice, &vkCommandPoolCInfo, nullptr, &this->pool);
+	this->beginInfo = VkCommandBufferBeginInfo{};
+	this->beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+}
 
-	void
-	ChangeTitle(const char* title, unsigned int size);
-
-	void
-	Destroy(void);
-
-	unsigned int
-	GetXcbID(void);
-
-private:
-	bool			isDestroyed;
-	unsigned int	id;
-	unsigned int	valueMask;
-	unsigned int	valueList[2];
-
-private:
-	void
-	__ChangeTitle(const char* title, unsigned int size);
-
-	virtual void
-	SetTheClassAbstract(void) override
-	{}
-};
-
-#endif
+void
+VVCommandManager::Destroy(void)
+{
+	if (!this->isDestroyed)
+	{
+		vkDestroyCommandPool(*this->vdevice, this->pool, nullptr);
+		this->vdevice = nullptr;
+		this->isDestroyed = true;
+	}
+}

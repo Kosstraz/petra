@@ -35,7 +35,10 @@ namespace Petra
 	void
 	Loop(void)
 	{
-		
+		Window*	w = new Window("Fenêtre - PETRA", 800, 600);
+		VVenus::SetMainWindow(w);
+		Sleep::ForSeconds(1);
+		delete (w);
 	}
 
 	FORCEINLINE

@@ -6,7 +6,7 @@
 #    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/04 00:27:26 by bama             ###   ########.fr        #
+#    Updated: 2025/01/05 15:18:21 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,9 +37,11 @@ CXX = @c++ -std=c++20
 
 AR = @ar -rcs
 
-SRCS =	./src/Window.cpp	\
-		./src/Venus.cpp 	\
-		./src/VVenus.cpp	\
+SRCS =	./src/Window.cpp			\
+		./src/Venus.cpp 			\
+		./src/VVCommandManager.cpp	\
+		./src/VVQueue.cpp			\
+		./src/VVenus.cpp			\
 
 LMAKE = @make --no-print-directory -C
 
@@ -51,7 +53,7 @@ DEPS = $(OBJS:%.obj=%.d)
 
 INCLUDES = -I . -I ./includes/
 
-OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
+OPTIFLAGS =	-O3 -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
 CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -MMD $(OPTIFLAGS) -fPIE -g3 #-Werror
 

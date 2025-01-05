@@ -12,44 +12,36 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#ifndef PETRA_VVCOMMANDMANAGER_HPP
+#define PETRA_VVCOMMANDMANAGER_HPP
 
-# include <xcb/xcb.h>
-# include "Venus.hpp"
+# include <vulkan/vulkan.h>
+# include <nsl.h>
+# include "VVQueue.hpp"
+# include "../platform.h"
 
-class Window final : private Venus
+struct VVCommandManager
 {
 public:
-	Window(void) = delete;
-	Window(const char* title, int width, int height);
-	~Window(void);
+	VVCommandManager(VkDevice* vkDevice, VVQueue queue, enum VkCommandPoolCreateFlagBits flag = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 
-	void
-	ChangeTitle(const char* title);
-
-	void
-	ChangeTitle(const char* title, unsigned int size);
+	FORCEINLINE
+	~VVCommandManager(void)
+	{
+		if (!isDestroyed)
+			this->Destroy();
+	}
 
 	void
 	Destroy(void);
 
-	unsigned int
-	GetXcbID(void);
-
-private:
-	bool			isDestroyed;
-	unsigned int	id;
-	unsigned int	valueMask;
-	unsigned int	valueList[2];
-
-private:
-	void
-	__ChangeTitle(const char* title, unsigned int size);
-
-	virtual void
-	SetTheClassAbstract(void) override
-	{}
+public:
+	bool						isDestroyed;
+	VkDevice*					vdevice;
+	VkCommandPool				pool;
+	VkCommandBuffer				buffers;
+	VkCommandBufferBeginInfo	beginInfo;
+	//VkCommandBufferAllocateInfo	allocateInfo;
 };
 
 #endif

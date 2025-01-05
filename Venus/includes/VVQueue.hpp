@@ -12,44 +12,66 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#ifndef PETRA_VVQUEUE_HPP
+#define PETRA_VVQUEUE_HPP
 
-# include <xcb/xcb.h>
-# include "Venus.hpp"
+# define VVQUEUE_TRY_TO_SUBMIT_WHEN_NO_CB	1
 
-class Window final : private Venus
+# include <vulkan/vulkan.h>
+# include <nsl.h>
+# include "../platform.h"
+
+class VVCommandBuffer;
+
+class VVQueue final
 {
 public:
-	Window(void) = delete;
-	Window(const char* title, int width, int height);
-	~Window(void);
+	VVQueue(VkDevice device, int pQueueFamilyIndex, unsigned int pQueueIndex);
+	~VVQueue(void) = default;
 
 	void
-	ChangeTitle(const char* title);
+	AddCommandBuffer(VkCommandBuffer pCommandBuffer);
 
-	void
-	ChangeTitle(const char* title, unsigned int size);
+	FORCEINLINE
+	int
+	GetQueueFamilyIndex(void)
+	{
+		return (this->queueFamilyIndex);
+	}
 
-	void
-	Destroy(void);
+	FORCEINLINE
+	VkQueue
+	GetVkQueue(void)
+	{
+		return (this->queue);
+	}
 
-	unsigned int
-	GetXcbID(void);
+	FORCEINLINE
+	VkResult
+	Wait(void)
+	{
+		return (vkQueueWaitIdle(this->queue));
+	}
+
+	FORCEINLINE
+	VkResult
+	Submit(void)
+	{
+		if (this->commandBuffers->Size() == 0U)
+			return (cast<VkResult>(VVQUEUE_TRY_TO_SUBMIT_WHEN_NO_CB));
+		return (vkQueueSubmit(this->queue, this->elementCount, &this->submitInfo, nullptr));
+	}
 
 private:
-	bool			isDestroyed;
-	unsigned int	id;
-	unsigned int	valueMask;
-	unsigned int	valueList[2];
-
-private:
-	void
-	__ChangeTitle(const char* title, unsigned int size);
-
-	virtual void
-	SetTheClassAbstract(void) override
-	{}
+	SmartPtr<Queue<VkCommandBuffer>>
+							commandBuffers;
+	VkQueue					queue;
+	VkSubmitInfo			submitInfo;
+	unsigned int			queueIndex;
+	int						queueFamilyIndex;
+	int						deviceUsedIndex;
+	int						elementCount;
+	bool					isDestroyed;
 };
 
 #endif

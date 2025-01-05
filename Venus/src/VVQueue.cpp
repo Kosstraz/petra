@@ -12,44 +12,21 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#include "VVQueue.hpp"
 
-# include <xcb/xcb.h>
-# include "Venus.hpp"
-
-class Window final : private Venus
+VVQueue::VVQueue(VkDevice device, int pQueueFamilyIndex, unsigned int pQueueIndex) : deviceUsedIndex(0), elementCount(0), isDestroyed(false)
 {
-public:
-	Window(void) = delete;
-	Window(const char* title, int width, int height);
-	~Window(void);
+	this->submitInfo = VkSubmitInfo{};
+	this->submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	this->queueFamilyIndex = pQueueFamilyIndex;
+	this->queueIndex = pQueueIndex;
+	vkGetDeviceQueue(device, this->queueFamilyIndex, this->queueIndex, &this->queue);
+}
 
-	void
-	ChangeTitle(const char* title);
-
-	void
-	ChangeTitle(const char* title, unsigned int size);
-
-	void
-	Destroy(void);
-
-	unsigned int
-	GetXcbID(void);
-
-private:
-	bool			isDestroyed;
-	unsigned int	id;
-	unsigned int	valueMask;
-	unsigned int	valueList[2];
-
-private:
-	void
-	__ChangeTitle(const char* title, unsigned int size);
-
-	virtual void
-	SetTheClassAbstract(void) override
-	{}
-};
-
-#endif
+void
+VVQueue::AddCommandBuffer(VkCommandBuffer pCommandBuffer)
+{
+	this->commandBuffers->Push(pCommandBuffer);
+	this->submitInfo.pCommandBuffers = commandBuffers->begin().get();
+	++this->submitInfo.commandBufferCount;
+}

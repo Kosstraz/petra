@@ -12,44 +12,20 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#ifndef VENUS_PLATFORM_H
+#define VENUS_PLATFORM_H
 
-# include <xcb/xcb.h>
-# include "Venus.hpp"
-
-class Window final : private Venus
-{
-public:
-	Window(void) = delete;
-	Window(const char* title, int width, int height);
-	~Window(void);
-
-	void
-	ChangeTitle(const char* title);
-
-	void
-	ChangeTitle(const char* title, unsigned int size);
-
-	void
-	Destroy(void);
-
-	unsigned int
-	GetXcbID(void);
-
-private:
-	bool			isDestroyed;
-	unsigned int	id;
-	unsigned int	valueMask;
-	unsigned int	valueList[2];
-
-private:
-	void
-	__ChangeTitle(const char* title, unsigned int size);
-
-	virtual void
-	SetTheClassAbstract(void) override
-	{}
-};
+# ifndef cast
+#  define cast		static_cast
+# endif
+# ifndef ptrCast
+#  define ptrCast	reinterpret_cast
+# endif
+# ifndef polyCast
+#  define polyCast	dynamic_cast
+# endif
+# ifndef constCast
+#  define constCast	const_cast
+# endif
 
 #endif

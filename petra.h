@@ -20,6 +20,7 @@
 # define PETRA_VERSION_MINOR	0
 # define PETRA_VERSION_PATCH	0
 
+# include <nsl.h>
 # include "Petra.hpp"
 # include "Helper/Helper.h"
 
