@@ -12,8 +12,8 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_WINDOW_HPP
-#define PETRA_WINDOW_HPP
+#ifndef VENUS_WINDOW_HPP
+#define VENUS_WINDOW_HPP
 
 	// Withdrawn -> Correspond à l'état où la fenêtre n'est plus dans le gestionnaire de fenêtre
 # define CLIENT_MSG_EVENT_DATA32_WITHDRAWN	0

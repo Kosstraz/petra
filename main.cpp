@@ -18,9 +18,10 @@
 
 int	main(void)
 {
-	Petra::Init();
-	Petra::Loop();
-	Petra::Destroy();
+	WIZARD_SCRIPT("Player");
+	//Petra::Init();
+	//Petra::Loop();
+	//Petra::Destroy();
 	//Gestalt::DestroyObjects();
 	return (0);
 }

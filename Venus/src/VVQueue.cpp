@@ -16,6 +16,8 @@
 
 VVQueue::VVQueue(VkDevice device, int pQueueFamilyIndex, unsigned int pQueueIndex) : deviceUsedIndex(0), elementCount(0), isDestroyed(false)
 {
+	(void)this->isDestroyed;
+	(void)this->deviceUsedIndex;
 	this->submitInfo = VkSubmitInfo{};
 	this->submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	this->queueFamilyIndex = pQueueFamilyIndex;

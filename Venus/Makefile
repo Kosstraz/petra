@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
+#    By: ymanchon <ymanchon@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/05 15:18:21 by bama             ###   ########.fr        #
+#    Updated: 2025/01/06 15:27:33 by ymanchon         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./includes/
+INCLUDES = -I . -I ./includes/ -I ../Egide/
 
 OPTIFLAGS =	-O3 -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
@@ -61,7 +61,7 @@ LIB =
 
 EXTERN_LIB =
 
-LIB_PATH =
+LIB_EGIDE_PATH = ../Egide/libegide.a
 
 # ############## #
 #*    REGLES    *#
@@ -72,6 +72,7 @@ all: check_compilation $(NAME)
 check_compilation:
 	@if [ -f $(NAME) ] && \
 		[ -n "$(strip $(OBJS))" ] && \
+		[ ! $(LIB_EGIDE_PATH) -nt $(NAME) ] && \
 		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \

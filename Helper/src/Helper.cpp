@@ -90,7 +90,7 @@ Helper::__CreateHPPScriptTemplate(const std::string& className)
 	HFW(headerProtect, file);
 	HFW_nl(file);
 
-	HFW(std::string("\n# include \"../platform.h\"\n\n"), file);
+	HFW(std::string("\n# include \"egide.h\"\n\n"), file);
 
 	HFW(std::string("GESTALT_USE\n"), file);
 	HFW_class(file);

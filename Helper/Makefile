@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
+#    By: ymanchon <ymanchon@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/04 00:31:45 by bama             ###   ########.fr        #
+#    Updated: 2025/01/06 15:30:38 by ymanchon         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./includes/
+INCLUDES = -I . -I ./includes/ -I ../Egide/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
@@ -57,7 +57,7 @@ LIB =
 
 EXTERN_LIB =
 
-ALL_LIB =
+LIB_EGIDE_PATH = ../Egide/
 
 # ############## #
 #*    REGLES    *#
@@ -66,7 +66,7 @@ ALL_LIB =
 all: check_compilation $(NAME)
 
 check_compilation:
-	@if [ -f $(NAME) ] && [ -n "$(strip $(OBJS))" ] && [ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ]; then \
+	@if [ -f $(NAME) ] && [ -n "$(strip $(OBJS))" ] && [ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ] && [ ! $(LIB_EGIDE_PATH) -nt $(NAME) ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \
 	fi

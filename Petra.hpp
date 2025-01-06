@@ -16,7 +16,7 @@
 #define PETRA_HPP
 
 # include "petra.h"
-# include <nsl.h>
+# include "egide/egide.h"
 # include "Venus.h"
 # include "Gestalt/Gestalt.h"
 
@@ -40,8 +40,8 @@ namespace Petra
 		while (w->IsOpened())
 		{
 			std::cout << "ah\n";
-			w->RecvLocalEvent(XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT, w->GetAtom("WM_ATOM"), 1, WindowState::Invisible);
-			//w->Close();
+			//w->RecvLocalEvent(XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT, w->GetAtom("WM_ATOM"), 1, WindowState::Invisible);
+			w->Close();
 		}
 		//while (1) ;
 		Sleep::ForSeconds(3);

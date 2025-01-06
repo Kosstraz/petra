@@ -12,8 +12,8 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_VENUS_HPP
-#define PETRA_VENUS_HPP
+#ifndef VENUS_HPP
+#define VENUS_HPP
 
 # include <xcb/xcb.h>
 # include "../platform.h"

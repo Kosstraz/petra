@@ -69,7 +69,7 @@
 # define WIZARD_SCRIPT(classT)	\
 	Helper::CreateScriptTemplate(classT);
 
-# include <nsl.h>
+# include "../Egide/egide/egide.h"
 
 class Helper final
 {

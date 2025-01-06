@@ -13,7 +13,7 @@
 /************************************************************************** */
 
 #include "VVenus.hpp"
-#include <nsl.h>
+#include "egide/egide.h"
 #include "../errors.h"
 #include "../colors.h"
 
@@ -104,6 +104,8 @@ VVenus::__CreateQueueAndLogic(void)
 											graphicsFamilyIndex,
 											0);
 	VVenus::vvCommandManager = new VVCommandManager(&VVenus::vkDevice, *VVenus::vvGraphicsQueue);
+	VVenus::vvGraphicsQueue->Wait();
+	VVenus::vvCommandManager->LinkToVVQueue(*VVenus::vvGraphicsQueue, VkCommandPoolCreateFlagBits::VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 }
  
 void

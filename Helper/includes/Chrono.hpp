@@ -2,7 +2,7 @@
 #define NSL_CHRONO_HPP
 
 # include <sys/time.h>
-# include <NSLplatform.h>
+# include "../Egide/egide/egide_platform.h"
 
 class SimpleChrono
 {

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
+#    By: ymanchon <ymanchon@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/04 01:31:59 by bama             ###   ########.fr        #
+#    Updated: 2025/01/06 17:29:54 by ymanchon         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,22 +46,23 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.obj)
 
 DEPS = $(OBJS:%.obj=%.d)
 
-INCLUDES = -I . -I ./Helper/ -I ./LesJardinsSuspendus/ -I ./Gestalt/ -I ./Venus/ -I ./Scripts/
+INCLUDES = -I . -I ./Helper/ -I ./LesJardinsSuspendus/ -I ./Gestalt/ -I ./Venus/ -I ./Scripts/ -I ./Egide/
 
 OPTIFLAGS =	-Ofast -march=native -mtune=generic -funroll-loops -fomit-frame-pointer -ffast-math
 
 CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -MMD $(OPTIFLAGS) -fPIE -g3 #-Werror
 
-LIB = -L ./Helper -L ./LesJardinsSuspendus/  -L ./Venus/ -L ./Gestalt/
+LIB = -L ./Helper -L ./LesJardinsSuspendus/  -L ./Venus/ -L ./Gestalt/ -L ./Egide/
 
-EXTERN_LIB = -ljaspendus -lpetrahelper -lvenus -lgestalt -lvulkan -lnsl -lxcb
+EXTERN_LIB = -ljaspendus -lpetrahelper -lvenus -lgestalt -lvulkan -lxcb -legide
 
 ALL_LIB = $(LIB) $(EXTERN_LIB)
 
 LIB_JARSU_PATH = ./LesJardinsSuspendus/libjaspendus.a
 LIB_HELPE_PATH = ./Helper/libpetrahelper.a
 LIB_VENUS_PATH = ./Venus/libvenus.a
-LIBS_PATH = $(LIB_JARSU_PATH) $(LIB_HELPE_PATH) $(LIB_VENUS_PATH)
+LIB_EGIDE_PATH = ./Egide/libegide.a
+LIBS_PATH = $(LIB_JARSU_PATH) $(LIB_HELPE_PATH) $(LIB_VENUS_PATH) $(LIB_EGIDE_PATH)
 
 # ############## #
 #*    REGLES    *#
@@ -70,12 +71,14 @@ LIBS_PATH = $(LIB_JARSU_PATH) $(LIB_HELPE_PATH) $(LIB_VENUS_PATH)
 all: compile_petra_libs check_compilation $(NAME)
 
 fre:
+	$(LMAKE) ./Egide/ libre
 	$(LMAKE) ./Venus/ re
 	$(LMAKE) ./Helper/ re
 	$(LMAKE) ./LesJardinsSuspendus/ re
 	$(LMAKE) . that
 
 compile_petra_libs:
+	$(LMAKE) ./Egide/ lib
 	$(LMAKE) ./Venus/
 	$(LMAKE) ./Helper/
 	$(LMAKE) ./LesJardinsSuspendus/
@@ -85,23 +88,23 @@ that: check_compilation $(NAME)
 check_compilation:
 	@if [ -f $(NAME) ] && \
 		[ -n "$(strip $(OBJS))" ] && \
-		[ -n "$(strip $(EXTERN_LIB))" ] && \
 		[ -z "$$(find $(SRCS) -newer $(NAME) 2>/dev/null)" ] && \
 		[ ! $(LIB_JARSU_PATH) -nt $(NAME) ] && \
 		[ ! $(LIB_VENUS_PATH) -nt $(NAME) ] && \
+		[ ! $(LIB_EGIDE_PATH) -nt $(NAME) ] && \
 		[ ! $(LIB_HELPE_PATH) -nt $(NAME) ]; then \
 		echo "$(BOLD)$(PURPLE)Tous les fichiers $(UNDERLINE)$(YELLOW)$(NAME)$(CLASSIC)$(BOLD)$(PURPLE) sont déjà compilés !$(CLASSIC)"; \
 		exit 0; \
 	fi
 
 $(NAME): $(OBJS) $(LIBS_PATH)
-	$(CXX) $(CFLAGS) $(OBJS) $(LIB) $(EXTERN_LIB) -o $@
+	$(CXX) $(CFLAGS) $(OBJS) $(EXTERN_LIB) $(LIB) -o $@
 	@echo "$(BOLD)$(CYAN)Exécutable $(NAME) créé avec succès!$(CLASSIC)"
 
 $(OBJS_DIR)/%.obj: %.cpp
 	@mkdir -p $(@D)
 	@echo "$(GREEN)🗸 Compilation $(BOLD)$(YELLOW)$<$(CLASSIC)"
-	$(CXX) $(INCLUDES) $(CFLAGS) $(ALL_LIB) -c $< -o $@
+	$(CXX) $(INCLUDES) $(CFLAGS) -c $< -o $@
 
 clean:
 	@echo "$(BOLD)$(RED)"

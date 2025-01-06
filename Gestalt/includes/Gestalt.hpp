@@ -16,7 +16,7 @@
 #define PETRA_GESTALT_HPP
 
 # include <vector>
-# include <nsl.h>
+# include "egide/egide.h"
 
 /*# define GESTALT_ACTIVE(classT)								\
 	static const bool	Gestalt##classT##Register = []		\

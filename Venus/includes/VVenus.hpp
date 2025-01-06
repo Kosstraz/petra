@@ -12,8 +12,8 @@
 /*																			*/
 /************************************************************************** */
 
-#ifndef PETRA_VVENUS_HPP
-#define PETRA_VVENUS_HPP
+#ifndef VENUS_VVENUS_HPP
+#define VENUS_VVENUS_HPP
 
 # ifndef cast
 #  define cast		static_cast
@@ -33,14 +33,14 @@
 # define VK_USE_PLATFORM_XCB_KHR
 # include <vulkan/vulkan.h>
 # include <vulkan/vulkan_xcb.h>
-# include <nsl.h>
+# include "egide/egide.h"
 # include "Venus.hpp"
 # include "Window.hpp"
 # include "../colors.h"
 # include "VVCommandManager.hpp"
 # include "VVQueue.hpp"
 
-struct VVenus final : private Venus
+struct VVenus : private Venus
 {
 	static void
 	Init(const char* engineName, unsigned int major, unsigned int minor, unsigned int patch);
