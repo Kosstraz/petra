@@ -58,10 +58,9 @@ private:
 
 int	main(void)
 {
-	//WIZARD_SCRIPT("Player");
-	//Petra::Init();
-	//Petra::Loop();
-	//Petra::Destroy();
-	//Gestalt::DestroyObjects();
+	WIZARD_SCRIPT("Player");
+	Petra::Init();
+	Petra::Loop();
+	Petra::Destroy();
 	return (0);
 }

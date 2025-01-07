@@ -41,17 +41,17 @@
 # define HFW_Pulse(f)			HELPER_FWRITE_Pulse(f);
 # define HFW_AfterPulse(f)		HELPER_FWRITE_AfterPulse(f);
 
-# define HELPER_FWRITE(str, f)			fwrite(str.c_str(), sizeof(char), str.size(), f)
+# define HELPER_FWRITE(str, f)			fwrite(str, sizeof(char), str.Size(), f)
 # define HELPER_FWRITE_nl(f)			fwrite("\n", sizeof(char), 1, f)
 # define HELPER_FWRITE_INTRO_NOTE(f)	fwrite("/* PETRA DEVELOPPMENT SCRIPT WIZARD */\n\n", sizeof(char), 40, f)
-# define HELPER_FWRITE_include(file, f)	fwrite("#include ", sizeof(char), 9, f); fwrite(#file, sizeof(char), std::string::size(#file), f);
+# define HELPER_FWRITE_include(file, f)	fwrite("#include ", sizeof(char), 9, f); fwrite(#file, sizeof(char), String::size(#file), f);
 # define HELPER_FWRITE_define(f)		fwrite("#define ", sizeof(char), 8, f)
 # define HELPER_FWRITE_ifndef(f)		fwrite("#ifndef ", sizeof(char), 8, f)
 # define HELPER_FWRITE_endif(f)			fwrite("#endif\n", sizeof(char), 7, f)
 # define HELPER_FWRITE_class(f)			fwrite("class ", sizeof(char), 6, f)
 # define HELPER_FWRITE_struct(f)		fwrite("struct ", sizeof(char), 7, f)
 # define HELPER_FWRITE_enum(f)			fwrite("enum ", sizeof(char), 5, f)
-# define HELPER_FWRITE_RAW(rawWord, f)	fwrite(#rawWord, sizeof(char), std::string::size(#rawWord), f)//String::Size(#rawWord), f)
+# define HELPER_FWRITE_RAW(rawWord, f)	fwrite(#rawWord, sizeof(char), String::size(#rawWord), f)//String::Size(#rawWord), f)
 # define HELPER_FWRITE_brace_o(f)		fwrite("{", sizeof(char), 1, f)
 # define HELPER_FWRITE_brace_c(f)		fwrite("}", sizeof(char), 1, f)
 # define HELPER_FWRITE_comma(f)			fwrite(";\n", sizeof(char), 2, f)
@@ -64,7 +64,7 @@
 # define HELPER_FWRITE_BeforePulse(f)	fwrite("\tvirtual void\n\tBeforePulse(void) override;\n\n", sizeof(char), 44, f)
 # define HELPER_FWRITE_Pulse(f)			fwrite("\tvirtual void\n\tPulse(float deltaTime) override;\n\n", sizeof(char), 49, f)
 # define HELPER_FWRITE_AfterPulse(f)	fwrite("\tvirtual void\n\tAfterPulse(void) override;\n\n", sizeof(char), 43, f)
-# define HELPER_FWRITE_PREFIX(pre, f)	fwrite(#pre, sizeof(char), std::string::size(#pre), f); fwrite("::", sizeof(char), 2, f)
+# define HELPER_FWRITE_PREFIX(pre, f)	fwrite(#pre, sizeof(char), String::size(#pre), f); fwrite("::", sizeof(char), 2, f)
 
 # define WIZARD_SCRIPT(classT)	\
 	Helper::CreateScriptTemplate(classT);
@@ -75,14 +75,14 @@ class Helper final
 {
 public:
 	static void
-	CreateScriptTemplate(std::string&& className);
+	CreateScriptTemplate(String&& className);
 
 private:
 	static void
-	__CreateCPPScriptTemplate(const std::string& className);
+	__CreateCPPScriptTemplate(const String& className);
 
 		static void
-	__CreateHPPScriptTemplate(const std::string& className);
+	__CreateHPPScriptTemplate(const String& className);
 };
 
 #endif

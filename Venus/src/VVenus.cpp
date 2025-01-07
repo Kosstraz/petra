@@ -187,17 +187,23 @@ VVenus::__CreateLogicalDevice(void)
 	float					queuePriority = 1.0f;
 
 	vkDeviceQueueCInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	vkDeviceQueueCInfo.pNext = nullptr;
 	vkDeviceQueueCInfo.queueFamilyIndex = 0;
 	vkDeviceQueueCInfo.queueCount = 1;
 	vkDeviceQueueCInfo.pQueuePriorities = &queuePriority;
 
 	vkDeviceCInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	vkDeviceCInfo.pNext = nullptr;
 	vkDeviceCInfo.queueCreateInfoCount = 1;
 	vkDeviceCInfo.pQueueCreateInfos = &vkDeviceQueueCInfo;
+	vkDeviceCInfo.enabledLayerCount = 0;
+	vkDeviceCInfo.ppEnabledLayerNames = nullptr;
+	vkDeviceCInfo.enabledExtensionCount = 0;
+	vkDeviceCInfo.ppEnabledExtensionNames = nullptr;
+	vkDeviceCInfo.pEnabledFeatures = nullptr;
 	VVenus::physicalGDeviceIndex = VVenus::__EvaluateAllDevicesScore();
 	if (vkCreateDevice(VVenus::vkPhysicalDevices[VVenus::physicalGDeviceIndex], &vkDeviceCInfo, nullptr, &VVenus::vkDevice) != VK_SUCCESS)
 		exit(VK_FAILED_TO_CREATE_LOGICAL_DEVICE);
-	
 	//ShowPhysicalDevicesProperties(VVenus::physicalDeviceUsedIndex);
 	//ShowPhysicalDevicesFeatures(VVenus::physicalDeviceUsedIndex);
 }

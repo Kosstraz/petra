@@ -85,7 +85,7 @@ void
 String::Reserve(const uint64& nbyte)	noexcept
 {
 	char* const	ref = this->data;
-	this->data = Allocator<char>::Reserve(nbyte);//new char[nbyte];
+	this->data = new char[nbyte];
 	if (this->size > 0ULL)
 		String::__ncopy__(this->data, ref, this->size);
 	delete[](ref);
@@ -164,8 +164,7 @@ String::__join__(const String& str) noexcept
 	if (totaLen > this->capacity)
 	{
 		this->capacity = totaLen * 2ULL;
-		this->data = Allocator<char>::Reserve(this->capacity + 1ULL, 32UL);
-		//this->data = new char[this->capacity + 1ULL];
+		this->data = new char[this->capacity + 1ULL];
 	}
 	else
 		this->allocated = false;
@@ -173,7 +172,7 @@ String::__join__(const String& str) noexcept
 	{
 		String::__ncopy__(this->data, ref, thisLen);
 		if (this->allocated)
-			Allocator<char>::Free(ref);
+			delete[](ref);
 	}
 	String::__ncopy__(&this->data[thisLen], str.data, dataLen);
 	this->data[totaLen] = '\0';
@@ -239,7 +238,7 @@ char*
 String::CString(const String& str) noexcept
 {
 	const uint64	size	= str.size;
-	char*			ret		= Allocator<char>::Reserve(size + 1ULL);//new char[size + 1ULL];
+	char*			ret		= new char[size + 1ULL];
 	String::__ncopy__(ret, str.data, size);
 	ret[size] = '\0';
 	return (ret);
@@ -249,7 +248,7 @@ char*
 String::CString() noexcept
 {
 	const uint64	lSize	= this->size;
-	char*			ret		= Allocator<char>::Reserve(lSize + 1ULL);//new char[size + 1ULL];
+	char*			ret		= new char[size + 1ULL];
 	String::__ncopy__(ret, this->data, lSize);
 	ret[lSize] = '\0';
 	return (ret);
@@ -303,7 +302,7 @@ void
 String::Clear() noexcept
 {
 	if (this->allocated && this->data)
-		Allocator<char>::Free(this->data);//delete[](this->data);
+		delete[](this->data);
 	this->allocated = false;
 	this->data = nullptr;
 	this->_setSize_(0ULL);
@@ -313,8 +312,7 @@ void
 String::Destroy() noexcept
 {
 	if (this->allocated && this->data)
-		Allocator<char>::Free(this->data);
-		//delete[](this->data);
+		delete[](this->data);
 	this->allocated = false;
 	this->data = nullptr;
 	this->_setSize_(0ULL);
@@ -337,9 +335,9 @@ String::__replace__(const String& str) noexcept
 	if (str.size > this->capacity)
 	{
 		if (this->allocated)
-			Allocator<char>::Free(this->data);//delete[](this->data);
+			delete[](this->data);
 		this->capacity = str.size * 2ULL;
-		this->data = Allocator<char>::Reserve(this->capacity + 1ULL);//new char[this->capacity + 1ULL];
+		this->data = new char[this->capacity + 1ULL];
 	}
 	//else if (this->capacity > STRING_capacity && str.size ) //Todo: faire un système d'auto-organisation de la mémoire
 	String::__ncopy__(this->data, str.data, this->size);
