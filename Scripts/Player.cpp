@@ -10,7 +10,6 @@ Player::BeforePulse(void)
 void
 Player::Pulse(float deltaTime)
 {
-	
 }
 
 void

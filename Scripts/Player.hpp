@@ -3,7 +3,7 @@
 #ifndef PETRA_DEV_
 #define PETRA_DEV_
 
-# include "../petra.h"
+# include "egide.h"
 
 GESTALT_USE
 class Player : Gestalt
