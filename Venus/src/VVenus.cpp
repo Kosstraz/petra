@@ -218,7 +218,7 @@ VVenus::__FindGPUs(void)
 	vkEnumeratePhysicalDevices(VVenus::vk, &VVenus::physicalDevicesCount, VVenus::vkPhysicalDevices);
 }
 
-void
+const char**
 VVenus::__SetInstanceExtension(VkInstanceCreateInfo* vkInstCInfo)
 {
 	constexpr unsigned int	extensionCount = 2;
@@ -228,20 +228,23 @@ VVenus::__SetInstanceExtension(VkInstanceCreateInfo* vkInstCInfo)
 	extensions[1] = VK_KHR_XCB_SURFACE_EXTENSION_NAME;
 	vkInstCInfo->enabledExtensionCount = extensionCount;
 	vkInstCInfo->ppEnabledExtensionNames = extensions;
+	return (extensions);
 }
 
 void
 VVenus::__CreateVulkanInstance(void)
 {
 	VkInstanceCreateInfo	vkCreateIInfo{};
+	const char**			tmp;
 
 	//const char* const		khronos = strdup("VK_LAYER_KHRONOS_validation");
 
 	vkCreateIInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	vkCreateIInfo.pApplicationInfo = &VVenus::vkAppInfo;
-	VVenus::__SetInstanceExtension(&vkCreateIInfo);
+	tmp = VVenus::__SetInstanceExtension(&vkCreateIInfo);
 	if (vkCreateInstance(&vkCreateIInfo, nullptr, &VVenus::vk) != VK_SUCCESS)
 		exit(VK_FAILED_TO_CREATE_AN_INSTANCE);
+	free(tmp);
 }
 
 void

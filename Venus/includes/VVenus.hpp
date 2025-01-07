@@ -77,7 +77,7 @@ private:
 	static void
 	__CreateQueueAndLogic(void);
 
-	static void
+	static const char**
 	__SetInstanceExtension(VkInstanceCreateInfo*);
 
 	static void

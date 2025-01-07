@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ymanchon <ymanchon@student.42.fr>          +#+  +:+       +#+         #
+#    By: bama <bama@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 16:21:19 by ymanchon          #+#    #+#              #
-#    Updated: 2025/01/06 17:29:54 by ymanchon         ###   ########.fr        #
+#    Updated: 2025/01/07 02:10:13 by bama             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ CFLAGS = -Wall -Wextra -Wshadow -Wuninitialized -Wno-unused-result -Winit-self -
 
 LIB = -L ./Helper -L ./LesJardinsSuspendus/  -L ./Venus/ -L ./Gestalt/ -L ./Egide/
 
-EXTERN_LIB = -ljaspendus -lpetrahelper -lvenus -lgestalt -lvulkan -lxcb -legide
+EXTERN_LIB = -ldl -ljaspendus -lpetrahelper -lvenus -lgestalt -lvulkan -lxcb -legide
 
 ALL_LIB = $(LIB) $(EXTERN_LIB)
 
