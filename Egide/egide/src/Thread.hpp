@@ -145,7 +145,7 @@ private:
 	static void*	ThreadMethodWrapperVariadic(void*);
 
 public:
-	thread_local static const int32	ThisTID;
+	static const int32	ThisTID;
 
 private:
 	bool					joined;

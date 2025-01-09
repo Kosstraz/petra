@@ -54,6 +54,10 @@ Thread::ThreadWrapper(void* args)
 {
 	Thread::WrapperHelper*	helpingArgs = static_cast<Thread::WrapperHelper*>(args);
 	TFun*					fun = reinterpret_cast<TFun*>(helpingArgs->funPtr);
+	//if (!fun)
+	//	std::cout << "null" << std::endl;
+	//else
+	//	std::cout << "valide" << std::endl;
 	delete(helpingArgs);
 	(*fun)();
 	return (nullptr);
@@ -69,7 +73,6 @@ Thread::ThreadWrapperVariadic(void* args)
 	Package<TArgs...>		pack = *static_cast<Package<TArgs...>*>(helpingArgs->args);
 	delete(static_cast<Package<TArgs...>*>(helpingArgs->args));
 	delete(helpingArgs);
-	std::cout << Types::Name(fun) << std::endl;
 	Unpack::Apply(*fun, pack);
 	return (nullptr);
 }

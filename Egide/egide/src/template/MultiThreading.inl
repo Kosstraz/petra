@@ -12,7 +12,7 @@ template <typename TRet>
 TRet
 MultiThreading::Get(const String& threadToWait) noexcept
 {
-	return (MultiThreading::threads.at(threadToWait)->Get<TRet>());
+	return (MultiThreading::threads.at(threadToWait).Get<TRet>());
 }
 
 template <typename TRet>
@@ -21,7 +21,7 @@ MultiThreading::TryGet(const String& threadToWait)
 {
 	try
 	{
-		return (MultiThreading::threads.at(threadToWait)->TryGet<TRet>());
+		return (MultiThreading::threads.at(threadToWait).TryGet<TRet>());
 	}
 	catch (Thread::IsStillAliveException& e)
 	{
@@ -39,7 +39,11 @@ MultiThreading::Create(String pThreadID, TFun pFun)
 {
 	if (MultiThreading::threads.contains(pThreadID))
 		throw (MultiThreading::ThreadIDAlreadyUsed());
-	MultiThreading::threads.insert(std::make_pair(Meta::Move(pThreadID), new Thread(pFun)));
+	MultiThreading::threads.emplace(pThreadID, Thread(pFun));
+	if (!pFun)
+		std::cout << "null" << std::endl;
+	else
+		std::cout << "valide" << std::endl;
 }
 
 template <typename TFun, typename... TArgs>
@@ -49,7 +53,7 @@ MultiThreading::Create(String pThreadID, TFun pFun, TArgs&&... pArgs)
 	std::cout << "Create\n";
 	if (MultiThreading::threads.contains(pThreadID))
 		throw (MultiThreading::ThreadIDAlreadyUsed());
-	MultiThreading::threads.emplace(Meta::Forward<String>(pThreadID), new Thread(pFun, Meta::Move(pArgs)...));
+	MultiThreading::threads.emplace(pThreadID, Thread(pFun, Meta::Forward<TArgs>(pArgs)...));
 }
 
 template <typename TRet, class CObject, typename... TFunArgs, typename... TArgs>
@@ -58,7 +62,7 @@ MultiThreading::Create(String pThreadID, TRet (CObject::*pFun)(TFunArgs...), COb
 {
 	if (MultiThreading::threads.contains(pThreadID))
 		throw (MultiThreading::ThreadIDAlreadyUsed());
-	MultiThreading::threads.insert(std::make_pair(Meta::Move(pThreadID), new Thread(pFun, pObject, Meta::Forward<TArgs>(pArgs)...)));
+	MultiThreading::threads.emplace(pThreadID, Thread(pFun, pObject, Meta::Forward<TArgs>(pArgs)...));
 }
 
 template <typename TRet, class CObject>
@@ -67,7 +71,7 @@ MultiThreading::Create(String pThreadID, TRet (CObject::*pFun)(void), CObject* p
 {
 	if (MultiThreading::threads.contains(pThreadID))
 		throw (MultiThreading::ThreadIDAlreadyUsed());
-	MultiThreading::threads.insert(std::make_pair(Meta::Move(pThreadID), new Thread(pFun, pObject)));
+	MultiThreading::threads.emplace(pThreadID, Thread(pFun, pObject));
 }
 
 FORCEINLINE bool
@@ -98,7 +102,7 @@ FORCEINLINE bool
 MultiThreading::__isAlive__(String&& threadName) noexcept
 {
 	if (MultiThreading::threads.contains(Meta::Move(threadName)))
-		if (MultiThreading::threads.at(Meta::Move(threadName))->IsAlive())
+		if (MultiThreading::threads.at(Meta::Move(threadName)).IsAlive())
 			return (true);
 	return (false);
 }
@@ -107,7 +111,7 @@ FORCEINLINE bool
 MultiThreading::__isAlive__(const String& threadName) noexcept
 {
 	if (MultiThreading::threads.contains(Meta::Move(threadName)))
-		if (MultiThreading::threads.at(Meta::Move(threadName))->IsAlive())
+		if (MultiThreading::threads.at(Meta::Move(threadName)).IsAlive())
 			return (true);
 	return (false);
 }

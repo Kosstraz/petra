@@ -16,6 +16,11 @@ float	ThreadTesting(String parameter /* can put infinite parameters */)
 	return (42.42f);
 }
 
+void	Ahah(void)
+{
+
+}
+
 int	main(void)
 {
 	//IO::Echo << IO::SaveMode << "Retest\n";
@@ -49,8 +54,11 @@ int	main(void)
 	quoicoubeh.WaitQueue();
 	std::cout << "Push 4 finished\n";*/
 
-	MultiThreading::Create("test1", &ThreadTesting, String("norage"));
-	Sleep::ForSeconds(1);
+
+
+	//MultiThreading::Create("test1", ThreadTesting, String("norage"));
+	MultiThreading::Create("test1", Ahah);
+	//Sleep::ForSeconds(1);
 	//std::cout << "MT IsAlive ? " << (MultiThreading::IsAlive("test1") ? "yes" : "no") << std::endl;
 	//std::cout << "MT IsExist ? " << (MultiThreading::IsExist("test1") ? "yes" : "no") << std::endl;
 	//String a = Channel::Receive<String>("randomized");

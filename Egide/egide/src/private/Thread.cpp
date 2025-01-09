@@ -7,7 +7,6 @@
 
 pthread_t
 Thread_MainThreadID = pthread_self();
-thread_local
 const int32
 Thread::ThisTID = gettid();
 

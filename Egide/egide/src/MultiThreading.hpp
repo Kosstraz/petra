@@ -11,7 +11,7 @@
 # include <map>
 
 // It's a simpler way to create thread and manage them.
-class MultiThreading final : private Thread
+class MultiThreading final
 {
 public:
 	explicit MultiThreading(const MultiThreading&) 	= delete;
@@ -33,10 +33,8 @@ public:
 	template <typename TRet>
 	static TRet	TryGet(const String& threadToGet);
 
-	using Thread::Wait;
 	static void	Wait(const String& threadToWait) noexcept ;
 
-	using Thread::IsAlive;
 	static FORCEINLINE bool	IsAlive(const String& threadName) noexcept;
 	
 	static FORCEINLINE bool	IsExist(const String& threadName) noexcept;
@@ -59,7 +57,7 @@ private:
 	static FORCEINLINE bool	__isExist__(String&& threadName) noexcept;
 
 private:
-	thread_local static std::map<String, Thread*>	threads;
+	static std::map<String, Thread>	threads;
 };
 
 # include "template/MultiThreading.inl"
