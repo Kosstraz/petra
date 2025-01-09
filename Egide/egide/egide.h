@@ -15,9 +15,6 @@
 //Todo General: Make a Stack class
 //Todo General: Make a BTree class
 
-// !Two memory leaks in threading edge case (in the Thread class)
-// !If not, no memory leak currently detected
-
 /*
 	MEMORY
 */

@@ -79,27 +79,31 @@ public:
 
 	// Waits for the thread to finish and returns its Thread::Return() value
 	template <typename TRet>
-	FORCEINLINE TRet	Get()
+	FORCEINLINE
+	TRet	Get()
 	{
-		void*	buffer;
-		TRet	ret;
-		pthread_join(this->thread, &buffer);
+		TRet*	buffer;
+		TRet	ret{};
+		pthread_join(this->thread, ptrCast<void**>(&buffer));
 		if (buffer)
 		{
 			this->joined = true;
-			ret = *static_cast<TRet*>(buffer);
-			delete(static_cast<int*>(buffer));//::operator delete(buffer);
+			ret = *buffer;
+			delete(buffer);
 		}
+		//delete(this->wrapperHelper);
 		return (ret);
 	}
 
 	// Waits for thread end
-	FORCEINLINE void	Wait() noexcept
+	FORCEINLINE void
+	Wait() noexcept
 	{
 		void*	buffer;
 		pthread_join(this->thread, &buffer);
 		this->joined = true;
-		::operator delete(buffer);
+		if (buffer)
+			delete(cast<int*>(buffer));
 	}
 	// FRANCAIS :
 	// Permet de quitter un thread, cependant si la fonction est appelé de manière native ET dans le MainThread, il faudra placer un 'return (...);' juste après, de manière à ce que la fonction quitte comme prévu, car cette fonction (Thread::Return) sera ignorée.
@@ -109,12 +113,13 @@ public:
 	// Allows you to exit a thread, but if the function is called natively AND in the MainThread, you'll need to place a 'return (...);' just after it, so that the function exits as expected, as this function (Thread::Return) will be ignored.
 	// If it is called natively in a thread that is not the main thread, the thread will be exited entirely
 	template <typename TRet>
-	FORCEINLINE static TRet	Return(TRet return_arg)
+	FORCEINLINE
+	static TRet
+	Return(TRet return_arg)
 	{
 		if (pthread_equal(pthread_self(), Thread_MainThreadID))
 			return (return_arg);
-		TRet*	ret = new TRet;//static_cast<TRet*>(::operator new(sizeof(TRet)));
-		*ret = return_arg;
+		TRet*	ret = new TRet(Meta::Move(return_arg));//static_cast<TRet*>(::operator new(sizeof(TRet)));
 		pthread_exit(ret);
 		CODE_UNREACHABLE;
 	}

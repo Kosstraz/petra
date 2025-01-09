@@ -1,14 +1,15 @@
-To finish :
+# To finish :
 ThreadQueue
 letf
 Many String functions (searching, parsing, ...)
 String use Allocator instead of new/delete
 
-To adapt :
+# To adapt :
 letc (when letf finished)
 Better MultiThreading's constructors, for compatibility in different contexts
 
-To do:
+# To do:
 More fonctionnalities on Socket class (Bluetooth, UDP, Infrared, ...)
 A JSON class
 Constructor overloads taking lambdas for Thread, MultiThreading, ThreadQueue and Callable
+Signal add functions using 'sigaction()'

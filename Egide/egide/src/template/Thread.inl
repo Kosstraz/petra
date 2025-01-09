@@ -9,7 +9,7 @@
 # include "../Thread.hpp"
 
 /**/template <typename TFun>
-Thread::Thread(TFun pFun)
+Thread::Thread(TFun pFun) : joined(false)
 {
 	this->wrapperHelper = new Thread::WrapperHelper;
 	this->wrapperHelper->funPtr = ptrCast<void*>(&pFun);
@@ -19,7 +19,7 @@ Thread::Thread(TFun pFun)
 }
 
 template <typename TFun, typename... TArgs>
-Thread::Thread(TFun pFun, TArgs&&... pArgs)
+Thread::Thread(TFun pFun, TArgs&&... pArgs) : joined(false)
 {
 	this->wrapperHelper = new Thread::WrapperHelper;
 	this->wrapperHelper->funPtr = ptrCast<void*>(&pFun);
@@ -29,7 +29,7 @@ Thread::Thread(TFun pFun, TArgs&&... pArgs)
 }
 
 template <typename TRet, class CObject>
-Thread::Thread(TRet (CObject::*pFun)(void), CObject* pObjInstance)
+Thread::Thread(TRet (CObject::*pFun)(void), CObject* pObjInstance) : joined(false)
 {
 	this->wrapperHelper = new Thread::WrapperHelper;
 	this->wrapperHelper->funPtr = ptrCast<void*>(&pFun);
@@ -39,7 +39,7 @@ Thread::Thread(TRet (CObject::*pFun)(void), CObject* pObjInstance)
 }
 
 template <typename TRet, class CObject, typename... TFunArgs, typename... TArgs>
-Thread::Thread(TRet (CObject::*pFun)(TFunArgs...), CObject* pObjInstance, TArgs&&... pArgs)
+Thread::Thread(TRet (CObject::*pFun)(TFunArgs...), CObject* pObjInstance, TArgs&&... pArgs) : joined(false)
 {
 	this->wrapperHelper = new Thread::WrapperHelper;
 	this->wrapperHelper->funPtr = ptrCast<void*>(&pFun);
@@ -54,21 +54,23 @@ Thread::ThreadWrapper(void* args)
 {
 	Thread::WrapperHelper*	helpingArgs = static_cast<Thread::WrapperHelper*>(args);
 	TFun*					fun = reinterpret_cast<TFun*>(helpingArgs->funPtr);
-	(*fun)();
 	delete(helpingArgs);
+	(*fun)();
 	return (nullptr);
 }
 
+#include "../TypesName.hpp"
 template <typename TFun, typename... TArgs>
 void*
 Thread::ThreadWrapperVariadic(void* args)
 {
 	Thread::WrapperHelper*	helpingArgs = static_cast<Thread::WrapperHelper*>(args);
 	TFun*					fun = reinterpret_cast<TFun*>(helpingArgs->funPtr);
-	Package<TArgs...>*		pack = static_cast<Package<TArgs...>*>(helpingArgs->args);
-	Unpack::Apply(*fun, *pack);
+	Package<TArgs...>		pack = *static_cast<Package<TArgs...>*>(helpingArgs->args);
+	delete(static_cast<Package<TArgs...>*>(helpingArgs->args));
 	delete(helpingArgs);
-	delete(pack);
+	std::cout << Types::Name(fun) << std::endl;
+	Unpack::Apply(*fun, pack);
 	return (nullptr);
 }
 
@@ -79,8 +81,8 @@ Thread::ThreadMethodWrapper(void* args)
 	Thread::WrapperHelper*	helpingArgs	= static_cast<Thread::WrapperHelper*>(args);
 	TFun*					fun			= reinterpret_cast<TFun*>(helpingArgs->funPtr);
 	CObject*				instance	= static_cast<CObject*>(helpingArgs->objPtr);
-	(instance->*(*fun))();
 	delete (helpingArgs);
+	(instance->*(*fun))();
 	return (nullptr);
 }
 
@@ -90,11 +92,11 @@ Thread::ThreadMethodWrapperVariadic(void* args)
 {
 	Thread::WrapperHelper*	helpingArgs	= static_cast<Thread::WrapperHelper*>(args);
 	TFun*					fun			= reinterpret_cast<TFun*>(helpingArgs->funPtr);
-	Package<TArgs...>*		pack		= static_cast<Package<TArgs...>*>(helpingArgs->args);
+	Package<TArgs...>		pack		= *static_cast<Package<TArgs...>*>(helpingArgs->args);
 	CObject*				instance	= static_cast<CObject*>(helpingArgs->objPtr);
-	Unpack::Apply(*fun, instance, *pack);
+	delete(static_cast<Package<TArgs...>*>(helpingArgs->args));
 	delete(helpingArgs);
-	delete(pack);
+	Unpack::Apply(*fun, instance, pack);
 	return (nullptr);
 }
 

@@ -23,4 +23,6 @@ objs/./egide/src/private/Thread.obj: egide/src/private/Thread.cpp \
  egide/src/private/../template/Let.inl \
  egide/src/private/../template/../Let.hpp \
  egide/src/private/../template/Thread.inl \
- egide/src/private/../template/../Thread.hpp
+ egide/src/private/../template/../Thread.hpp \
+ egide/src/private/../template/../TypesName.hpp \
+ egide/src/private/../template/../String.hpp

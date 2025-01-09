@@ -12,17 +12,7 @@ const int32
 Thread::ThisTID = gettid();
 
 Thread::~Thread()
-{
-	// !A régler
-	// Juste après d'avoir lancer le thread (avec ThreadWrapper), Thread::Send et Thread::Receive
-	//pour savoir quand on peut désallouer la mémoire
-	/*if (this->wrapperHelper)
-	{
-		delete this->wrapperHelper->args;
-		delete wrapperHelper;
-	}*/
-	
-}
+{}
 
 #include <iostream>
 bool

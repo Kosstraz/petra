@@ -19,15 +19,12 @@ public:
 	explicit MultiThreading()						= delete;
 	virtual ~MultiThreading()						= delete;
 
-	template <typename TFun>
-	static void	Create(String pThreadID, TFun pFun);
-	template <typename TFun, typename... TArgs>
-	static void	Create(String pThreadID, TFun pFun, TArgs&&... PArgs);
-	template <typename TRet, class CObject>
-	static void	Create(String pThreadID, TRet (CObject::*pFun)(void), CObject* pObject);
-	template <typename TRet, class CObject, typename... TFunArgs, typename... TArgs>
-	static void	Create(String pThreadID, TRet (CObject::*pFun)(TFunArgs...), CObject* pObject, TArgs&&... PArgs);
-
+	template <typename TRet, typename TObject, typename... TFArgs, typename... TArgs>
+	static void	Create(String threadName, TRet (TObject::*)(TFArgs...), TObject* objInstance, TArgs&&... args) noexcept;
+	template <typename TRet, typename... TFArgs, typename... TArgs>
+	static void	Create(String threadName, TRet (*)(TFArgs...), TArgs&&... args) noexcept;
+	template <typename TRet>
+	static void	Create(String threadName, TRet (*)()) noexcept;
 	template <typename TRet>
 	static TRet	Get(const String& threadToGet) noexcept;
 	template <typename TRet>
@@ -46,8 +43,6 @@ public:
 	
 	static FORCEINLINE bool	IsExist(String&& threadName) noexcept;
 
-	struct ThreadIDAlreadyUsed : std::exception { virtual const char* what(void) noexcept { return ("ThreaID is already used!"); }};
-
 private:
 
 	static FORCEINLINE bool	__isAlive__(const String& threadName) noexcept;
@@ -59,7 +54,7 @@ private:
 	static FORCEINLINE bool	__isExist__(String&& threadName) noexcept;
 
 private:
-	thread_local static std::map<String, Thread*>	threads;
+	thread_local static std::map<String, Thread>	threads;
 };
 
 # include "template/MultiThreading.inl"

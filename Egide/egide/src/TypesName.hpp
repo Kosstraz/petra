@@ -12,6 +12,7 @@
 #  include <typeinfo>
 # endif
 
+#include <iostream>
 namespace Types
 {
 # ifndef FUNCTION_DETAILS
@@ -70,7 +71,7 @@ namespace Types
 	// Allows to know the precise type
 	// Less precise on compilers other than GNU (GCC/clang/...)
 	template <typename T>
-	String	Name()
+	String	Name(const T& var)
 	{
 		String	ret;
 		ret += Types::QualifierName<RemovePtr<T>>();
@@ -82,15 +83,14 @@ namespace Types
 	// Allows to know the precise type
 	// Less precise on compilers other than GNU (GCC/clang/...)
 	template <typename T>
-	String	Name()
+	String	Name([[maybe_unused]] const T& var)
 	{
 		String	ret = FUNCTION_DETAILS; //Todo: à modifier lorsqu'il y aura String.Find()
 		for (ulong i = 0 ; i < ret.Size() ; i++)
 			if (ret[i] == '=')
 				ret = &ret[i + 2];
-		for (ulong i = 0 ; i < ret.Size() ; i++)
-			if (ret[i] == ']')
-				ret.Erase(i);
+		std::cout << "size : " << ret.Size() << std::endl;
+		ret.Erase(ret.Size() - 1);
 		return (ret);
 	}
 # endif

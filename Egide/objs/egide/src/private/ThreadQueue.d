@@ -25,6 +25,8 @@ objs/./egide/src/private/ThreadQueue.obj: \
  egide/src/private/../template/../Let.hpp \
  egide/src/private/../template/Thread.inl \
  egide/src/private/../template/../Thread.hpp \
+ egide/src/private/../template/../TypesName.hpp \
+ egide/src/private/../template/../String.hpp \
  egide/src/private/../Async.hpp egide/src/private/../Queue.hpp \
  egide/src/private/../Iterator.hpp \
  egide/src/private/../template/Iterator.inl \

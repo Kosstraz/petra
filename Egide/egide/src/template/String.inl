@@ -261,7 +261,7 @@ String::Erase(const int& index) noexcept
 	const uint64	secondPart= index + 1ULL;
 	char* const		ref = this->data;
 
-	if (static_cast<uint64>(index) >= totalSize) [[unlikely]]
+	if (static_cast<uint64>(index) > totalSize) [[unlikely]]
 		return ;
 	String::__ncopy__(&this->data[index], &ref[secondPart], totalSize - index);
 	this->data[totalSize] = '\0';

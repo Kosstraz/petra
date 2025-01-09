@@ -46,7 +46,8 @@ public:
 		while (!Channel::async_send.contains(messageID))
 		{
 			Channel::mutex_send.Unlock();
-			Thread::Async::LongYield();
+			//Thread::Async::LongYield();
+			//Sleep::ForSeconds(1);
 			Channel::mutex_send.Lock();
 		}
 		TRet*	ptr = static_cast<TRet*>(Channel::async_send.at(messageID));

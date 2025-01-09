@@ -26,5 +26,7 @@ objs/./egide/src/private/MultiThreading.obj: \
  egide/src/private/../template/../Let.hpp \
  egide/src/private/../template/Thread.inl \
  egide/src/private/../template/../Thread.hpp \
+ egide/src/private/../template/../TypesName.hpp \
+ egide/src/private/../template/../String.hpp \
  egide/src/private/../template/MultiThreading.inl \
  egide/src/private/../template/../MultiThreading.hpp
